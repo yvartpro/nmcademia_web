@@ -50,7 +50,7 @@
             </div>
           </div>
           <button @click="nextStep" class="w-full md:w-auto bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-600 hover:to-yellow-500 text-slate-950 font-display font-bold py-4 px-8 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 shadow-lg shadow-amber-500/25 group hover:-translate-y-0.5">
-            <span>👉 Enter the Vision</span>
+            <span>👉 {{ settings['landing_cta_text'] || 'Enter the Vision' }}</span>
             <span class="transform group-hover:translate-x-1 transition-transform">→</span>
           </button>
         </div>
@@ -93,47 +93,60 @@
             </button>
           </div>
         </div>
-
-        <!-- Step 3A: Already in NM (Message & Custom Input) -->
+        <!-- Step 3A: Already in NM (Full message, fail reasons, coaching benefits) -->
         <div v-else-if="currentStep === 3 && isAlreadyInNM" class="space-y-6 animate-fade-in">
-          <div class="p-5 bg-amber-500/10 border border-amber-500/20 rounded-xl space-y-3">
-            <h4 class="text-amber-400 font-bold font-display text-lg">Your challenge is not opportunity, it’s strategy and execution.</h4>
-            <p class="text-gray-300 text-sm leading-relaxed">
-              We help active distributors identify structural failures, duplicate compensation frameworks, and build sustainable mentoring ecosystems that restore momentum in failing lines.
-            </p>
+          <!-- Congratulations message -->
+          <div class="space-y-3">
+            <h4 class="text-xl font-display font-bold bg-gradient-to-r from-amber-300 to-yellow-100 bg-clip-text text-transparent">Congratulations on Your Decision</h4>
+            <p class="text-gray-300 text-sm leading-relaxed whitespace-pre-line">{{ settings['already_in_nm_message'] }}</p>
+          </div>
+
+          <!-- Why Many Fail -->
+          <div class="space-y-3">
+            <h5 class="text-sm font-bold text-red-400 uppercase tracking-wider">Why Many Distributors Fail</h5>
+            <ul class="space-y-1.5">
+              <li v-for="(reason, i) in whyFailReasons" :key="i" class="flex items-start gap-2 text-xs text-gray-300">
+                <span class="text-red-400 mt-0.5 shrink-0">✗</span>
+                <span>{{ reason }}</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Coaching Benefits -->
+          <div class="space-y-3">
+            <h5 class="text-sm font-bold text-emerald-400 uppercase tracking-wider">Why Having an Experienced Coach Matters</h5>
+            <ul class="space-y-1.5">
+              <li v-for="(benefit, i) in coachingBenefits" :key="i" class="flex items-start gap-2 text-xs text-gray-300">
+                <span class="text-emerald-400 mt-0.5 shrink-0">✓</span>
+                <span>{{ benefit }}</span>
+              </li>
+            </ul>
           </div>
 
           <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-300">
-              What kind of challenges are you experiencing?
-            </label>
+            <label class="block text-sm font-medium text-gray-300">What challenges have you experienced?</label>
             <textarea 
               v-model="challengesText"
-              rows="4" 
-              placeholder="E.g., Lack of duplication, team members quitting, lack of proper training, mentorship issues..."
+              rows="3" 
+              placeholder="E.g., Lack of duplication, team members quitting, mentorship issues..."
               class="w-full bg-slate-950 border border-gray-800 rounded-lg p-3 text-sm focus:outline-none focus:border-amber-400 transition"
             ></textarea>
           </div>
 
           <div class="flex items-center justify-between pt-4 border-t border-gray-800">
             <button @click="prevStep" class="text-sm text-gray-400 hover:text-white transition">Back</button>
-            <button 
-              @click="nextStep"
-              class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-3 px-6 rounded-lg transition text-sm"
-            >
-              👉 Get Coaching & Mentorship
+            <button @click="nextStep" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-3 px-6 rounded-lg transition text-sm">
+              👉 {{ settings['coaching_cta_text'] || 'Get Coaching & Mentorship' }}
             </button>
           </div>
         </div>
 
-        <!-- Step 3B: New / Exploring (Confrontational welcome & Checklist) -->
+        <!-- Step 3B: New / Exploring (Dynamic message & checklist from settings) -->
         <div v-else-if="currentStep === 3 && !isAlreadyInNM" class="space-y-6 animate-fade-in">
           <div class="space-y-4">
             <h4 class="text-xl font-display font-bold bg-gradient-to-r from-amber-300 to-yellow-100 bg-clip-text text-transparent">Welcome to Network Marketing Academia.</h4>
-            <p class="text-gray-300 text-sm leading-relaxed">
-              You are entering a multibillion-dollar global industry where millions around the world are building income, developing leadership, and transforming their financial future through networks and digital systems.
-            </p>
-            <p class="text-gray-400 text-xs">Before you continue, tell us who you are. Check all that apply:</p>
+            <p class="text-gray-300 text-sm leading-relaxed whitespace-pre-line">{{ settings['new_exploring_message'] }}</p>
+            <p class="text-gray-400 text-xs font-semibold">Are you: (check all that apply)</p>
           </div>
 
           <div class="grid grid-cols-1 gap-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
@@ -148,23 +161,14 @@
                   : 'border-gray-800 bg-slate-950/30 hover:border-gray-700'
               ]"
             >
-              <input 
-                type="checkbox" 
-                :checked="selectedListOptions.includes(subOpt)"
-                class="rounded border-gray-700 text-amber-500 focus:ring-0 cursor-pointer pointer-events-none" 
-              />
+              <input type="checkbox" :checked="selectedListOptions.includes(subOpt)" class="rounded border-gray-700 text-amber-500 focus:ring-0 cursor-pointer pointer-events-none" />
               <span>{{ subOpt }}</span>
             </div>
           </div>
 
           <div class="flex items-center justify-between pt-4 border-t border-gray-800">
             <button @click="prevStep" class="text-sm text-gray-400 hover:text-white transition">Back</button>
-            <button 
-              @click="nextStep"
-              class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-3 px-6 rounded-lg transition text-sm"
-            >
-              👉 Proceed
-            </button>
+            <button @click="nextStep" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-3 px-6 rounded-lg transition text-sm">👉 Proceed</button>
           </div>
         </div>
 
@@ -285,11 +289,13 @@ import { useRouter } from 'vue-router';
 import { useCatalogStore } from '../stores/catalog';
 import { useLeadsStore } from '../stores/leads';
 import { useChatStore } from '../stores/chat';
+import { useSettingsStore } from '../stores/settings';
 
 const router = useRouter();
 const catalogStore = useCatalogStore();
 const leadsStore = useLeadsStore();
 const chatStore = useChatStore();
+const settingsStore = useSettingsStore();
 
 const currentStep = ref(1);
 const selectedSegment = ref(null);
@@ -306,26 +312,29 @@ const form = ref({
   consent: false
 });
 
-const segmentOptions = [
-  'I am new to network marketing',
-  'I am already in network marketing',
-  'I am in network marketing but not satisfied and want to switch companies',
-  'I am just exploring opportunities',
-  'I am tired of depending on one source of income',
-  'I am tired of being jobless',
-  'I want this business by all means'
-];
+// Expose settings directly for template binding
+const settings = computed(() => settingsStore.settings);
 
-const listOptions = [
-  'Tired of depending on a single income?',
-  'Tired of working hard but not progressing financially?',
-  'Tired of job uncertainty and rising living costs?',
-  'A single mother looking for a flexible way to support your family?',
-  'An employee looking for an additional source of income?',
-  'Unemployed and searching for an opportunity?',
-  'A student exploring future possibilities?',
-  'An entrepreneur looking to expand your income streams?'
-];
+// Parse JSON arrays from settings, with static fallbacks
+const segmentOptions = computed(() => {
+  try { return JSON.parse(settingsStore.settings['segment_options']); } catch {
+    return ['I am new to network marketing','I am already in network marketing','I am in network marketing but not satisfied and want to switch companies','I am just exploring opportunities','I am tired of depending on one source of income','I am tired of being jobless','I want this business by all means'];
+  }
+});
+
+const listOptions = computed(() => {
+  try { return JSON.parse(settingsStore.settings['list_options']); } catch {
+    return ['Tired of depending on a single income?','Tired of working hard but not progressing financially?','Tired of job uncertainty and rising living costs?','A single mother looking for a flexible way to support your family?','An employee looking for an additional source of income?','Unemployed and searching for an opportunity?','A student exploring future possibilities?','An entrepreneur looking to expand your income streams?'];
+  }
+});
+
+const whyFailReasons = computed(() => {
+  try { return JSON.parse(settingsStore.settings['nm_why_fail_reasons']); } catch { return []; }
+});
+
+const coachingBenefits = computed(() => {
+  try { return JSON.parse(settingsStore.settings['nm_coaching_benefits']); } catch { return []; }
+});
 
 const isAlreadyInNM = computed(() => {
   return selectedSegment.value === 'I am already in network marketing' || 
@@ -333,7 +342,10 @@ const isAlreadyInNM = computed(() => {
 });
 
 onMounted(async () => {
-  await catalogStore.fetchCountries();
+  await Promise.all([
+    catalogStore.fetchCountries(),
+    settingsStore.fetchSettings()
+  ]);
   if (catalogStore.countries.length > 0) {
     // default to stored country or Nigeria if available
     const saved = localStorage.getItem('selected_country');

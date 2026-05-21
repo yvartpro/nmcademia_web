@@ -53,6 +53,54 @@
             <span>⚙️</span>
             <span>Site Configurations</span>
           </button>
+          
+          <div class="pt-4 pb-2">
+            <span class="px-4 text-[10px] font-bold text-gray-600 uppercase tracking-widest">Content Management</span>
+          </div>
+
+          <button 
+            @click="activeTab = 'founders'"
+            :class="[
+              'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+              activeTab === 'founders' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'text-gray-400 hover:text-white hover:bg-slate-900/50 border border-transparent'
+            ]"
+          >
+            <span>👔</span>
+            <span>Founders</span>
+          </button>
+
+          <button 
+            @click="activeTab = 'testimonials'"
+            :class="[
+              'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+              activeTab === 'testimonials' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'text-gray-400 hover:text-white hover:bg-slate-900/50 border border-transparent'
+            ]"
+          >
+            <span>⭐</span>
+            <span>Testimonials</span>
+          </button>
+
+          <button 
+            @click="activeTab = 'partners'"
+            :class="[
+              'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+              activeTab === 'partners' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'text-gray-400 hover:text-white hover:bg-slate-900/50 border border-transparent'
+            ]"
+          >
+            <span>🏭</span>
+            <span>Manufacturing</span>
+          </button>
+
+          <button 
+            @click="activeTab = 'earnings'"
+            :class="[
+              'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+              activeTab === 'earnings' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'text-gray-400 hover:text-white hover:bg-slate-900/50 border border-transparent'
+            ]"
+          >
+            <span>💰</span>
+            <span>Earning Streams</span>
+          </button>
         </nav>
       </div>
 
@@ -379,6 +427,12 @@
 
         </div>
 
+        <!-- Content Management Tabs -->
+        <FoundersManager v-else-if="activeTab === 'founders'" />
+        <TestimonialsManager v-else-if="activeTab === 'testimonials'" />
+        <PartnersManager v-else-if="activeTab === 'partners'" />
+        <EarningsManager v-else-if="activeTab === 'earnings'" />
+
       </div>
     </main>
 
@@ -450,6 +504,12 @@ import { useLeadsStore } from '../../stores/leads';
 import { useChatStore } from '../../stores/chat';
 import { useCatalogStore } from '../../stores/catalog';
 import { useSettingsStore } from '../../stores/settings';
+import { useContentStore } from '../../stores/content';
+
+import FoundersManager from '../../components/admin/FoundersManager.vue';
+import TestimonialsManager from '../../components/admin/TestimonialsManager.vue';
+import PartnersManager from '../../components/admin/PartnersManager.vue';
+import EarningsManager from '../../components/admin/EarningsManager.vue';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -457,6 +517,7 @@ const leadsStore = useLeadsStore();
 const chatStore = useChatStore();
 const catalogStore = useCatalogStore();
 const settingsStore = useSettingsStore();
+const contentStore = useContentStore();
 
 const activeTab = ref('leads');
 const leadsFilter = ref({ country: '', status: '' });
@@ -484,7 +545,12 @@ const detailsModal = ref({
 const activeTabTitle = computed(() => {
   if (activeTab.value === 'leads') return 'Captured Leads (Distributor Signups)';
   if (activeTab.value === 'chats') return 'Live Chat Support Center';
-  return 'System Configurations Dashboard';
+  if (activeTab.value === 'settings') return 'System Configurations Dashboard';
+  if (activeTab.value === 'founders') return 'Company Founders';
+  if (activeTab.value === 'testimonials') return 'Client Testimonials';
+  if (activeTab.value === 'partners') return 'Manufacturing Partners';
+  if (activeTab.value === 'earnings') return 'Compensation Earning Streams';
+  return 'Dashboard';
 });
 
 const activeChatSessionDetails = computed(() => {
@@ -500,6 +566,7 @@ onMounted(async () => {
 
   await catalogStore.fetchCountries();
   await settingsStore.fetchSettings();
+  await contentStore.fetchAll();
   
   // Prep settings form
   syncSettingsForm();
