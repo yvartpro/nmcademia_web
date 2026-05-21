@@ -1,4 +1,18 @@
-<template>
+const fs = require('fs');
+
+const content = fs.readFileSync('src/views/PresentationPage.vue', 'utf8');
+
+// Extract script
+const scriptMatch = content.match(/<script setup>([\s\S]*?)<\/script>/);
+let script = scriptMatch ? scriptMatch[1] : '';
+
+// Add useThemeStore if not present
+if (!script.includes('useThemeStore')) {
+  script = script.replace(/import \{ ref, onMounted, computed \} from 'vue';/, "import { ref, onMounted, computed } from 'vue';\nimport { useThemeStore } from '../stores/theme';");
+  script = script.replace(/const settingsStore = useSettingsStore\(\);/, "const settingsStore = useSettingsStore();\nconst themeStore = useThemeStore();\n\nconst currentSlide = ref(1);\nconst totalSlides = 8;\n\nconst nextSlide = () => { if (currentSlide.value < totalSlides) currentSlide.value++; window.scrollTo({ top: 0, behavior: 'smooth' }); };\nconst prevSlide = () => { if (currentSlide.value > 1) currentSlide.value--; window.scrollTo({ top: 0, behavior: 'smooth' }); };\n\nconst openFAQs = ref([]);\nconst searchQuery = ref('');\nconst rawFAQs = ref([]);");
+}
+
+const template = `<template>
   <div class="min-h-screen bg-gray-50 dark:bg-[#121212] text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300 pb-24">
     <!-- Header Navigation -->
     <header class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1a1a1a] sticky top-0 z-50">
@@ -298,187 +312,9 @@
       </div>
     </div>
   </div>
-</template>
+</template>`;
 
-<script setup>
+const finalContent = `${template}\n\n<script setup>\n${script}\n</script>\n\n<style scoped>\n.animate-fade-in {\n  animation: fadeIn 0.3s ease-out forwards;\n}\n@keyframes fadeIn {\n  from { opacity: 0; transform: translateY(10px); }\n  to { opacity: 1; transform: translateY(0); }\n}\nselect option {\n  background-color: #fff;\n  color: #000;\n}\n.dark select option {\n  background-color: #1a1a1a;\n  color: #fff;\n}\n</style>\n`;
 
-import { ref, onMounted, computed } from 'vue';
-import { useThemeStore } from '../stores/theme';
-import { useCatalogStore } from '../stores/catalog';
-import { useSettingsStore } from '../stores/settings';
-import { useContentStore } from '../stores/content';
-import api from '../api';
-
-const catalogStore = useCatalogStore();
-const settingsStore = useSettingsStore();
-const themeStore = useThemeStore();
-
-const currentSlide = ref(1);
-const totalSlides = 8;
-
-const nextSlide = () => { if (currentSlide.value < totalSlides) currentSlide.value++; window.scrollTo({ top: 0, behavior: 'smooth' }); };
-const prevSlide = () => { if (currentSlide.value > 1) currentSlide.value--; window.scrollTo({ top: 0, behavior: 'smooth' }); };
-
-const contentStore = useContentStore();
-
-const selectedCountryCode = ref(localStorage.getItem('selected_country') || 'NG');
-const activeQuadrant = ref('E');
-const openFAQs = ref([]);
-const searchQuery = ref('');
-const rawFAQs = ref([]);
-
-const quadrantData = {
-  E: {
-    title: 'E - Employee',
-    description: 'You trade your time directly for a salary. You work for a system that controls your time, earnings, and advancement. If you stop working, your income instantly drops to zero.',
-    leverage: 'Zero leverage. Your income is 100% dependent on your personal hourly presence.'
-  },
-  S: {
-    title: 'S - Self-Employed / Specialist',
-    description: 'You own your job, but you are still the primary system. If you take a vacation, the business closes. Doctors, lawyers, small shop owners, and consultants live here.',
-    leverage: 'Very low leverage. You cannot duplicate yourself easily without expanding overhead dramatically.'
-  },
-  B: {
-    title: 'B - Business Owner',
-    description: 'You own a system and lead people. You create a network where other people\'s efforts, time, and skills produce revenue for the ecosystem. If you leave, the system continues running.',
-    leverage: 'Maximum leverage. Network marketing is the most accessible vehicle to cross into the B quadrant without huge capital.'
-  },
-  I: {
-    title: 'I - Investor',
-    description: 'Your money works for you. You invest resources into assets, stocks, real estate, or network systems that yield passive returns.',
-    leverage: 'Capital leverage. Money works as your duplicate employee.'
-  }
-};
-
-onMounted(async () => {
-  await Promise.all([
-    catalogStore.fetchCountries(),
-    catalogStore.fetchPackages(),
-    catalogStore.fetchProducts(),
-    settingsStore.fetchSettings(),
-    contentStore.fetchAll(),
-    fetchFAQs()
-  ]);
-  if (catalogStore.countries.length > 0 && !catalogStore.countries.some(c => c.code === selectedCountryCode.value)) {
-    selectedCountryCode.value = catalogStore.countries[0].code;
-  }
-});
-
-const selectedCountryName = computed(() => {
-  return catalogStore.selectedCountry?.name || 'Your Country';
-});
-
-const currencySymbol = computed(() => {
-  return catalogStore.selectedCountry?.currencySymbol || '₦';
-});
-
-const conversionRate = computed(() => {
-  // Let's compute a simple conversion factor based on Nigeria currency baseline or simple scaling
-  // NGN base is 1. If KES, convert (KES is about 7.5x smaller than NGN for packages? KES price 10000 vs NGN 99990, so factor 0.1)
-  // Let's use the explicit package price from DB! For products price we can scale roughly:
-  // NG: 1
-  // KE: 0.1
-  // BI: 2.0
-  // US: 0.00075
-  const code = selectedCountryCode.value;
-  if (code === 'KE') return 0.1;
-  if (code === 'BI') return 2.0;
-  if (code === 'US') return 0.00075;
-  return 1.0;
-});
-
-const whatsappLink = computed(() => {
-  const number = catalogStore.selectedCountry?.whatsappNumber || settingsStore.settings['whatsapp_number'] || '+2348030001111';
-  return `https://wa.me/${number.replace(/\+/g, '')}`;
-});
-
-// Content store shortcuts
-const testimonials = computed(() => contentStore.testimonials);
-const founders = computed(() => contentStore.founders);
-const manufacturingPartners = computed(() => contentStore.manufacturingPartners);
-const earningStreams = computed(() => contentStore.earningStreams);
-
-// Nigeria packages (for HOW TO JOIN section)
-const nigeriaPackages = computed(() => {
-  return catalogStore.packages.map(pkg => {
-    const price = pkg.prices?.find(p => p.countryCode === 'NG');
-    return price ? { ...pkg, ngPrice: price.price, ngReferralBonus: price.referralBonus, ngMatchBonus: price.matchBonus } : null;
-  }).filter(Boolean);
-});
-
-// Settings shortcut
-const settings = computed(() => settingsStore.settings);
-
-const changeCountry = () => {
-  catalogStore.selectCountry(selectedCountryCode.value);
-};
-
-const getPriceForCountry = (pkg, field) => {
-  const priceObj = pkg.prices?.find(p => p.countryCode === selectedCountryCode.value);
-  if (priceObj) {
-    return formatNumber(priceObj[field]);
-  }
-  // Fallback scale based on selectedCountryCode
-  const base = pkg[field] || 0;
-  return formatNumber(base * conversionRate.value);
-};
-
-const formatNumber = (num) => {
-  const n = Number(num);
-  if (isNaN(n)) return '0';
-  return n.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-};
-
-const consultTrainerPackage = (pkg) => {
-  const number = catalogStore.selectedCountry?.whatsappNumber || settingsStore.settings['whatsapp_number'] || '+2348030001111';
-  const text = encodeURIComponent(`Hello Trainer, I am interested in registering for the ${pkg.name} (${currencySymbol.value}${getPriceForCountry(pkg, 'price')}) in ${selectedCountryName.value}. Please guide me on registration.`);
-  window.open(`https://wa.me/${number.replace(/\+/g, '')}?text=${text}`, '_blank');
-};
-
-// FAQs loading & filtering
-const fetchFAQs = async () => {
-  try {
-    const response = await api.get('/faqs');
-    rawFAQs.value = response.data;
-  } catch (err) {
-    console.error('Fetch FAQs failed:', err);
-  }
-};
-
-const filteredFAQsList = computed(() => {
-  if (!searchQuery.value) return rawFAQs.value;
-  const q = searchQuery.value.toLowerCase();
-  return rawFAQs.value.filter(f => 
-    f.question.toLowerCase().includes(q) || 
-    f.answer.toLowerCase().includes(q)
-  );
-});
-
-const toggleFAQ = (id) => {
-  const index = openFAQs.value.indexOf(id);
-  if (index === -1) {
-    openFAQs.value.push(id);
-  } else {
-    openFAQs.value.splice(index, 1);
-  }
-};
-
-</script>
-
-<style scoped>
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-out forwards;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-select option {
-  background-color: #fff;
-  color: #000;
-}
-.dark select option {
-  background-color: #1a1a1a;
-  color: #fff;
-}
-</style>
+fs.writeFileSync('src/views/PresentationPage.vue', finalContent);
+console.log('Successfully rewrote PresentationPage.vue');

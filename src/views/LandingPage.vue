@@ -1,47 +1,52 @@
 <template>
-  <div class="min-h-screen bg-[#0b0f19] text-white flex flex-col justify-between font-sans overflow-x-hidden relative">
-    <!-- Glowing background accents -->
-    <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px] pointer-events-none"></div>
-    <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-yellow-500/10 rounded-full blur-[120px] pointer-events-none"></div>
-
+  <div class="min-h-screen flex flex-col font-sans transition-colors duration-300">
     <!-- Header Navigation -->
-    <header class="border-b border-gray-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+    <header class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#121212] sticky top-0 z-50 px-6 py-4">
       <div class="max-w-6xl mx-auto flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center font-bold text-slate-900 text-lg shadow-lg shadow-amber-500/20">
+          <div class="w-8 h-8 rounded bg-blue-600 flex items-center justify-center font-bold text-white text-sm">
             NMA
           </div>
           <div>
-            <h1 class="font-display font-bold text-lg leading-tight tracking-wide bg-gradient-to-r from-amber-400 to-yellow-200 bg-clip-text text-transparent">
+            <h1 class="font-display font-semibold text-base leading-tight text-gray-900 dark:text-gray-100">
               Network Marketing Academia
             </h1>
-            <p class="text-[10px] text-gray-400 tracking-widest uppercase">The Science of Human Networks</p>
           </div>
         </div>
-        <router-link to="/admin/login" class="text-xs text-gray-400 hover:text-amber-400 border border-gray-700 hover:border-amber-400 px-3 py-1.5 rounded-full transition-all duration-300">
-          Admin Portal
-        </router-link>
+        <div class="flex items-center gap-4">
+          <button @click="themeStore.toggleTheme" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" title="Toggle Theme">
+            <svg v-if="themeStore.isDark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </button>
+          <router-link to="/admin/login" class="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+            Admin
+          </router-link>
+        </div>
       </div>
     </header>
 
     <!-- Main Wizard Area -->
     <main class="flex-grow flex items-center justify-center px-4 py-12 relative z-10">
-      <div class="max-w-2xl w-full bg-slate-900/40 border border-gray-800 backdrop-blur-xl rounded-2xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
+      <div class="max-w-2xl w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-sm p-8 md:p-10 shadow-sm relative overflow-hidden">
         
         <!-- Step 1: Hero Confrontation -->
         <div v-if="currentStep === 1" class="space-y-8 animate-fade-in">
           <div class="space-y-6">
-            <span class="text-amber-400 text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20">
+            <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">
               Welcome Visionary
             </span>
-            <h2 class="text-3xl md:text-4xl font-display font-extrabold tracking-tight leading-tight">
-              Network Marketing Academy is <span class="bg-gradient-to-r from-red-500 to-amber-500 bg-clip-text text-transparent">not here to entertain you</span>—it is here to confront you.
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-gray-100 tracking-tight leading-tight">
+              Network Marketing Academy is not here to entertain you—it is here to confront you.
             </h2>
-            <div class="text-gray-300 text-sm md:text-base leading-relaxed space-y-4 font-light">
+            <div class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed space-y-4">
               <p>
                 The world you were prepared for is no longer the world you are living in. Jobs are shrinking, automation is rising, inflation is eating salaries, and the promise that education alone guarantees freedom is quietly collapsing. Yet most people still wait, hoping the old system will somehow fix what it has already outgrown.
               </p>
-              <p class="border-l-2 border-amber-500 pl-4 py-1 italic bg-amber-500/5 text-gray-200">
+              <p class="border-l-4 border-blue-600 pl-4 py-1 font-medium text-gray-900 dark:text-gray-200 bg-blue-50 dark:bg-blue-900/20">
                 This is a new economy. Power no longer belongs to those who simply work hard, but to those who understand networks, influence, and digital connection.
               </p>
               <p>
@@ -49,17 +54,17 @@
               </p>
             </div>
           </div>
-          <button @click="nextStep" class="w-full md:w-auto bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-600 hover:to-yellow-500 text-slate-950 font-display font-bold py-4 px-8 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 shadow-lg shadow-amber-500/25 group hover:-translate-y-0.5">
-            <span>👉 {{ settings['landing_cta_text'] || 'Enter the Vision' }}</span>
-            <span class="transform group-hover:translate-x-1 transition-transform">→</span>
+          <button @click="nextStep" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded transition-colors flex items-center justify-center gap-2">
+            <span>{{ settings['landing_cta_text'] || 'Enter the Vision' }}</span>
+            <span>→</span>
           </button>
         </div>
 
         <!-- Step 2: "Which best describes you?" -->
         <div v-else-if="currentStep === 2" class="space-y-8 animate-fade-in">
           <div class="space-y-2">
-            <h3 class="text-2xl font-display font-bold bg-gradient-to-r from-amber-300 to-yellow-100 bg-clip-text text-transparent">Which best describes you?</h3>
-            <p class="text-gray-400 text-xs md:text-sm">Select the option that mirrors your current situation to calibrate your guide.</p>
+            <h3 class="text-2xl font-display font-bold text-gray-900 dark:text-white">Which best describes you?</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Select the option that mirrors your current situation to calibrate your guide.</p>
           </div>
 
           <div class="grid grid-cols-1 gap-3 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
@@ -68,85 +73,83 @@
               :key="idx"
               @click="selectedSegment = opt"
               :class="[
-                'border p-4 rounded-xl cursor-pointer transition-all duration-300 flex items-start gap-4',
+                'border p-4 rounded cursor-pointer transition-colors flex items-start gap-3',
                 selectedSegment === opt 
-                  ? 'border-amber-400 bg-amber-500/10 shadow-lg shadow-amber-500/5' 
-                  : 'border-gray-800 bg-slate-950/40 hover:border-gray-700 hover:bg-slate-950/70'
+                  ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-500' 
+                  : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
               ]"
             >
               <div class="w-5 h-5 rounded-full border flex items-center justify-center shrink-0 mt-0.5"
-                :class="selectedSegment === opt ? 'border-amber-400 bg-amber-400 text-slate-950' : 'border-gray-600'">
-                <div v-if="selectedSegment === opt" class="w-2.5 h-2.5 bg-slate-950 rounded-full"></div>
+                :class="selectedSegment === opt ? 'border-blue-600 dark:border-blue-400 bg-blue-600' : 'border-gray-400 dark:border-gray-600'">
+                <div v-if="selectedSegment === opt" class="w-2 h-2 bg-white rounded-full"></div>
               </div>
-              <span class="text-sm font-medium text-gray-200" :class="{'text-amber-300': selectedSegment === opt}">{{ opt }}</span>
+              <span class="text-sm font-medium text-gray-900 dark:text-gray-200" :class="{'text-blue-700 dark:text-blue-300': selectedSegment === opt}">{{ opt }}</span>
             </div>
           </div>
 
-          <div class="flex items-center justify-between pt-4 border-t border-gray-800">
-            <button @click="prevStep" class="text-sm text-gray-400 hover:text-white transition">Back</button>
+          <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
+            <button @click="prevStep" class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Back</button>
             <button 
               @click="submitSegmentSelection" 
               :disabled="!selectedSegment"
-              class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-3 px-6 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
-              👉 Continue
+              Continue
             </button>
           </div>
         </div>
-        <!-- Step 3A: Already in NM (Full message, fail reasons, coaching benefits) -->
+
+        <!-- Step 3A: Already in NM -->
         <div v-else-if="currentStep === 3 && isAlreadyInNM" class="space-y-6 animate-fade-in">
-          <!-- Congratulations message -->
           <div class="space-y-3">
-            <h4 class="text-xl font-display font-bold bg-gradient-to-r from-amber-300 to-yellow-100 bg-clip-text text-transparent">Congratulations on Your Decision</h4>
-            <p class="text-gray-300 text-sm leading-relaxed whitespace-pre-line">{{ settings['already_in_nm_message'] }}</p>
+            <h4 class="text-xl font-display font-bold text-gray-900 dark:text-white">Congratulations on Your Decision</h4>
+            <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed whitespace-pre-line">{{ settings['already_in_nm_message'] }}</p>
           </div>
 
-          <!-- Why Many Fail -->
           <div class="space-y-3">
-            <h5 class="text-sm font-bold text-red-400 uppercase tracking-wider">Why Many Distributors Fail</h5>
-            <ul class="space-y-1.5">
-              <li v-for="(reason, i) in whyFailReasons" :key="i" class="flex items-start gap-2 text-xs text-gray-300">
-                <span class="text-red-400 mt-0.5 shrink-0">✗</span>
+            <h5 class="text-sm font-bold text-red-600 dark:text-red-400 uppercase tracking-wider">Why Many Distributors Fail</h5>
+            <ul class="space-y-2">
+              <li v-for="(reason, i) in whyFailReasons" :key="i" class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <span class="text-red-600 dark:text-red-400 mt-0.5 shrink-0 font-bold">×</span>
                 <span>{{ reason }}</span>
               </li>
             </ul>
           </div>
 
-          <!-- Coaching Benefits -->
           <div class="space-y-3">
-            <h5 class="text-sm font-bold text-emerald-400 uppercase tracking-wider">Why Having an Experienced Coach Matters</h5>
-            <ul class="space-y-1.5">
-              <li v-for="(benefit, i) in coachingBenefits" :key="i" class="flex items-start gap-2 text-xs text-gray-300">
-                <span class="text-emerald-400 mt-0.5 shrink-0">✓</span>
+            <h5 class="text-sm font-bold text-green-600 dark:text-green-500 uppercase tracking-wider">Why Having an Experienced Coach Matters</h5>
+            <ul class="space-y-2">
+              <li v-for="(benefit, i) in coachingBenefits" :key="i" class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <span class="text-green-600 dark:text-green-500 mt-0.5 shrink-0 font-bold">✓</span>
                 <span>{{ benefit }}</span>
               </li>
             </ul>
           </div>
 
           <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-300">What challenges have you experienced?</label>
+            <label class="block text-sm font-medium text-gray-900 dark:text-gray-200">What challenges have you experienced?</label>
             <textarea 
               v-model="challengesText"
               rows="3" 
               placeholder="E.g., Lack of duplication, team members quitting, mentorship issues..."
-              class="w-full bg-slate-950 border border-gray-800 rounded-lg p-3 text-sm focus:outline-none focus:border-amber-400 transition"
+              class="w-full bg-white dark:bg-[#121212] border border-gray-300 dark:border-gray-700 rounded p-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
             ></textarea>
           </div>
 
-          <div class="flex items-center justify-between pt-4 border-t border-gray-800">
-            <button @click="prevStep" class="text-sm text-gray-400 hover:text-white transition">Back</button>
-            <button @click="nextStep" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-3 px-6 rounded-lg transition text-sm">
-              👉 {{ settings['coaching_cta_text'] || 'Get Coaching & Mentorship' }}
+          <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
+            <button @click="prevStep" class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Back</button>
+            <button @click="nextStep" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded transition-colors text-sm">
+              {{ settings['coaching_cta_text'] || 'Get Coaching & Mentorship' }}
             </button>
           </div>
         </div>
 
-        <!-- Step 3B: New / Exploring (Dynamic message & checklist from settings) -->
+        <!-- Step 3B: New / Exploring -->
         <div v-else-if="currentStep === 3 && !isAlreadyInNM" class="space-y-6 animate-fade-in">
           <div class="space-y-4">
-            <h4 class="text-xl font-display font-bold bg-gradient-to-r from-amber-300 to-yellow-100 bg-clip-text text-transparent">Welcome to Network Marketing Academia.</h4>
-            <p class="text-gray-300 text-sm leading-relaxed whitespace-pre-line">{{ settings['new_exploring_message'] }}</p>
-            <p class="text-gray-400 text-xs font-semibold">Are you: (check all that apply)</p>
+            <h4 class="text-xl font-display font-bold text-gray-900 dark:text-white">Welcome to Network Marketing Academia.</h4>
+            <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed whitespace-pre-line">{{ settings['new_exploring_message'] }}</p>
+            <p class="text-gray-900 dark:text-gray-300 text-sm font-semibold">Are you: (check all that apply)</p>
           </div>
 
           <div class="grid grid-cols-1 gap-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
@@ -155,60 +158,57 @@
               :key="idx"
               @click="toggleListOption(subOpt)"
               :class="[
-                'border p-3 rounded-lg cursor-pointer transition-all duration-200 flex items-center gap-3 text-xs md:text-sm',
+                'border p-3 rounded cursor-pointer transition-colors flex items-center gap-3 text-sm',
                 selectedListOptions.includes(subOpt) 
-                  ? 'border-amber-400/50 bg-amber-500/5 text-amber-300' 
-                  : 'border-gray-800 bg-slate-950/30 hover:border-gray-700'
+                  ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200' 
+                  : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
               ]"
             >
-              <input type="checkbox" :checked="selectedListOptions.includes(subOpt)" class="rounded border-gray-700 text-amber-500 focus:ring-0 cursor-pointer pointer-events-none" />
+              <input type="checkbox" :checked="selectedListOptions.includes(subOpt)" class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-0 pointer-events-none" />
               <span>{{ subOpt }}</span>
             </div>
           </div>
 
-          <div class="flex items-center justify-between pt-4 border-t border-gray-800">
-            <button @click="prevStep" class="text-sm text-gray-400 hover:text-white transition">Back</button>
-            <button @click="nextStep" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-3 px-6 rounded-lg transition text-sm">👉 Proceed</button>
+          <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
+            <button @click="prevStep" class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Back</button>
+            <button @click="nextStep" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded transition-colors text-sm">Proceed</button>
           </div>
         </div>
 
         <!-- Step 4: Personal Details Form -->
         <div v-else-if="currentStep === 4" class="space-y-6 animate-fade-in">
           <div class="space-y-1">
-            <h4 class="text-xl font-display font-bold bg-gradient-to-r from-amber-300 to-yellow-100 bg-clip-text text-transparent">Personal Information</h4>
-            <p class="text-gray-400 text-xs">Enter your details to create your visitor profile and join the ecosystem.</p>
+            <h4 class="text-xl font-display font-bold text-gray-900 dark:text-white">Personal Information</h4>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Enter your details to create your visitor profile and join the ecosystem.</p>
           </div>
 
           <form @submit.prevent="submitContactDetails" class="space-y-4">
             <div class="space-y-1">
-              <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide">Full Name</label>
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Full Name</label>
               <input 
                 type="text" 
                 v-model="form.fullName" 
                 required
-                placeholder="John Doe"
-                class="w-full bg-slate-950 border border-gray-800 rounded-lg p-3 text-sm focus:outline-none focus:border-amber-400 transition" 
+                class="w-full bg-white dark:bg-[#121212] border border-gray-300 dark:border-gray-700 rounded p-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500" 
               />
             </div>
 
             <div class="space-y-1">
-              <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide">Email Address</label>
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Email Address</label>
               <input 
                 type="email" 
                 v-model="form.email" 
                 required
-                placeholder="johndoe@example.com"
-                class="w-full bg-slate-950 border border-gray-800 rounded-lg p-3 text-sm focus:outline-none focus:border-amber-400 transition" 
+                class="w-full bg-white dark:bg-[#121212] border border-gray-300 dark:border-gray-700 rounded p-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500" 
               />
             </div>
 
             <div class="space-y-1">
-              <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide">Phone Number (Optional)</label>
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Phone Number (Optional)</label>
               <input 
                 type="tel" 
                 v-model="form.phone" 
-                placeholder="+234..."
-                class="w-full bg-slate-950 border border-gray-800 rounded-lg p-3 text-sm focus:outline-none focus:border-amber-400 transition" 
+                class="w-full bg-white dark:bg-[#121212] border border-gray-300 dark:border-gray-700 rounded p-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500" 
               />
             </div>
 
@@ -218,23 +218,23 @@
                 id="consent" 
                 v-model="form.consent" 
                 required
-                class="mt-1 rounded border-gray-800 bg-slate-950 text-amber-500 focus:ring-0 cursor-pointer" 
+                class="mt-1 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-0 cursor-pointer" 
               />
-              <label for="consent" class="text-xs text-gray-400 leading-relaxed cursor-pointer select-none">
+              <label for="consent" class="text-sm text-gray-700 dark:text-gray-300 cursor-pointer select-none">
                 By signing up, I agree to receive learning materials, updates, and communications from Network Marketing Academia.
               </label>
             </div>
 
-            <div v-if="errorMessage" class="text-xs text-red-500 font-semibold">{{ errorMessage }}</div>
+            <div v-if="errorMessage" class="text-sm text-red-600 dark:text-red-400 font-medium">{{ errorMessage }}</div>
 
-            <div class="flex items-center justify-between pt-4 border-t border-gray-800">
-              <button type="button" @click="prevStep" class="text-sm text-gray-400 hover:text-white transition">Back</button>
+            <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
+              <button type="button" @click="prevStep" class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Back</button>
               <button 
                 type="submit"
                 :disabled="submitting || !form.consent"
-                class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-3 px-6 rounded-lg transition disabled:opacity-50 text-sm flex items-center gap-2"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded transition-colors disabled:opacity-50 text-sm"
               >
-                <span>{{ submitting ? 'Processing...' : '👉 ✔ Enter the Academia' }}</span>
+                {{ submitting ? 'Processing...' : 'Enter the Academia' }}
               </button>
             </div>
           </form>
@@ -243,15 +243,15 @@
         <!-- Step 5: Country Dropdown Selection -->
         <div v-else-if="currentStep === 5" class="space-y-6 animate-fade-in">
           <div class="space-y-1">
-            <h4 class="text-xl font-display font-bold bg-gradient-to-r from-amber-300 to-yellow-100 bg-clip-text text-transparent">Your Location</h4>
-            <p class="text-gray-400 text-xs">Select your country to tailor currency pricing models and regional compensation structures.</p>
+            <h4 class="text-xl font-display font-bold text-gray-900 dark:text-white">Your Location</h4>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Select your country to tailor currency pricing models and regional compensation structures.</p>
           </div>
 
           <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide">Select Your Country 🌍</label>
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Select Your Country</label>
             <select 
               v-model="selectedCountry" 
-              class="w-full bg-slate-950 border border-gray-800 rounded-lg p-3 text-sm focus:outline-none focus:border-amber-400 transition"
+              class="w-full bg-white dark:bg-[#121212] border border-gray-300 dark:border-gray-700 rounded p-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
             >
               <option v-for="c in catalogStore.countries" :key="c.code" :value="c.code">
                 {{ c.name }}
@@ -259,25 +259,24 @@
             </select>
           </div>
 
-          <div class="flex items-center justify-between pt-4 border-t border-gray-800">
-            <button @click="prevStep" class="text-sm text-gray-400 hover:text-white transition">Back</button>
+          <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
+            <button @click="prevStep" class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Back</button>
             <button 
               @click="finishWizard"
-              class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-3 px-6 rounded-lg transition text-sm"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded transition-colors text-sm"
             >
-              👉 Continue
+              Continue
             </button>
           </div>
         </div>
-
       </div>
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-gray-900 bg-slate-950/80 backdrop-blur-md px-6 py-6 text-center text-xs text-gray-500">
+    <footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#121212] px-6 py-6 text-center text-sm text-gray-600 dark:text-gray-500">
       <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <p>© 2026 Network Marketing Academia. All rights reserved.</p>
-        <p class="text-amber-500/60 hover:text-amber-400 cursor-pointer transition">Official Partner: Alliance In Motion Global</p>
+        <p class="hover:text-gray-900 dark:hover:text-gray-300 cursor-pointer transition">Official Partner: Alliance In Motion Global</p>
       </div>
     </footer>
   </div>
@@ -286,11 +285,13 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useThemeStore } from '../stores/theme';
 import { useCatalogStore } from '../stores/catalog';
 import { useLeadsStore } from '../stores/leads';
 import { useChatStore } from '../stores/chat';
 import { useSettingsStore } from '../stores/settings';
 
+const themeStore = useThemeStore();
 const router = useRouter();
 const catalogStore = useCatalogStore();
 const leadsStore = useLeadsStore();
@@ -426,7 +427,7 @@ const finishWizard = () => {
 
 <style scoped>
 .animate-fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
+  animation: fadeIn 0.3s ease-out forwards;
 }
 
 @keyframes fadeIn {
@@ -438,14 +439,23 @@ const finishWizard = () => {
   width: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.3);
+  background: rgba(15, 23, 42, 0.05);
   border-radius: 4px;
 }
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.3);
+}
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(251, 191, 36, 0.2);
+  background: rgba(37, 99, 235, 0.2);
   border-radius: 4px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(251, 191, 36, 0.4);
+  background: rgba(37, 99, 235, 0.4);
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-[#0b0f19] min-h-screen text-white font-sans selection:bg-amber-400 selection:text-slate-900">
+  <div class="bg-gray-50 dark:bg-[#121212] min-h-screen text-slate-900 dark:text-gray-100 font-sans selection:bg-amber-400 selection:text-slate-900 transition-colors duration-300">
     <router-view />
     
     <!-- Float chat widget only on non-admin routes -->
@@ -8,11 +8,17 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { useThemeStore } from './stores/theme';
 import ChatWidget from './components/ChatWidget.vue';
 
 const route = useRoute();
+const themeStore = useThemeStore();
+
+onMounted(() => {
+  themeStore.initTheme();
+});
 
 const showChatWidget = computed(() => {
   // Hide support chat widget inside the administration panel
@@ -26,6 +32,6 @@ const showChatWidget = computed(() => {
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #0b0f19;
+  @apply bg-gray-50 dark:bg-[#121212];
 }
 </style>
