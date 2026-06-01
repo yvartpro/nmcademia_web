@@ -12,7 +12,7 @@
       <div v-else class="w-14 h-14 rounded bg-gray-800 flex items-center justify-center text-lg">🎬</div>
       <div class="flex-grow min-w-0">
         <p class="text-white font-medium truncate text-xs">{{ selectedAsset.title || `Asset #${selectedAsset.id}` }}</p>
-        <p class="text-gray-500 text-[10px]">ID: {{ selectedAsset.id }}</p>
+        <p class="text-gray-500 text-[10px] truncate" :title="mediaStore.getCopyUrl(selectedAsset)">{{ mediaStore.getCopyUrl(selectedAsset) }}</p>
       </div>
       <button type="button" @click="clear" class="text-red-400 hover:text-red-300 text-xs font-bold shrink-0">Clear</button>
     </div>

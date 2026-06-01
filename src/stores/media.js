@@ -57,12 +57,13 @@ export const useMediaStore = defineStore('media', () => {
     assets.value = assets.value.filter(a => a.id !== id);
   };
 
-  const resolveUrl = (assetOrPath) => {
-    if (!assetOrPath) return '';
-    if (typeof assetOrPath === 'object') {
-      return getFullMediaUrl(assetOrPath.thumbnailPath || assetOrPath.filePath);
-    }
-    return getFullMediaUrl(assetOrPath);
+  const resolveUrl = (assetOrPath) => getFullMediaUrl(assetOrPath);
+
+  const getCopyUrl = (asset) => {
+    if (!asset) return '';
+    const url = asset.publicUrl || asset.filePath;
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    return getFullMediaUrl(url);
   };
 
   const getById = (id) => assets.value.find(a => a.id === id);
@@ -76,6 +77,7 @@ export const useMediaStore = defineStore('media', () => {
     uploadVideo,
     deleteAsset,
     resolveUrl,
+    getCopyUrl,
     getById
   };
 });

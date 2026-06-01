@@ -10,15 +10,30 @@ const getBaseUrl = () => {
   return '/api';
 };
 
-export const getMediaUrl = (filePath) => {
-  if (!filePath) return '';
-  return filePath.startsWith('/') ? filePath : `/${filePath}`;
+/** Collapse duplicate slashes in a path (not after `://`). */
+export const normalizeMediaPath = (path) => {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path.replace(/([^:]\/)\/+/g, '$1');
+  }
+  const withLeading = path.startsWith('/') ? path : `/${path}`;
+  return withLeading.replace(/\/+/g, '/');
 };
 
-export const getFullMediaUrl = (filePath) => {
-  if (!filePath) return '';
-  const origin = getBackendOrigin();
-  const path = filePath.startsWith('/') ? filePath : `/${filePath}`;
+export const getMediaUrl = (filePath) => normalizeMediaPath(filePath);
+
+export const getFullMediaUrl = (filePathOrAsset) => {
+  if (!filePathOrAsset) return '';
+  if (typeof filePathOrAsset === 'object') {
+    if (filePathOrAsset.publicUrl) return normalizeMediaPath(filePathOrAsset.publicUrl);
+    return getFullMediaUrl(filePathOrAsset.filePath);
+  }
+  const value = filePathOrAsset;
+  if (value.startsWith('http://') || value.startsWith('https://')) {
+    return normalizeMediaPath(value);
+  }
+  const origin = getBackendOrigin().replace(/\/+$/, '');
+  const path = normalizeMediaPath(value);
   return `${origin}${path}`;
 };
 

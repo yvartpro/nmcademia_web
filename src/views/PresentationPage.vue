@@ -75,7 +75,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div v-for="founder in founders" :key="founder.id" class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 p-4 rounded flex flex-col gap-3 shadow-sm">
               <div class="w-12 h-12 rounded bg-gray-100 dark:bg-gray-800 flex items-center justify-center overflow-hidden shrink-0">
-                <img v-if="founder.photo" :src="founder.photo.filePath" :alt="founder.name" class="w-full h-full object-cover" />
+                <img v-if="founder.photo" :src="getFullMediaUrl(founder.photo)" :alt="founder.name" class="w-full h-full object-cover" />
                 <span v-else class="text-gray-500 font-bold">{{ founder.initials || founder.name.split(' ').map(n=>n[0]).join('') }}</span>
               </div>
               <div>
@@ -92,7 +92,7 @@
           <div class="grid grid-cols-2 gap-4">
             <div v-for="partner in partners" :key="partner.id" class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 p-4 rounded flex flex-col items-center text-center shadow-sm">
               <div class="w-16 h-16 mb-2">
-                <img v-if="partner.logo" :src="partner.logo.filePath" :alt="partner.name" class="w-full h-full object-contain grayscale opacity-70" />
+                <img v-if="partner.logo" :src="getFullMediaUrl(partner.logo)" :alt="partner.name" class="w-full h-full object-contain grayscale opacity-70" />
                 <div v-else class="w-full h-full bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-xs text-gray-400">{{ partner.name }}</div>
               </div>
               <h5 class="font-bold text-sm text-gray-900 dark:text-white">{{ partner.name }}</h5>
@@ -126,7 +126,7 @@
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
           <div v-for="product in catalogStore.products" :key="product.id" class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded p-4 flex flex-col items-center text-center shadow-sm">
             <div class="w-20 h-20 mb-3 bg-gray-50 dark:bg-gray-800 rounded-sm p-2">
-               <img v-if="product.image" :src="product.image.filePath" :alt="product.name" class="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
+               <img v-if="product.image" :src="getFullMediaUrl(product.image)" :alt="product.name" class="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
             </div>
             <h4 class="font-bold text-sm text-gray-900 dark:text-white">{{ product.name }}</h4>
             <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 mt-1">{{ product.description }}</p>
@@ -149,7 +149,7 @@
           <div class="space-y-4">
             <div v-for="test in testimonials" :key="test.id" class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 p-5 rounded shadow-sm flex flex-col sm:flex-row gap-4">
               <div class="w-16 h-16 rounded bg-gray-100 dark:bg-gray-800 shrink-0 overflow-hidden">
-                <img v-if="test.photo" :src="test.photo.filePath" :alt="test.name" class="w-full h-full object-cover" />
+                <img v-if="test.photo" :src="getFullMediaUrl(test.photo)" :alt="test.name" class="w-full h-full object-cover" />
               </div>
               <div>
                 <p class="text-sm text-gray-700 dark:text-gray-300 italic mb-2">"{{ test.quote }}"</p>
@@ -313,7 +313,7 @@ import { useThemeStore } from '../stores/theme';
 import { useCatalogStore } from '../stores/catalog';
 import { useSettingsStore } from '../stores/settings';
 import { useContentStore } from '../stores/content';
-import api from '../api';
+import api, { getFullMediaUrl } from '../api';
 
 const catalogStore = useCatalogStore();
 const settingsStore = useSettingsStore();

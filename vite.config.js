@@ -15,6 +15,18 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: process.env.VITE_BACKEND_ORIGIN || 'http://localhost:5000',
+        changeOrigin: true
+      },
+      '/uploads': {
+        target: process.env.VITE_BACKEND_ORIGIN || 'http://localhost:5000',
+        changeOrigin: true
+      }
+    }
+  },
   build: {
     outDir: '../api/public',
     emptyOutDir: true
