@@ -7,6 +7,7 @@ export const useContentStore = defineStore('content', () => {
   const founders = ref([]);
   const manufacturingPartners = ref([]);
   const earningStreams = ref([]);
+  const faqs = ref([]);
   const loading = ref(false);
 
   const fetchTestimonials = async () => {
@@ -45,13 +46,44 @@ export const useContentStore = defineStore('content', () => {
     }
   };
 
+  const fetchEarningStreamsAdmin = async () => {
+    try {
+      const res = await api.get('/admin/earning-streams');
+      earningStreams.value = res.data;
+    } catch (err) {
+      console.error('fetchEarningStreamsAdmin failed:', err);
+    }
+  };
+
+  const fetchFAQs = async () => {
+    try {
+      const res = await api.get('/faqs');
+      faqs.value = res.data;
+    } catch (err) {
+      console.error('fetchFAQs failed:', err);
+    }
+  };
+
   const fetchAll = async () => {
     loading.value = true;
     await Promise.all([
       fetchTestimonials(),
       fetchFounders(),
       fetchManufacturingPartners(),
-      fetchEarningStreams()
+      fetchEarningStreams(),
+      fetchFAQs()
+    ]);
+    loading.value = false;
+  };
+
+  const fetchAllAdmin = async () => {
+    loading.value = true;
+    await Promise.all([
+      fetchTestimonials(),
+      fetchFounders(),
+      fetchManufacturingPartners(),
+      fetchEarningStreamsAdmin(),
+      fetchFAQs()
     ]);
     loading.value = false;
   };
@@ -130,17 +162,41 @@ export const useContentStore = defineStore('content', () => {
     earningStreams.value = earningStreams.value.filter(s => s.id !== id);
   };
 
+  const adminCreateFAQ = async (data) => {
+    const res = await api.post('/admin/faqs', data);
+    faqs.value.push(res.data);
+    faqs.value.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    return res.data;
+  };
+
+  const adminUpdateFAQ = async (id, data) => {
+    const res = await api.put(`/admin/faqs/${id}`, data);
+    const idx = faqs.value.findIndex(f => f.id === id);
+    if (idx !== -1) faqs.value[idx] = res.data;
+    faqs.value.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    return res.data;
+  };
+
+  const adminDeleteFAQ = async (id) => {
+    await api.delete(`/admin/faqs/${id}`);
+    faqs.value = faqs.value.filter(f => f.id !== id);
+  };
+
   return {
     testimonials,
     founders,
     manufacturingPartners,
     earningStreams,
+    faqs,
     loading,
     fetchTestimonials,
     fetchFounders,
     fetchManufacturingPartners,
     fetchEarningStreams,
+    fetchEarningStreamsAdmin,
+    fetchFAQs,
     fetchAll,
+    fetchAllAdmin,
     adminCreateTestimonial,
     adminUpdateTestimonial,
     adminDeleteTestimonial,
@@ -152,6 +208,9 @@ export const useContentStore = defineStore('content', () => {
     adminDeleteManufacturingPartner,
     adminCreateEarningStream,
     adminUpdateEarningStream,
-    adminDeleteEarningStream
+    adminDeleteEarningStream,
+    adminCreateFAQ,
+    adminUpdateFAQ,
+    adminDeleteFAQ
   };
 });

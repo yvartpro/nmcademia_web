@@ -14,7 +14,7 @@
           </div>
         </div>
 
-        <nav class="p-4 space-y-1">
+        <nav class="p-4 space-y-1 max-h-[calc(100vh-10rem)] overflow-y-auto custom-scrollbar">
           <button 
             @click="activeTab = 'leads'"
             :class="[
@@ -93,13 +93,35 @@
 
           <button 
             @click="activeTab = 'earnings'"
-            :class="[
-              'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
-              activeTab === 'earnings' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'text-gray-400 hover:text-white hover:bg-slate-900/50 border border-transparent'
-            ]"
+            :class="tabClass('earnings')"
           >
             <span>💰</span>
             <span>Earning Streams</span>
+          </button>
+
+          <button @click="activeTab = 'faqs'" :class="tabClass('faqs')">
+            <span>❓</span>
+            <span>FAQs</span>
+          </button>
+
+          <button @click="activeTab = 'products'" :class="tabClass('products')">
+            <span>📦</span>
+            <span>Products</span>
+          </button>
+
+          <button @click="activeTab = 'packages'" :class="tabClass('packages')">
+            <span>🎁</span>
+            <span>Packages</span>
+          </button>
+
+          <button @click="activeTab = 'countries'" :class="tabClass('countries')">
+            <span>🌍</span>
+            <span>Countries</span>
+          </button>
+
+          <button @click="activeTab = 'media'" :class="tabClass('media')">
+            <span>🖼️</span>
+            <span>Media Library</span>
           </button>
         </nav>
       </div>
@@ -351,87 +373,17 @@
 
         </div>
 
-        <!-- Tab 3: System Settings Manager -->
-        <div v-else-if="activeTab === 'settings'" class="max-w-2xl bg-slate-950 border border-gray-900 rounded-xl p-8 shadow-2xl space-y-6 animate-fade-in">
-          
-          <form @submit.prevent="saveSettings" class="space-y-6">
-            <div class="space-y-2">
-              <h3 class="text-base font-bold text-amber-400 font-display uppercase tracking-wider">Video & Contacts</h3>
-              
-              <div class="space-y-1">
-                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide">YouTube Embed Presentation Link</label>
-                <input 
-                  type="text" 
-                  v-model="settingsForm.video_url" 
-                  required
-                  placeholder="https://www.youtube.com/embed/..."
-                  class="w-full bg-slate-900 border border-gray-800 rounded-lg p-3 text-xs focus:outline-none focus:border-amber-400 transition" 
-                />
-              </div>
+        <SiteSettingsManager v-else-if="activeTab === 'settings'" />
 
-              <div class="space-y-1">
-                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide">Trainer WhatsApp Link/Number</label>
-                <input 
-                  type="text" 
-                  v-model="settingsForm.whatsapp_number" 
-                  required
-                  placeholder="+234..."
-                  class="w-full bg-slate-900 border border-gray-800 rounded-lg p-3 text-xs focus:outline-none focus:border-amber-400 transition" 
-                />
-              </div>
-            </div>
-
-            <div class="space-y-2 border-t border-gray-900 pt-6">
-              <h3 class="text-base font-bold text-amber-400 font-display uppercase tracking-wider">Landing Page Text Copy</h3>
-              
-              <div class="space-y-1">
-                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide">Landing Hero Confrontational Text</label>
-                <textarea 
-                  v-model="settingsForm.landing_hero_text" 
-                  rows="4"
-                  class="w-full bg-slate-900 border border-gray-800 rounded-lg p-3 text-xs focus:outline-none focus:border-amber-400 transition"
-                ></textarea>
-              </div>
-
-              <div class="space-y-1">
-                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide">Academia Mission Text</label>
-                <textarea 
-                  v-model="settingsForm.mission_statement" 
-                  rows="4"
-                  class="w-full bg-slate-900 border border-gray-800 rounded-lg p-3 text-xs focus:outline-none focus:border-amber-400 transition"
-                ></textarea>
-              </div>
-
-              <div class="space-y-1">
-                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide">Academia Vision Text</label>
-                <textarea 
-                  v-model="settingsForm.vision_statement" 
-                  rows="4"
-                  class="w-full bg-slate-900 border border-gray-800 rounded-lg p-3 text-xs focus:outline-none focus:border-amber-400 transition"
-                ></textarea>
-              </div>
-            </div>
-
-            <div v-if="settingsSaveMessage" class="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 p-3 rounded">
-              ✓ {{ settingsSaveMessage }}
-            </div>
-
-            <button 
-              type="submit" 
-              :disabled="savingSettings"
-              class="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-3 rounded-lg text-xs transition disabled:opacity-50 font-display"
-            >
-              {{ savingSettings ? 'Saving Configurations...' : 'Save Site Settings' }}
-            </button>
-          </form>
-
-        </div>
-
-        <!-- Content Management Tabs -->
         <FoundersManager v-else-if="activeTab === 'founders'" />
         <TestimonialsManager v-else-if="activeTab === 'testimonials'" />
         <PartnersManager v-else-if="activeTab === 'partners'" />
         <EarningsManager v-else-if="activeTab === 'earnings'" />
+        <FAQsManager v-else-if="activeTab === 'faqs'" />
+        <ProductsManager v-else-if="activeTab === 'products'" />
+        <PackagesManager v-else-if="activeTab === 'packages'" />
+        <CountriesManager v-else-if="activeTab === 'countries'" />
+        <MediaLibrary v-else-if="activeTab === 'media'" />
 
       </div>
     </main>
@@ -503,38 +455,33 @@ import { useAuthStore } from '../../stores/auth';
 import { useLeadsStore } from '../../stores/leads';
 import { useChatStore } from '../../stores/chat';
 import { useCatalogStore } from '../../stores/catalog';
-import { useSettingsStore } from '../../stores/settings';
 import { useContentStore } from '../../stores/content';
 
 import FoundersManager from '../../components/admin/FoundersManager.vue';
 import TestimonialsManager from '../../components/admin/TestimonialsManager.vue';
 import PartnersManager from '../../components/admin/PartnersManager.vue';
 import EarningsManager from '../../components/admin/EarningsManager.vue';
+import FAQsManager from '../../components/admin/FAQsManager.vue';
+import ProductsManager from '../../components/admin/ProductsManager.vue';
+import PackagesManager from '../../components/admin/PackagesManager.vue';
+import CountriesManager from '../../components/admin/CountriesManager.vue';
+import MediaLibrary from '../../components/admin/MediaLibrary.vue';
+import SiteSettingsManager from '../../components/admin/SiteSettingsManager.vue';
+import { useMediaStore } from '../../stores/media';
 
 const router = useRouter();
 const authStore = useAuthStore();
 const leadsStore = useLeadsStore();
 const chatStore = useChatStore();
 const catalogStore = useCatalogStore();
-const settingsStore = useSettingsStore();
 const contentStore = useContentStore();
+const mediaStore = useMediaStore();
 
 const activeTab = ref('leads');
 const leadsFilter = ref({ country: '', status: '' });
 const adminReplyText = ref('');
 const chatMessagesContainer = ref(null);
 const chatPollingInterval = ref(null);
-
-// Settings Form states
-const settingsForm = ref({
-  video_url: '',
-  whatsapp_number: '',
-  landing_hero_text: '',
-  mission_statement: '',
-  vision_statement: ''
-});
-const savingSettings = ref(false);
-const settingsSaveMessage = ref('');
 
 // Details Modal state
 const detailsModal = ref({
@@ -550,8 +497,20 @@ const activeTabTitle = computed(() => {
   if (activeTab.value === 'testimonials') return 'Client Testimonials';
   if (activeTab.value === 'partners') return 'Manufacturing Partners';
   if (activeTab.value === 'earnings') return 'Compensation Earning Streams';
+  if (activeTab.value === 'faqs') return 'Frequently Asked Questions';
+  if (activeTab.value === 'products') return 'Product Catalog';
+  if (activeTab.value === 'packages') return 'Registration Packages & Pricing';
+  if (activeTab.value === 'countries') return 'Countries & WhatsApp Numbers';
+  if (activeTab.value === 'media') return 'Media Library';
   return 'Dashboard';
 });
+
+const tabClass = (tab) => [
+  'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+  activeTab.value === tab
+    ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+    : 'text-gray-400 hover:text-white hover:bg-slate-900/50 border border-transparent'
+];
 
 const activeChatSessionDetails = computed(() => {
   return chatStore.activeSessions.find(s => s.id === chatStore.selectedSessionId);
@@ -564,12 +523,13 @@ onMounted(async () => {
     return;
   }
 
-  await catalogStore.fetchCountries();
-  await settingsStore.fetchSettings();
-  await contentStore.fetchAll();
-  
-  // Prep settings form
-  syncSettingsForm();
+  await Promise.all([
+    catalogStore.adminFetchCountries(),
+    catalogStore.fetchPackages(),
+    catalogStore.fetchProducts(),
+    contentStore.fetchAllAdmin(),
+    mediaStore.fetchAll()
+  ]);
 
   // Load leads
   loadLeads();
@@ -675,27 +635,6 @@ const scrollToBottom = async () => {
   if (chatMessagesContainer.value) {
     chatMessagesContainer.value.scrollTop = chatMessagesContainer.value.scrollHeight;
   }
-};
-
-// Settings operations
-const syncSettingsForm = () => {
-  settingsForm.value.video_url = settingsStore.settings['video_url'] || '';
-  settingsForm.value.whatsapp_number = settingsStore.settings['whatsapp_number'] || '';
-  settingsForm.value.landing_hero_text = settingsStore.settings['landing_hero_text'] || '';
-  settingsForm.value.mission_statement = settingsStore.settings['mission_statement'] || '';
-  settingsForm.value.vision_statement = settingsStore.settings['vision_statement'] || '';
-};
-
-const saveSettings = async () => {
-  savingSettings.value = true;
-  settingsSaveMessage.value = '';
-  const success = await settingsStore.adminUpdateSettings(settingsForm.value);
-  if (success) {
-    settingsSaveMessage.value = 'Configurations updated successfully!';
-  } else {
-    alert('Failed to update configurations.');
-  }
-  savingSettings.value = false;
 };
 
 // Auto scroll on new messages

@@ -155,8 +155,7 @@
                 <p class="text-sm text-gray-700 dark:text-gray-300 italic mb-2">"{{ test.quote }}"</p>
                 <h4 class="font-bold text-sm text-gray-900 dark:text-white">{{ test.name }}</h4>
                 <div class="flex gap-2 mt-1 flex-wrap">
-                  <span class="text-[10px] bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded">{{ test.lifestyleTag1 }}</span>
-                  <span v-if="test.lifestyleTag2" class="text-[10px] bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded">{{ test.lifestyleTag2 }}</span>
+                  <span v-if="test.lifestyleTag" class="text-[10px] bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded">{{ test.lifestyleTag }}</span>
                 </div>
               </div>
             </div>
@@ -251,9 +250,16 @@
       <div v-if="currentSlide === 8" class="animate-fade-in space-y-6">
         <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">Information</span>
         <h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white">Frequently Asked Questions</h2>
+
+        <input
+          v-model="searchQuery"
+          type="search"
+          placeholder="Search questions…"
+          class="w-full bg-white dark:bg-[#121212] border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500"
+        />
         
         <div class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded shadow-sm overflow-hidden">
-          <div v-for="faq in filteredFAQsList.slice(0, 10)" :key="faq.id" class="border-b border-gray-200 dark:border-gray-800 last:border-0">
+          <div v-for="faq in filteredFAQsList" :key="faq.id" class="border-b border-gray-200 dark:border-gray-800 last:border-0">
             <button @click="toggleFAQ(faq.id)" class="w-full text-left p-4 flex items-center justify-between focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800/50">
               <span class="font-medium text-sm text-gray-900 dark:text-white pr-4">{{ faq.question }}</span>
               <span class="text-gray-400 transform transition-transform" :class="{ 'rotate-180': openFAQs.includes(faq.id) }">▼</span>
@@ -396,6 +402,7 @@ const whatsappLink = computed(() => {
 const testimonials = computed(() => contentStore.testimonials);
 const founders = computed(() => contentStore.founders);
 const manufacturingPartners = computed(() => contentStore.manufacturingPartners);
+const partners = computed(() => contentStore.manufacturingPartners);
 const earningStreams = computed(() => contentStore.earningStreams);
 
 // Nigeria packages (for HOW TO JOIN section)

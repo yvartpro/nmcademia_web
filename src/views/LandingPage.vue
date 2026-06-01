@@ -175,8 +175,38 @@
           </div>
         </div>
 
-        <!-- Step 4: Personal Details Form -->
+        <!-- Step 4: Country -->
         <div v-else-if="currentStep === 4" class="space-y-6 animate-fade-in">
+          <div class="space-y-1">
+            <h4 class="text-xl font-display font-bold text-gray-900 dark:text-white">Your Location</h4>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Select your country to tailor currency pricing models and regional compensation structures.</p>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Select Your Country</label>
+            <select 
+              v-model="selectedCountry" 
+              class="w-full bg-white dark:bg-[#121212] border border-gray-300 dark:border-gray-700 rounded p-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+            >
+              <option v-for="c in catalogStore.countries" :key="c.code" :value="c.code">
+                {{ c.name }}
+              </option>
+            </select>
+          </div>
+
+          <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
+            <button @click="prevStep" class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Back</button>
+            <button 
+              @click="nextStep"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded transition-colors text-sm"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 5: Personal Details Form -->
+        <div v-else-if="currentStep === 5" class="space-y-6 animate-fade-in">
           <div class="space-y-1">
             <h4 class="text-xl font-display font-bold text-gray-900 dark:text-white">Personal Information</h4>
             <p class="text-gray-600 dark:text-gray-400 text-sm">Enter your details to create your visitor profile and join the ecosystem.</p>
@@ -238,36 +268,6 @@
               </button>
             </div>
           </form>
-        </div>
-
-        <!-- Step 5: Country Dropdown Selection -->
-        <div v-else-if="currentStep === 5" class="space-y-6 animate-fade-in">
-          <div class="space-y-1">
-            <h4 class="text-xl font-display font-bold text-gray-900 dark:text-white">Your Location</h4>
-            <p class="text-gray-600 dark:text-gray-400 text-sm">Select your country to tailor currency pricing models and regional compensation structures.</p>
-          </div>
-
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Select Your Country</label>
-            <select 
-              v-model="selectedCountry" 
-              class="w-full bg-white dark:bg-[#121212] border border-gray-300 dark:border-gray-700 rounded p-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
-            >
-              <option v-for="c in catalogStore.countries" :key="c.code" :value="c.code">
-                {{ c.name }}
-              </option>
-            </select>
-          </div>
-
-          <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
-            <button @click="prevStep" class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Back</button>
-            <button 
-              @click="finishWizard"
-              class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded transition-colors text-sm"
-            >
-              Continue
-            </button>
-          </div>
         </div>
       </div>
     </main>
@@ -411,17 +411,13 @@ const submitContactDetails = async () => {
       console.warn('Silent chat setup warning:', e);
     }
 
-    nextStep();
+    catalogStore.selectCountry(selectedCountry.value);
+    router.push('/presentation');
   } catch (err) {
     errorMessage.value = err.response?.data?.message || 'Submission failed. Please check your inputs.';
   } finally {
     submitting.value = false;
   }
-};
-
-const finishWizard = () => {
-  catalogStore.selectCountry(selectedCountry.value);
-  router.push('/presentation');
 };
 </script>
 

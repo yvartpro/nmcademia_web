@@ -54,10 +54,7 @@
             <label class="block text-gray-400 uppercase tracking-wider font-bold mb-1">Description</label>
             <textarea v-model="form.description" rows="3" required class="w-full bg-slate-900 border border-gray-800 rounded p-2 focus:border-amber-400 text-white"></textarea>
           </div>
-          <div>
-            <label class="block text-gray-400 uppercase tracking-wider font-bold mb-1">Media Asset ID (Optional)</label>
-            <input v-model="form.mediaAssetId" type="number" class="w-full bg-slate-900 border border-gray-800 rounded p-2 focus:border-amber-400 text-white" />
-          </div>
+          <MediaPicker v-model="form.mediaAssetId" label="Partner logo" />
           <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-900">
             <button type="button" @click="isModalOpen = false" class="text-gray-400 hover:text-white transition">Cancel</button>
             <button type="submit" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded transition">
@@ -73,6 +70,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useContentStore } from '../../stores/content';
+import MediaPicker from './MediaPicker.vue';
 
 const contentStore = useContentStore();
 
