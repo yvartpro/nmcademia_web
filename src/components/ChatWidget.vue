@@ -1,5 +1,8 @@
 <template>
-  <div class="fixed bottom-6 right-6 z-50 font-sans">
+  <div
+    class="fixed right-6 z-50 font-sans transition-[bottom] duration-200"
+    :class="isPresentationRoute ? 'bottom-28' : 'bottom-6'"
+  >
     
     <!-- Collapsed Toggle Button -->
     <button 
@@ -133,10 +136,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { useChatStore } from '../stores/chat';
 
+const route = useRoute();
 const chatStore = useChatStore();
+
+/** Sit above the presentation slide footer (Previous / Next bar). */
+const isPresentationRoute = computed(() => route.path === '/presentation');
 
 const isOpen = ref(false);
 const messageText = ref('');

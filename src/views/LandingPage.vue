@@ -4,7 +4,13 @@
     <header class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#121212] sticky top-0 z-50 px-6 py-4">
       <div class="max-w-6xl mx-auto flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded bg-blue-600 flex items-center justify-center font-bold text-white text-sm">
+          <img
+            v-if="logoUrl"
+            :src="logoUrl"
+            alt="Network Marketing Academia"
+            class="w-9 h-9 rounded object-contain"
+          />
+          <div v-else class="w-8 h-8 rounded bg-blue-600 flex items-center justify-center font-bold text-white text-sm shrink-0">
             NMA
           </div>
           <div>
@@ -40,17 +46,11 @@
               Welcome Visionary
             </span>
             <h2 class="text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-gray-100 tracking-tight leading-tight">
-              Network Marketing Academy is not here to entertain you—it is here to confront you.
+              Network Marketing Academia is not here to entertain you—it is here to confront you.
             </h2>
             <div class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed space-y-4">
-              <p>
-                The world you were prepared for is no longer the world you are living in. Jobs are shrinking, automation is rising, inflation is eating salaries, and the promise that education alone guarantees freedom is quietly collapsing. Yet most people still wait, hoping the old system will somehow fix what it has already outgrown.
-              </p>
-              <p class="border-l-4 border-blue-600 pl-4 py-1 font-medium text-gray-900 dark:text-gray-200 bg-blue-50 dark:bg-blue-900/20">
-                This is a new economy. Power no longer belongs to those who simply work hard, but to those who understand networks, influence, and digital connection.
-              </p>
-              <p>
-                Network Marketing Academy exists to train a generation that refuses dependency—people who build, lead, and create income through human networks instead of waiting for permission. The only real question now is not whether the world is changing—but whether you will change with it or be left explaining why you didn’t.
+              <p v-for="(para, i) in heroParagraphs" :key="i" :class="{ 'border-l-4 border-blue-600 pl-4 py-1 font-medium text-gray-900 dark:text-gray-200 bg-blue-50 dark:bg-blue-900/20': i === 1 && heroParagraphs.length > 2 }">
+                {{ para }}
               </p>
             </div>
           </div>
@@ -60,8 +60,59 @@
           </button>
         </div>
 
-        <!-- Step 2: "Which best describes you?" -->
-        <div v-else-if="currentStep === 2" class="space-y-8 animate-fade-in">
+        <!-- Step 2: Mission -->
+        <div v-else-if="currentStep === STEPS.MISSION" class="space-y-6 animate-fade-in">
+          <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">Mission</span>
+          <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed whitespace-pre-line">{{ settings['mission_statement'] }}</p>
+          <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
+            <button type="button" @click="prevStep" class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Back</button>
+            <button type="button" @click="nextStep" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded transition-colors text-sm">Continue</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Objectives -->
+        <div v-else-if="currentStep === STEPS.OBJECTIVES" class="space-y-6 animate-fade-in">
+          <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">Objectives</span>
+          <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed whitespace-pre-line">{{ settings['objectives_statement'] }}</p>
+          <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
+            <button type="button" @click="prevStep" class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Back</button>
+            <button type="button" @click="nextStep" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded transition-colors text-sm">Continue</button>
+          </div>
+        </div>
+
+        <!-- Step 4: Vision -->
+        <div v-else-if="currentStep === STEPS.VISION" class="space-y-6 animate-fade-in">
+          <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">Vision</span>
+          <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed whitespace-pre-line">{{ settings['vision_statement'] }}</p>
+          <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
+            <button type="button" @click="prevStep" class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Back</button>
+            <button type="button" @click="nextStep" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded transition-colors text-sm">Continue</button>
+          </div>
+        </div>
+
+        <!-- Step 5: What is network marketing (video) -->
+        <div v-else-if="currentStep === STEPS.NM_VIDEO" class="space-y-6 animate-fade-in">
+          <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">Education</span>
+          <h3 class="text-xl font-display font-bold text-gray-900 dark:text-white">What is network marketing?</h3>
+          <div v-if="nmVideoUrl" class="aspect-video bg-black rounded overflow-hidden">
+            <iframe
+              :src="nmVideoUrl"
+              title="What is Network Marketing"
+              class="w-full h-full"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            />
+          </div>
+          <p v-else class="text-sm text-gray-500">Video will appear here once configured in Site Settings.</p>
+          <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
+            <button type="button" @click="prevStep" class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Back</button>
+            <button type="button" @click="nextStep" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded transition-colors text-sm">Continue</button>
+          </div>
+        </div>
+
+        <!-- Step 6: "Which best describes you?" -->
+        <div v-else-if="currentStep === STEPS.SEGMENT" class="space-y-8 animate-fade-in">
           <div class="space-y-2">
             <h3 class="text-2xl font-display font-bold text-gray-900 dark:text-white">Which best describes you?</h3>
             <p class="text-gray-600 dark:text-gray-400 text-sm">Select the option that mirrors your current situation to calibrate your guide.</p>
@@ -100,7 +151,7 @@
         </div>
 
         <!-- Step 3A: Already in NM -->
-        <div v-else-if="currentStep === 3 && isAlreadyInNM" class="space-y-6 animate-fade-in">
+        <div v-else-if="currentStep === STEPS.PROFILE && isAlreadyInNM" class="space-y-6 animate-fade-in">
           <div class="space-y-3">
             <h4 class="text-xl font-display font-bold text-gray-900 dark:text-white">Congratulations on Your Decision</h4>
             <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed whitespace-pre-line">{{ settings['already_in_nm_message'] }}</p>
@@ -145,7 +196,7 @@
         </div>
 
         <!-- Step 3B: New / Exploring -->
-        <div v-else-if="currentStep === 3 && !isAlreadyInNM" class="space-y-6 animate-fade-in">
+        <div v-else-if="currentStep === STEPS.PROFILE && !isAlreadyInNM" class="space-y-6 animate-fade-in">
           <div class="space-y-4">
             <h4 class="text-xl font-display font-bold text-gray-900 dark:text-white">Welcome to Network Marketing Academia.</h4>
             <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed whitespace-pre-line">{{ settings['new_exploring_message'] }}</p>
@@ -175,8 +226,8 @@
           </div>
         </div>
 
-        <!-- Step 4: Country -->
-        <div v-else-if="currentStep === 4" class="space-y-6 animate-fade-in">
+        <!-- Step 8: Country -->
+        <div v-else-if="currentStep === STEPS.COUNTRY" class="space-y-6 animate-fade-in">
           <div class="space-y-1">
             <h4 class="text-xl font-display font-bold text-gray-900 dark:text-white">Your Location</h4>
             <p class="text-gray-600 dark:text-gray-400 text-sm">Select your country to tailor currency pricing models and regional compensation structures.</p>
@@ -205,8 +256,8 @@
           </div>
         </div>
 
-        <!-- Step 5: Personal Details Form -->
-        <div v-else-if="currentStep === 5" class="space-y-6 animate-fade-in">
+        <!-- Step 9: Personal Details Form -->
+        <div v-else-if="currentStep === STEPS.PERSONAL" class="space-y-6 animate-fade-in">
           <div class="space-y-1">
             <h4 class="text-xl font-display font-bold text-gray-900 dark:text-white">Personal Information</h4>
             <p class="text-gray-600 dark:text-gray-400 text-sm">Enter your details to create your visitor profile and join the ecosystem.</p>
@@ -290,6 +341,19 @@ import { useCatalogStore } from '../stores/catalog';
 import { useLeadsStore } from '../stores/leads';
 import { useChatStore } from '../stores/chat';
 import { useSettingsStore } from '../stores/settings';
+import { getFullMediaUrl } from '../api';
+
+const STEPS = {
+  HERO: 1,
+  MISSION: 2,
+  OBJECTIVES: 3,
+  VISION: 4,
+  NM_VIDEO: 5,
+  SEGMENT: 6,
+  PROFILE: 7,
+  COUNTRY: 8,
+  PERSONAL: 9
+};
 
 const themeStore = useThemeStore();
 const router = useRouter();
@@ -315,6 +379,26 @@ const form = ref({
 
 // Expose settings directly for template binding
 const settings = computed(() => settingsStore.settings);
+
+const logoUrl = computed(() => {
+  const url = settings.value['logo_url'];
+  return url ? getFullMediaUrl(url) : '';
+});
+
+const nmVideoUrl = computed(() => settings.value['nm_video_url'] || settings.value['video_url'] || '');
+
+const defaultHeroParagraphs = [
+  'The world you were prepared for is no longer the world you are living in. Jobs are shrinking, automation is rising, inflation is eating salaries, and the promise that education alone guarantees freedom is quietly collapsing. Yet most people still wait, hoping the old system will somehow fix what it has already outgrown.',
+  'This is a new economy. Power no longer belongs to those who simply work hard, but to those who understand networks, influence, and digital connection.',
+  'Network Marketing Academia exists to train a generation that refuses dependency—people who build, lead, and create income through human networks instead of waiting for permission. The only real question now is not whether the world is changing—but whether you will change with it or be left explaining why you didn’t.'
+];
+
+const heroParagraphs = computed(() => {
+  const text = settings.value['landing_hero_text'];
+  if (!text || !text.trim()) return defaultHeroParagraphs;
+  const parts = text.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+  return parts.length ? parts : defaultHeroParagraphs;
+});
 
 // Parse JSON arrays from settings, with static fallbacks
 const segmentOptions = computed(() => {

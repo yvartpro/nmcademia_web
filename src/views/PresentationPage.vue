@@ -217,9 +217,15 @@
         <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">Registration</span>
         <h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white">How To Join ({{ selectedCountryCode }})</h2>
         <p class="text-gray-700 dark:text-gray-300 text-sm">Select a registration package to start your journey.</p>
+        <p
+          v-if="settings['how_to_join_note']"
+          class="text-gray-600 dark:text-gray-400 text-xs leading-relaxed whitespace-pre-line bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded p-4"
+        >
+          {{ settings['how_to_join_note'] }}
+        </p>
         
         <div class="space-y-4">
-          <div v-for="pkg in nigeriaPackages" :key="pkg.id" class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded p-5 shadow-sm space-y-4">
+          <div v-for="pkg in catalogStore.packages" :key="pkg.id" class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded p-5 shadow-sm space-y-4">
             <div class="flex justify-between items-start border-b border-gray-100 dark:border-gray-800 pb-3">
               <div>
                 <h3 class="font-bold text-lg text-gray-900 dark:text-white">{{ pkg.name }}</h3>
@@ -404,14 +410,6 @@ const founders = computed(() => contentStore.founders);
 const manufacturingPartners = computed(() => contentStore.manufacturingPartners);
 const partners = computed(() => contentStore.manufacturingPartners);
 const earningStreams = computed(() => contentStore.earningStreams);
-
-// Nigeria packages (for HOW TO JOIN section)
-const nigeriaPackages = computed(() => {
-  return catalogStore.packages.map(pkg => {
-    const price = pkg.prices?.find(p => p.countryCode === 'NG');
-    return price ? { ...pkg, ngPrice: price.price, ngReferralBonus: price.referralBonus, ngMatchBonus: price.matchBonus } : null;
-  }).filter(Boolean);
-});
 
 // Settings shortcut
 const settings = computed(() => settingsStore.settings);
