@@ -482,13 +482,15 @@ const submitContactDetails = async () => {
     
     // Save to leads DB table
     await leadsStore.submitLead(payload);
-    
-    // Set visitor identity details in chat store for immediate sync
+
+    chatStore.markLeadRegistered();
+
+    // Set visitor identity for chat (returning users skip registration)
     localStorage.setItem('chat_visitor_name', form.value.fullName);
     localStorage.setItem('chat_visitor_email', form.value.email);
-    localStorage.setItem('chat_visitor_phone', form.value.phone);
+    localStorage.setItem('chat_visitor_phone', form.value.phone || '');
 
-    // Initialize chat session so it is pre-warmed
+    // Initialize or resume chat session
     try {
       await chatStore.initGuestSession(form.value.fullName, form.value.email, form.value.phone);
     } catch (e) {

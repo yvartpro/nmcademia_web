@@ -49,12 +49,17 @@
       <!-- Message History / Setup Form -->
       <div class="flex-grow p-4 overflow-y-auto flex flex-col gap-3 custom-scrollbar bg-slate-950/40" ref="messagesContainer">
         
-        <!-- Form to initialize session if not present -->
-        <div v-if="!chatStore.sessionId" class="space-y-4 my-auto">
+        <div v-if="ensuringSession" class="flex flex-col items-center justify-center gap-2 my-auto py-12 text-gray-400">
+          <span class="text-2xl animate-pulse">💬</span>
+          <p class="text-xs">Restoring your conversation…</p>
+        </div>
+
+        <!-- First-time visitors only: collect details before chat -->
+        <div v-else-if="showRegistrationForm" class="space-y-4 my-auto">
           <div class="text-center space-y-1 py-4">
             <span class="text-3xl">👋</span>
             <h6 class="font-bold text-sm">Ask a question to our trainer</h6>
-            <p class="text-xs text-gray-400 max-w-[240px] mx-auto leading-normal">Fill in details to open a secure direct chat window.</p>
+            <p class="text-xs text-gray-400 max-w-[240px] mx-auto leading-normal">Complete the signup steps first, or fill in your details below to open chat.</p>
           </div>
           
           <form @submit.prevent="startSessionSubmit" class="space-y-3">
@@ -89,6 +94,12 @@
 
         <!-- Active Message Bubbles -->
         <div v-else class="space-y-3 flex flex-col justify-end min-h-full">
+          <p
+            v-if="chatStore.hasRegisteredVisitor() && chatStore.messages.length === 0"
+            class="text-xs text-center text-gray-500 pb-2"
+          >
+            Welcome back, {{ chatStore.visitorName }}. Ask your trainer anything below.
+          </p>
           <div 
             v-for="msg in chatStore.messages" 
             :key="msg.id"
@@ -105,7 +116,10 @@
             </span>
           </div>
 
-          <div v-if="chatStore.messages.length === 0" class="text-center text-gray-500 text-xs py-8">
+          <div
+            v-if="chatStore.messages.length === 0 && !chatStore.hasRegisteredVisitor()"
+            class="text-center text-gray-500 text-xs py-8"
+          >
             Type your question below to start chatting with the trainer.
           </div>
         </div>
@@ -158,13 +172,42 @@ const initForm = ref({
 });
 
 const unreadCount = ref(0);
+const ensuringSession = ref(false);
 
-const toggleChat = () => {
+const showRegistrationForm = computed(
+  () => !chatStore.sessionId && !chatStore.hasRegisteredVisitor()
+);
+
+const ensureChatReady = async () => {
+  if (chatStore.sessionId) {
+    try {
+      await chatStore.fetchGuestMessages();
+    } catch {
+      /* invalid session cleared in store */
+    }
+    return;
+  }
+  if (!chatStore.hasRegisteredVisitor()) return;
+
+  ensuringSession.value = true;
+  try {
+    await chatStore.ensureGuestSession();
+  } catch (e) {
+    console.error('Could not restore chat session:', e);
+  } finally {
+    ensuringSession.value = false;
+  }
+};
+
+const toggleChat = async () => {
   isOpen.value = !isOpen.value;
   if (isOpen.value) {
     unreadCount.value = 0;
+    await ensureChatReady();
     scrollToBottom();
     chatStore.startGuestPolling();
+  } else {
+    chatStore.stopPolling();
   }
 };
 
@@ -216,8 +259,9 @@ watch(() => chatStore.messages.length, (newVal, oldVal) => {
   scrollToBottom();
 });
 
-onMounted(() => {
-  if (chatStore.sessionId) {
+onMounted(async () => {
+  if (chatStore.sessionId || chatStore.hasRegisteredVisitor()) {
+    await chatStore.ensureGuestSession().catch(() => {});
     chatStore.startGuestPolling();
   }
 });
