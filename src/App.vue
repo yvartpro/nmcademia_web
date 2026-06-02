@@ -1,8 +1,7 @@
 <template>
-  <div class="bg-gray-50 dark:bg-[#121212] min-h-screen text-slate-900 dark:text-gray-100 font-sans selection:bg-amber-400 selection:text-slate-900 transition-colors duration-300">
+  <div class="bg-surface-0 dark:bg-surface-0-dark min-h-screen text-zinc-900 dark:text-zinc-50 font-sans transition-colors duration-300">
     <router-view />
-    
-    <!-- Float chat widget only on non-admin routes -->
+
     <ChatWidget v-if="showChatWidget" />
   </div>
 </template>
@@ -21,17 +20,9 @@ onMounted(() => {
 });
 
 const showChatWidget = computed(() => {
-  // Hide support chat widget inside the administration panel
-  return route.path && !route.path.startsWith('/admin');
+  if (!route.path) return true;
+  if (route.path.startsWith('/admin')) return false;
+  if (route.path.startsWith('/app/learn/') && route.params.lessonId) return false;
+  return true;
 });
 </script>
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;755;800&family=Outfit:wght@400;600;700;800;900&display=swap');
-
-html, body {
-  margin: 0;
-  padding: 0;
-  @apply bg-gray-50 dark:bg-[#121212];
-}
-</style>

@@ -1,33 +1,17 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-[#121212] text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300 pb-24">
-    <!-- Header Navigation -->
-    <header class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1a1a1a] sticky top-0 z-50">
+  <div class="min-h-screen bg-surface-0 dark:bg-surface-0-dark pb-28 nma-gradient-mesh">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 border-b border-zinc-200/80 dark:border-white/[0.06] bg-surface-1/90 dark:bg-surface-1-dark/90 backdrop-blur-xl">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 bg-blue-600 text-white rounded flex items-center justify-center font-bold text-sm">
-            NMA
-          </div>
-          <div class="hidden sm:block">
-            <h1 class="font-display font-semibold text-sm">Network Marketing Academia</h1>
-          </div>
-        </div>
-        
-        <div class="flex items-center gap-4">
-          <!-- Theme Toggle -->
-          <button @click="themeStore.toggleTheme" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-            <svg v-if="themeStore.isDark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-            </svg>
-          </button>
-          
-          <div class="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded px-2 py-1">
-            <select 
-              v-model="selectedCountryCode" 
+        <AppLogo size="sm" />
+        <div class="flex items-center gap-2">
+          <ThemeToggle />
+          <div class="flex items-center gap-2 bg-zinc-100 dark:bg-zinc-800 rounded-xl px-3 py-1.5">
+            <Globe :size="14" class="text-zinc-400" />
+            <select
+              v-model="selectedCountryCode"
               @change="changeCountry"
-              class="bg-transparent text-xs font-medium text-gray-700 dark:text-gray-300 focus:outline-none cursor-pointer"
+              class="bg-transparent text-xs font-medium text-zinc-700 dark:text-zinc-300 focus:outline-none cursor-pointer"
             >
               <option v-for="c in catalogStore.countries" :key="c.code" :value="c.code">
                 {{ c.code }} ({{ c.currencySymbol }})
@@ -36,331 +20,359 @@
           </div>
         </div>
       </div>
-      
-      <!-- Progress Bar -->
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 flex items-center gap-1 pb-3">
-        <div v-for="i in totalSlides" :key="i" class="h-1.5 flex-1 rounded-sm bg-gray-200 dark:bg-gray-800 overflow-hidden">
-          <div class="h-full bg-blue-600 transition-all duration-300" :style="{ width: i <= currentSlide ? '100%' : '0%' }"></div>
-        </div>
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 pb-3">
+        <UiProgress :current="currentSlide" :total="totalSlides" :show-label="false" />
       </div>
     </header>
 
+    <!-- Journey context for registered learners -->
+    <div
+      v-if="memberStore.isRegistered"
+      class="max-w-3xl mx-auto px-4 sm:px-6 pt-4"
+    >
+      <div class="nma-card px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-accent/20">
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-wider text-accent">Your path</p>
+          <p class="text-sm font-medium">{{ memberStore.journey.title }}</p>
+          <p class="text-xs text-zinc-500">{{ memberStore.journey.welcomeLine }}</p>
+        </div>
+        <UiButton
+          v-if="memberStore.canFeature('courses')"
+          variant="outline"
+          size="sm"
+          to="/app/training"
+          class="shrink-0"
+        >
+          Training
+        </UiButton>
+      </div>
+    </div>
+
     <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-      
-      <!-- Slide 1: Welcome & Partner -->
-      <div v-if="currentSlide === 1" class="animate-fade-in space-y-6">
-        <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">Partner Company</span>
-        <h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white">
+      <!-- Slide 1 -->
+      <div v-if="currentSlide === 1" class="motion-safe:animate-fade-in space-y-6">
+        <UiSectionLabel>Partner Company</UiSectionLabel>
+        <h2 class="text-2xl md:text-3xl font-display font-bold">
           {{ settings['partner_company_name'] || 'Alliance In Motion Global Group of Companies' }}
         </h2>
-        <div class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded p-6 shadow-sm">
-          <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed whitespace-pre-line">
+        <div class="nma-card p-6">
+          <p class="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-400 whitespace-pre-line">
             {{ settings['partner_company_intro'] }}
           </p>
         </div>
       </div>
 
-      <!-- Slide 2: Company Profile -->
-      <div v-if="currentSlide === 2" class="animate-fade-in space-y-8">
+      <!-- Slide 2 -->
+      <div v-if="currentSlide === 2" class="motion-safe:animate-fade-in space-y-8">
         <div class="space-y-4">
-          <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">Company Profile</span>
-          <h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white">About Alliance In Motion Global</h2>
-          <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed whitespace-pre-line bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded p-6 shadow-sm">
+          <UiSectionLabel>Company Profile</UiSectionLabel>
+          <h2 class="text-2xl md:text-3xl font-display font-bold">About Alliance In Motion Global</h2>
+          <p class="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-400 whitespace-pre-line nma-card p-6">
             {{ settings['partner_company_profile'] }}
           </p>
         </div>
-
         <div class="space-y-4">
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white">Visionary Founders</h3>
+          <h3 class="text-lg font-display font-semibold">Visionary Founders</h3>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div v-for="founder in founders" :key="founder.id" class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 p-4 rounded flex flex-col gap-3 shadow-sm">
-              <div class="w-12 h-12 rounded bg-gray-100 dark:bg-gray-800 flex items-center justify-center overflow-hidden shrink-0">
+            <div v-for="founder in founders" :key="founder.id" class="nma-card p-4 flex flex-col gap-3">
+              <div class="w-14 h-14 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center overflow-hidden shrink-0">
                 <img v-if="founder.photo" :src="getFullMediaUrl(founder.photo)" :alt="founder.name" class="w-full h-full object-cover" />
-                <span v-else class="text-gray-500 font-bold">{{ founder.initials || founder.name.split(' ').map(n=>n[0]).join('') }}</span>
+                <span v-else class="text-zinc-500 font-bold">{{ founder.initials || founder.name.split(' ').map(n=>n[0]).join('') }}</span>
               </div>
               <div>
-                <h4 class="font-bold text-sm text-gray-900 dark:text-white">{{ founder.name }}</h4>
-                <p class="text-xs text-blue-600 dark:text-blue-400 font-medium">{{ founder.role }}</p>
+                <h4 class="font-bold text-sm">{{ founder.name }}</h4>
+                <p class="text-xs text-accent font-medium">{{ founder.role }}</p>
               </div>
-              <p class="text-gray-600 dark:text-gray-400 text-xs leading-relaxed">{{ founder.bio }}</p>
+              <p class="text-xs text-zinc-500 leading-relaxed">{{ founder.bio }}</p>
             </div>
           </div>
         </div>
-
         <div class="space-y-4">
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white">Manufacturing Partners</h3>
+          <h3 class="text-lg font-display font-semibold">Manufacturing Partners</h3>
           <div class="grid grid-cols-2 gap-4">
-            <div v-for="partner in partners" :key="partner.id" class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 p-4 rounded flex flex-col items-center text-center shadow-sm">
+            <div v-for="partner in partners" :key="partner.id" class="nma-card p-4 flex flex-col items-center text-center">
               <div class="w-16 h-16 mb-2">
-                <img v-if="partner.logo" :src="getFullMediaUrl(partner.logo)" :alt="partner.name" class="w-full h-full object-contain grayscale opacity-70" />
-                <div v-else class="w-full h-full bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-xs text-gray-400">{{ partner.name }}</div>
+                <img v-if="partner.logo" :src="getFullMediaUrl(partner.logo)" :alt="partner.name" class="w-full h-full object-contain opacity-70" />
+                <div v-else class="w-full h-full bg-zinc-100 dark:bg-zinc-800 rounded-xl flex items-center justify-center text-xs text-zinc-400">{{ partner.name }}</div>
               </div>
-              <h5 class="font-bold text-sm text-gray-900 dark:text-white">{{ partner.name }}</h5>
-              <p class="text-xs text-gray-500">{{ partner.country }}</p>
+              <h5 class="font-bold text-sm">{{ partner.name }}</h5>
+              <p class="text-xs text-zinc-500">{{ partner.country }}</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Slide 3: Our Products -->
-      <div v-if="currentSlide === 3" class="animate-fade-in space-y-6">
-        <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">Our Products</span>
-        <h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white">World-Class Health & Wellness</h2>
-        
-        <div class="aspect-video bg-black rounded overflow-hidden shadow-sm relative">
-          <iframe 
+      <!-- Slide 3 -->
+      <div v-if="currentSlide === 3" class="motion-safe:animate-fade-in space-y-6">
+        <UiSectionLabel>Our Products</UiSectionLabel>
+        <h2 class="text-2xl md:text-3xl font-display font-bold">World-Class Health & Wellness</h2>
+        <div class="aspect-video bg-zinc-900 rounded-xl overflow-hidden shadow-glow">
+          <iframe
             v-if="settings['video_url']"
-            :src="settings['video_url']" 
+            :src="settings['video_url']"
             title="Presentation Video"
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
             class="w-full h-full"
-          ></iframe>
-          <div v-else class="w-full h-full flex flex-col items-center justify-center text-gray-500 text-sm">
-            <span class="text-2xl mb-2">▶</span>
+          />
+          <div v-else class="w-full h-full flex flex-col items-center justify-center text-zinc-500 text-sm">
+            <Play :size="32" class="mb-2 opacity-50" />
             Video presentation goes here
           </div>
         </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <div v-for="product in catalogStore.products" :key="product.id" class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded p-4 flex flex-col items-center text-center shadow-sm">
-            <div class="w-20 h-20 mb-3 bg-gray-50 dark:bg-gray-800 rounded-sm p-2">
-               <img v-if="product.image" :src="getFullMediaUrl(product.image)" :alt="product.name" class="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div v-for="product in catalogStore.products" :key="product.id" class="nma-card p-4 flex flex-col items-center text-center">
+            <div class="w-16 h-16 mb-2 bg-zinc-50 dark:bg-zinc-800 rounded-xl p-2">
+              <img v-if="product.image" :src="getFullMediaUrl(product.image)" :alt="product.name" class="w-full h-full object-contain" />
             </div>
-            <h4 class="font-bold text-sm text-gray-900 dark:text-white">{{ product.name }}</h4>
-            <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 mt-1">{{ product.description }}</p>
+            <h4 class="font-bold text-sm">{{ product.name }}</h4>
+            <p class="text-xs text-zinc-500 line-clamp-2 mt-1">{{ product.description }}</p>
           </div>
         </div>
       </div>
 
-      <!-- Slide 4: Dream & Testimonials -->
-      <div v-if="currentSlide === 4" class="animate-fade-in space-y-8">
+      <!-- Slide 4 -->
+      <div v-if="currentSlide === 4" class="motion-safe:animate-fade-in space-y-8">
         <div class="space-y-4">
-          <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">Aspirations</span>
-          <h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white">What is Your Dream?</h2>
-          <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded p-6 shadow-sm">
-            {{ settings['dream_section_text'] }}
-          </p>
+          <UiSectionLabel>Aspirations</UiSectionLabel>
+          <h2 class="text-2xl md:text-3xl font-display font-bold">What is Your Dream?</h2>
+          <p class="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 nma-card p-6">{{ settings['dream_section_text'] }}</p>
         </div>
-
         <div class="space-y-4">
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white">Success Stories</h3>
-          <div class="space-y-4">
-            <div v-for="test in testimonials" :key="test.id" class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 p-5 rounded shadow-sm flex flex-col sm:flex-row gap-4">
-              <div class="w-16 h-16 rounded bg-gray-100 dark:bg-gray-800 shrink-0 overflow-hidden">
+          <h3 class="text-lg font-display font-semibold">Success Stories</h3>
+          <div class="flex gap-4 overflow-x-auto pb-2 nma-scrollbar -mx-1 px-1">
+            <div
+              v-for="test in testimonials"
+              :key="test.id"
+              class="shrink-0 w-72 nma-card p-5 flex flex-col gap-3"
+            >
+              <div class="w-14 h-14 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
                 <img v-if="test.photo" :src="getFullMediaUrl(test.photo)" :alt="test.name" class="w-full h-full object-cover" />
               </div>
+              <p class="text-sm text-zinc-600 dark:text-zinc-400 italic flex-1">"{{ test.quote }}"</p>
               <div>
-                <p class="text-sm text-gray-700 dark:text-gray-300 italic mb-2">"{{ test.quote }}"</p>
-                <h4 class="font-bold text-sm text-gray-900 dark:text-white">{{ test.name }}</h4>
-                <div class="flex gap-2 mt-1 flex-wrap">
-                  <span v-if="test.lifestyleTag" class="text-[10px] bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded">{{ test.lifestyleTag }}</span>
-                </div>
+                <h4 class="font-bold text-sm">{{ test.name }}</h4>
+                <span v-if="test.lifestyleTag" class="text-[10px] bg-zinc-100 dark:bg-zinc-800 text-zinc-500 px-2 py-0.5 rounded-full">{{ test.lifestyleTag }}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Slide 5: Cashflow Quadrant -->
-      <div v-if="currentSlide === 5" class="animate-fade-in space-y-6">
-        <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">Financial Education</span>
-        <h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white">The Cashflow Quadrant</h2>
-        <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{{ settings['cashflow_quadrant_explanation'] }}</p>
+      <!-- Slide 5: Interactive Quadrant -->
+      <div v-if="currentSlide === 5" class="motion-safe:animate-fade-in space-y-6">
+        <UiSectionLabel>Financial Education</UiSectionLabel>
+        <h2 class="text-2xl md:text-3xl font-display font-bold">The Cashflow Quadrant</h2>
+        <p class="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{{ settings['cashflow_quadrant_explanation'] }}</p>
 
-        <div class="grid grid-cols-2 gap-2 mt-4">
-          <div class="bg-white dark:bg-[#1a1a1a] border-t-4 border-t-red-500 border border-gray-200 dark:border-gray-800 p-4 rounded shadow-sm text-center space-y-2">
-            <div class="text-2xl font-black text-gray-900 dark:text-white">E</div>
-            <h4 class="font-bold text-xs uppercase text-gray-500">Employee</h4>
-            <p class="text-xs text-gray-600 dark:text-gray-400">You have a job. You trade time for money.</p>
-          </div>
-          <div class="bg-white dark:bg-[#1a1a1a] border-t-4 border-t-orange-500 border border-gray-200 dark:border-gray-800 p-4 rounded shadow-sm text-center space-y-2">
-            <div class="text-2xl font-black text-gray-900 dark:text-white">S</div>
-            <h4 class="font-bold text-xs uppercase text-gray-500">Self-Employed</h4>
-            <p class="text-xs text-gray-600 dark:text-gray-400">You own a job. Money stops when you stop.</p>
-          </div>
-          <div class="bg-white dark:bg-[#1a1a1a] border-t-4 border-t-blue-500 border border-gray-200 dark:border-gray-800 p-4 rounded shadow-sm text-center space-y-2">
-            <div class="text-2xl font-black text-gray-900 dark:text-white">B</div>
-            <h4 class="font-bold text-xs uppercase text-gray-500">Business Owner</h4>
-            <p class="text-xs text-gray-600 dark:text-gray-400">You own a system. People work for you.</p>
-          </div>
-          <div class="bg-white dark:bg-[#1a1a1a] border-t-4 border-t-green-500 border border-gray-200 dark:border-gray-800 p-4 rounded shadow-sm text-center space-y-2">
-            <div class="text-2xl font-black text-gray-900 dark:text-white">I</div>
-            <h4 class="font-bold text-xs uppercase text-gray-500">Investor</h4>
-            <p class="text-xs text-gray-600 dark:text-gray-400">You own investments. Money works for you.</p>
-          </div>
+        <div class="grid grid-cols-2 gap-2">
+          <button
+            v-for="(q, key) in quadrantData"
+            :key="key"
+            type="button"
+            @click="activeQuadrant = key"
+            class="nma-card p-4 text-center space-y-2 transition-all duration-200 border-t-4"
+            :class="[
+              quadrantColors[key].border,
+              activeQuadrant === key ? 'ring-2 ring-accent shadow-glow scale-[1.02]' : 'hover:scale-[1.01]',
+            ]"
+          >
+            <div class="text-2xl font-black">{{ key }}</div>
+            <h4 class="font-bold text-xs uppercase text-zinc-500">{{ q.title.split(' - ')[1] || q.title.split(' ').slice(1).join(' ') }}</h4>
+          </button>
+        </div>
+
+        <div v-if="activeQuadrantInfo" class="nma-card p-5 border-accent/30 motion-safe:animate-fade-in">
+          <h4 class="font-display font-bold text-lg mb-2">{{ activeQuadrantInfo.title }}</h4>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-3">{{ activeQuadrantInfo.description }}</p>
+          <p class="text-xs font-medium text-accent">
+            <span class="text-zinc-500">Leverage:</span> {{ activeQuadrantInfo.leverage }}
+          </p>
+          <p v-if="activeQuadrant === 'B'" class="mt-3 text-sm font-semibold nma-gradient-text">
+            Network Marketing = B Quadrant
+          </p>
         </div>
       </div>
 
-      <!-- Slide 6: Ways of Earning -->
-      <div v-if="currentSlide === 6" class="animate-fade-in space-y-6">
-        <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">Compensation Plan</span>
-        <h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white">Ways of Earning</h2>
-        
-        <div class="space-y-4">
-          <div v-for="(stream, idx) in earningStreams" :key="stream.id" class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 p-5 rounded shadow-sm flex gap-4">
-            <div class="text-2xl mt-1">{{ stream.icon || '💰' }}</div>
+      <!-- Slide 6 -->
+      <div v-if="currentSlide === 6" class="motion-safe:animate-fade-in space-y-6">
+        <UiSectionLabel>Compensation Plan</UiSectionLabel>
+        <h2 class="text-2xl md:text-3xl font-display font-bold">Ways of Earning</h2>
+        <div class="space-y-3">
+          <div v-for="(stream, idx) in earningStreams" :key="stream.id" class="nma-card p-5 flex gap-4">
+            <div class="text-2xl mt-0.5">{{ stream.icon || '💰' }}</div>
             <div>
-              <h4 class="font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2">
-                {{ idx + 1 }}. {{ stream.title }}
-              </h4>
-              <p class="text-sm text-gray-700 dark:text-gray-300 mt-1">{{ stream.shortDescription }}</p>
-              <p v-if="stream.longDescription" class="text-xs text-gray-500 mt-2 border-t border-gray-100 dark:border-gray-800 pt-2">{{ stream.longDescription }}</p>
+              <h4 class="font-bold text-sm">{{ idx + 1 }}. {{ stream.title }}</h4>
+              <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">{{ stream.shortDescription }}</p>
+              <p v-if="stream.longDescription" class="text-xs text-zinc-500 mt-2 border-t border-zinc-100 dark:border-zinc-800 pt-2">{{ stream.longDescription }}</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Slide 7: How to Join -->
-      <div v-if="currentSlide === 7" class="animate-fade-in space-y-6">
-        <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">Registration</span>
-        <h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white">How To Join ({{ selectedCountryCode }})</h2>
-        <p class="text-gray-700 dark:text-gray-300 text-sm">Select a registration package to start your journey.</p>
-        <p
-          v-if="settings['how_to_join_note']"
-          class="text-gray-600 dark:text-gray-400 text-xs leading-relaxed whitespace-pre-line bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded p-4"
-        >
-          {{ settings['how_to_join_note'] }}
-        </p>
-        
+      <!-- Slide 7 -->
+      <div v-if="currentSlide === 7" class="motion-safe:animate-fade-in space-y-6">
+        <UiSectionLabel>Registration</UiSectionLabel>
+        <h2 class="text-2xl md:text-3xl font-display font-bold">How To Join ({{ selectedCountryCode }})</h2>
+        <p class="text-sm text-zinc-500">Select a registration package to start your journey.</p>
+        <p v-if="settings['how_to_join_note']" class="text-xs leading-relaxed text-zinc-500 nma-card p-4 whitespace-pre-line">{{ settings['how_to_join_note'] }}</p>
+
         <div class="space-y-4">
-          <div v-for="pkg in catalogStore.packages" :key="pkg.id" class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded p-5 shadow-sm space-y-4">
-            <div class="flex justify-between items-start border-b border-gray-100 dark:border-gray-800 pb-3">
+          <div v-for="pkg in catalogStore.packages" :key="pkg.id" class="nma-card p-5 space-y-4">
+            <div class="flex justify-between items-start border-b border-zinc-100 dark:border-zinc-800 pb-3">
               <div>
-                <h3 class="font-bold text-lg text-gray-900 dark:text-white">{{ pkg.name }}</h3>
-                <p class="text-xs text-gray-500">Provides {{ pkg.points }} points</p>
+                <h3 class="font-bold text-lg">{{ pkg.name }}</h3>
+                <p class="text-xs text-zinc-500">Provides {{ pkg.points }} points</p>
               </div>
-              <div class="text-right">
-                <span class="font-black text-xl text-blue-600 dark:text-blue-400">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'price') }}</span>
-              </div>
+              <span class="font-black text-xl nma-gradient-text">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'price') }}</span>
             </div>
             <div class="grid grid-cols-2 gap-3 text-xs">
-              <div class="bg-gray-50 dark:bg-gray-800 p-2 rounded">
-                <span class="block text-gray-500 mb-0.5">Referral Bonus</span>
-                <strong class="text-gray-900 dark:text-white">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'referralBonus') }}</strong>
+              <div class="bg-zinc-50 dark:bg-zinc-800 p-3 rounded-xl">
+                <span class="block text-zinc-500 mb-0.5">Referral Bonus</span>
+                <strong>{{ currencySymbol }}{{ getPriceForCountry(pkg, 'referralBonus') }}</strong>
               </div>
-              <div class="bg-gray-50 dark:bg-gray-800 p-2 rounded">
-                <span class="block text-gray-500 mb-0.5">Match Bonus</span>
-                <strong class="text-gray-900 dark:text-white">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'matchBonus') }}</strong>
+              <div class="bg-zinc-50 dark:bg-zinc-800 p-3 rounded-xl">
+                <span class="block text-zinc-500 mb-0.5">Match Bonus</span>
+                <strong>{{ currencySymbol }}{{ getPriceForCountry(pkg, 'matchBonus') }}</strong>
               </div>
             </div>
-            <button @click="consultTrainerPackage(pkg)" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded transition-colors text-sm">
+            <UiButton variant="secondary" full-width @click="consultTrainerPackage(pkg)">
               Register via WhatsApp
-            </button>
+            </UiButton>
           </div>
         </div>
       </div>
 
-      <!-- Slide 8: FAQs & Next Steps -->
-      <div v-if="currentSlide === 8" class="animate-fade-in space-y-6">
-        <span class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest">Information</span>
-        <h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white">Frequently Asked Questions</h2>
+      <!-- Slide 8 -->
+      <div v-if="currentSlide === 8" class="motion-safe:animate-fade-in space-y-6">
+        <UiSectionLabel>Information</UiSectionLabel>
+        <h2 class="text-2xl md:text-3xl font-display font-bold">Frequently Asked Questions</h2>
+        <input v-model="searchQuery" type="search" placeholder="Search questions…" class="nma-input" />
 
-        <input
-          v-model="searchQuery"
-          type="search"
-          placeholder="Search questions…"
-          class="w-full bg-white dark:bg-[#121212] border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500"
-        />
-        
-        <div class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded shadow-sm overflow-hidden">
-          <div v-for="faq in filteredFAQsList" :key="faq.id" class="border-b border-gray-200 dark:border-gray-800 last:border-0">
-            <button @click="toggleFAQ(faq.id)" class="w-full text-left p-4 flex items-center justify-between focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800/50">
-              <span class="font-medium text-sm text-gray-900 dark:text-white pr-4">{{ faq.question }}</span>
-              <span class="text-gray-400 transform transition-transform" :class="{ 'rotate-180': openFAQs.includes(faq.id) }">▼</span>
+        <div class="nma-card overflow-hidden divide-y divide-zinc-200/80 dark:divide-white/[0.06]">
+          <div v-for="faq in filteredFAQsList" :key="faq.id">
+            <button
+              type="button"
+              @click="toggleFAQ(faq.id)"
+              class="w-full text-left p-4 flex items-center justify-between hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
+            >
+              <span class="font-medium text-sm pr-4">{{ faq.question }}</span>
+              <ChevronDown :size="16" class="text-zinc-400 shrink-0 transition-transform" :class="{ 'rotate-180': openFAQs.includes(faq.id) }" />
             </button>
-            <div v-if="openFAQs.includes(faq.id)" class="p-4 pt-0 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-[#1a1a1a]">
+            <div v-if="openFAQs.includes(faq.id)" class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
               {{ faq.answer }}
             </div>
           </div>
         </div>
 
-        <div class="mt-8 bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 rounded p-6 text-center space-y-4">
-          <h3 class="font-bold text-lg text-gray-900 dark:text-white">Ready to begin?</h3>
-          <p class="text-sm text-gray-700 dark:text-gray-300">Your trainer is waiting to guide you through the next steps.</p>
-          <button @click="consultTrainerPackage({name: 'General Entry'})" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded transition-colors text-sm w-full sm:w-auto">
-            Contact Trainer on WhatsApp
-          </button>
+        <div class="nma-card p-6 text-center space-y-4 border-accent/30 bg-accent-muted/20 dark:bg-accent/5">
+          <h3 class="font-display font-bold text-lg">
+            {{ finishTitle }}
+          </h3>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">{{ finishMessage }}</p>
+          <div v-if="memberStore.isRegistered && memberStore.canFeature('ownerMentor')" class="text-left">
+            <OwnerMentorCard cta-label="Speak with Your Coach" />
+          </div>
+          <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <UiButton variant="primary" @click="consultTrainerPackage({ name: 'General Entry' })">
+              Contact Coach on WhatsApp
+            </UiButton>
+            <UiButton
+              v-if="memberStore.canFeature('courses')"
+              variant="outline"
+              to="/app/training"
+            >
+              Continue to Training →
+            </UiButton>
+          </div>
         </div>
       </div>
-
     </main>
 
-    <!-- Bottom Navigation Bar -->
-    <div class="fixed bottom-0 left-0 right-0 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1a1a1a] p-4 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] dark:shadow-none">
+    <!-- Bottom nav -->
+    <div class="fixed bottom-0 left-0 right-0 border-t border-zinc-200/80 dark:border-white/[0.06] bg-surface-1/95 dark:bg-surface-1-dark/95 backdrop-blur-xl p-4 z-50 nma-safe-bottom">
       <div class="max-w-3xl mx-auto flex items-center justify-between">
-        <button 
-          @click="prevSlide" 
-          :disabled="currentSlide === 1"
-          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          Previous
-        </button>
-        <div class="text-xs text-gray-500 font-medium tracking-widest">
-          {{ currentSlide }} / {{ totalSlides }}
-        </div>
-        <button 
-          @click="nextSlide" 
-          :disabled="currentSlide === totalSlides"
-          class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-        >
+        <UiButton variant="ghost" size="sm" :disabled="currentSlide === 1" @click="prevSlide">Previous</UiButton>
+        <span class="text-xs text-zinc-500 font-mono font-medium">{{ currentSlide }} / {{ totalSlides }}</span>
+        <UiButton variant="primary" size="sm" :disabled="currentSlide === totalSlides" @click="nextSlide">
           {{ currentSlide === totalSlides ? 'Finish' : 'Next' }}
-        </button>
+        </UiButton>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-
 import { ref, onMounted, computed } from 'vue';
-import { useThemeStore } from '../stores/theme';
+import { Globe, Play, ChevronDown } from 'lucide-vue-next';
+import AppLogo from '../components/ui/AppLogo.vue';
+import ThemeToggle from '../components/ui/ThemeToggle.vue';
+import UiSectionLabel from '../components/ui/UiSectionLabel.vue';
+import UiProgress from '../components/ui/UiProgress.vue';
+import UiButton from '../components/ui/UiButton.vue';
 import { useCatalogStore } from '../stores/catalog';
 import { useSettingsStore } from '../stores/settings';
 import { useContentStore } from '../stores/content';
+import { useMemberStore } from '../stores/member';
+import OwnerMentorCard from '../components/journey/OwnerMentorCard.vue';
 import api, { getFullMediaUrl } from '../api';
+
+const memberStore = useMemberStore();
 
 const catalogStore = useCatalogStore();
 const settingsStore = useSettingsStore();
-const themeStore = useThemeStore();
+const contentStore = useContentStore();
 
 const currentSlide = ref(1);
 const totalSlides = 8;
 
-const nextSlide = () => { if (currentSlide.value < totalSlides) currentSlide.value++; window.scrollTo({ top: 0, behavior: 'smooth' }); };
-const prevSlide = () => { if (currentSlide.value > 1) currentSlide.value--; window.scrollTo({ top: 0, behavior: 'smooth' }); };
-
-const contentStore = useContentStore();
+const nextSlide = () => {
+  if (currentSlide.value < totalSlides) currentSlide.value++;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+const prevSlide = () => {
+  if (currentSlide.value > 1) currentSlide.value--;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
 const selectedCountryCode = ref(localStorage.getItem('selected_country') || 'NG');
-const activeQuadrant = ref('E');
+const activeQuadrant = ref('B');
 const openFAQs = ref([]);
 const searchQuery = ref('');
 const rawFAQs = ref([]);
+
+const quadrantColors = {
+  E: { border: 'border-t-red-500' },
+  S: { border: 'border-t-orange-500' },
+  B: { border: 'border-t-brand' },
+  I: { border: 'border-t-success' },
+};
 
 const quadrantData = {
   E: {
     title: 'E - Employee',
     description: 'You trade your time directly for a salary. You work for a system that controls your time, earnings, and advancement. If you stop working, your income instantly drops to zero.',
-    leverage: 'Zero leverage. Your income is 100% dependent on your personal hourly presence.'
+    leverage: 'Zero leverage. Your income is 100% dependent on your personal hourly presence.',
   },
   S: {
     title: 'S - Self-Employed / Specialist',
-    description: 'You own your job, but you are still the primary system. If you take a vacation, the business closes. Doctors, lawyers, small shop owners, and consultants live here.',
-    leverage: 'Very low leverage. You cannot duplicate yourself easily without expanding overhead dramatically.'
+    description: 'You own your job, but you are still the primary system. If you take a vacation, the business closes.',
+    leverage: 'Very low leverage. You cannot duplicate yourself easily without expanding overhead dramatically.',
   },
   B: {
     title: 'B - Business Owner',
-    description: 'You own a system and lead people. You create a network where other people\'s efforts, time, and skills produce revenue for the ecosystem. If you leave, the system continues running.',
-    leverage: 'Maximum leverage. Network marketing is the most accessible vehicle to cross into the B quadrant without huge capital.'
+    description: 'You own a system and lead people. You create a network where other people\'s efforts produce revenue for the ecosystem.',
+    leverage: 'Maximum leverage. Network marketing is the most accessible vehicle to cross into the B quadrant without huge capital.',
   },
   I: {
     title: 'I - Investor',
-    description: 'Your money works for you. You invest resources into assets, stocks, real estate, or network systems that yield passive returns.',
-    leverage: 'Capital leverage. Money works as your duplicate employee.'
-  }
+    description: 'Your money works for you. You invest resources into assets that yield passive returns.',
+    leverage: 'Capital leverage. Money works as your duplicate employee.',
+  },
 };
+
+const activeQuadrantInfo = computed(() => quadrantData[activeQuadrant.value]);
 
 onMounted(async () => {
   await Promise.all([
@@ -369,29 +381,17 @@ onMounted(async () => {
     catalogStore.fetchProducts(),
     settingsStore.fetchSettings(),
     contentStore.fetchAll(),
-    fetchFAQs()
+    fetchFAQs(),
   ]);
-  if (catalogStore.countries.length > 0 && !catalogStore.countries.some(c => c.code === selectedCountryCode.value)) {
+  if (catalogStore.countries.length > 0 && !catalogStore.countries.some((c) => c.code === selectedCountryCode.value)) {
     selectedCountryCode.value = catalogStore.countries[0].code;
   }
 });
 
-const selectedCountryName = computed(() => {
-  return catalogStore.selectedCountry?.name || 'Your Country';
-});
-
-const currencySymbol = computed(() => {
-  return catalogStore.selectedCountry?.currencySymbol || '₦';
-});
+const selectedCountryName = computed(() => catalogStore.selectedCountry?.name || 'Your Country');
+const currencySymbol = computed(() => catalogStore.selectedCountry?.currencySymbol || '₦');
 
 const conversionRate = computed(() => {
-  // Let's compute a simple conversion factor based on Nigeria currency baseline or simple scaling
-  // NGN base is 1. If KES, convert (KES is about 7.5x smaller than NGN for packages? KES price 10000 vs NGN 99990, so factor 0.1)
-  // Let's use the explicit package price from DB! For products price we can scale roughly:
-  // NG: 1
-  // KE: 0.1
-  // BI: 2.0
-  // US: 0.00075
   const code = selectedCountryCode.value;
   if (code === 'KE') return 0.1;
   if (code === 'BI') return 2.0;
@@ -399,31 +399,35 @@ const conversionRate = computed(() => {
   return 1.0;
 });
 
-const whatsappLink = computed(() => {
-  const number = catalogStore.selectedCountry?.whatsappNumber || settingsStore.settings['whatsapp_number'] || '+2348030001111';
-  return `https://wa.me/${number.replace(/\+/g, '')}`;
-});
-
-// Content store shortcuts
 const testimonials = computed(() => contentStore.testimonials);
 const founders = computed(() => contentStore.founders);
-const manufacturingPartners = computed(() => contentStore.manufacturingPartners);
 const partners = computed(() => contentStore.manufacturingPartners);
 const earningStreams = computed(() => contentStore.earningStreams);
-
-// Settings shortcut
 const settings = computed(() => settingsStore.settings);
+
+const finishTitle = computed(() => {
+  if (!memberStore.isRegistered) return 'Ready to begin?';
+  if (memberStore.canFeature('courses')) return 'Presentation complete';
+  return 'Thank you for reviewing the opportunity';
+});
+
+const finishMessage = computed(() => {
+  if (!memberStore.isRegistered) {
+    return 'Your coach is waiting to guide you through the next steps.';
+  }
+  if (memberStore.canFeature('courses')) {
+    return 'When you are ready, continue to your personalized training track.';
+  }
+  return 'Your path is focused on this presentation. Reach out to your coach with any questions.';
+});
 
 const changeCountry = () => {
   catalogStore.selectCountry(selectedCountryCode.value);
 };
 
 const getPriceForCountry = (pkg, field) => {
-  const priceObj = pkg.prices?.find(p => p.countryCode === selectedCountryCode.value);
-  if (priceObj) {
-    return formatNumber(priceObj[field]);
-  }
-  // Fallback scale based on selectedCountryCode
+  const priceObj = pkg.prices?.find((p) => p.countryCode === selectedCountryCode.value);
+  if (priceObj) return formatNumber(priceObj[field]);
   const base = pkg[field] || 0;
   return formatNumber(base * conversionRate.value);
 };
@@ -440,7 +444,6 @@ const consultTrainerPackage = (pkg) => {
   window.open(`https://wa.me/${number.replace(/\+/g, '')}?text=${text}`, '_blank');
 };
 
-// FAQs loading & filtering
 const fetchFAQs = async () => {
   try {
     const response = await api.get('/faqs');
@@ -453,37 +456,25 @@ const fetchFAQs = async () => {
 const filteredFAQsList = computed(() => {
   if (!searchQuery.value) return rawFAQs.value;
   const q = searchQuery.value.toLowerCase();
-  return rawFAQs.value.filter(f => 
-    f.question.toLowerCase().includes(q) || 
-    f.answer.toLowerCase().includes(q)
+  return rawFAQs.value.filter((f) =>
+    f.question.toLowerCase().includes(q) || f.answer.toLowerCase().includes(q)
   );
 });
 
 const toggleFAQ = (id) => {
   const index = openFAQs.value.indexOf(id);
-  if (index === -1) {
-    openFAQs.value.push(id);
-  } else {
-    openFAQs.value.splice(index, 1);
-  }
+  if (index === -1) openFAQs.value.push(id);
+  else openFAQs.value.splice(index, 1);
 };
-
 </script>
 
 <style scoped>
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-out forwards;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 select option {
   background-color: #fff;
   color: #000;
 }
 .dark select option {
-  background-color: #1a1a1a;
+  background-color: #18181b;
   color: #fff;
 }
 </style>

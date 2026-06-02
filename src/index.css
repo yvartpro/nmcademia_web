@@ -1,3 +1,96 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased scroll-smooth;
+  }
+
+  body {
+    @apply bg-surface-0 text-zinc-900 dark:bg-surface-0-dark dark:text-zinc-50;
+  }
+
+  ::selection {
+    @apply bg-accent-light/40 text-zinc-900;
+  }
+
+  .dark ::selection {
+    @apply bg-accent/30 text-white;
+  }
+}
+
+@layer components {
+  .nma-gradient-text {
+    @apply bg-gradient-to-r from-accent-dark via-accent to-accent-light bg-clip-text text-transparent;
+  }
+
+  .nma-gradient-gold {
+    @apply bg-gradient-to-r from-accent-dark via-accent to-accent-light;
+  }
+
+  .nma-gradient-mesh {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% -10%, rgb(245 158 11 / 0.12), transparent),
+      radial-gradient(ellipse 60% 50% at 100% 50%, rgb(37 99 235 / 0.08), transparent),
+      radial-gradient(ellipse 50% 40% at 0% 80%, rgb(245 158 11 / 0.06), transparent);
+  }
+
+  .dark .nma-gradient-mesh {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% -10%, rgb(245 158 11 / 0.15), transparent),
+      radial-gradient(ellipse 60% 50% at 100% 50%, rgb(37 99 235 / 0.1), transparent),
+      radial-gradient(ellipse 50% 40% at 0% 80%, rgb(245 158 11 / 0.08), transparent);
+  }
+
+  .nma-card {
+    @apply bg-surface-1 dark:bg-surface-1-dark border border-zinc-200/80 dark:border-white/[0.06] rounded-card shadow-card dark:shadow-card-dark;
+  }
+
+  .nma-input {
+    @apply w-full bg-surface-1 dark:bg-surface-2-dark border border-zinc-300 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm
+           text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400
+           focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent
+           transition-colors duration-200;
+  }
+
+  .nma-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(245 158 11 / 0.3) transparent;
+  }
+
+  .nma-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .nma-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-accent/30 rounded-full;
+  }
+
+  .nma-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent/50;
+  }
+
+  .nma-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .nma-touch {
+    @apply min-h-[48px] min-w-[48px];
+  }
+}
+
+@layer utilities {
+  .animate-stagger-1 { animation-delay: 0.05s; }
+  .animate-stagger-2 { animation-delay: 0.1s; }
+  .animate-stagger-3 { animation-delay: 0.15s; }
+  .animate-stagger-4 { animation-delay: 0.2s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .motion-safe\:animate-fade-in,
+    .motion-safe\:animate-slide-up {
+      animation: none !important;
+    }
+  }
+}
