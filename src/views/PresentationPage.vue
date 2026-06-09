@@ -325,58 +325,227 @@
             A <strong>Binary Structure</strong> means you build only two sides: a <strong>Left Team</strong> and a <strong>Right Team</strong>. Every time you place a package referral on the Left and another on the Right, they pair to generate a <strong>Pairing Match Bonus (MSB)</strong>.
           </p>
           
-          <!-- Genealogy illustration -->
-          <div class="py-6 flex flex-col items-center select-none bg-slate-950/40 rounded-xl border border-white/[0.03] overflow-x-auto">
-            <div class="flex flex-col items-center min-w-[340px]">
-              
-              <!-- Root -->
-              <div class="px-4 py-2 bg-accent text-slate-900 font-black rounded-lg text-xs tracking-wider shadow">YOU</div>
-              
-              <div class="h-6 w-0.5 bg-zinc-700"></div>
-              
-              <!-- Level 1 split -->
-              <div class="w-64 border-t border-zinc-700 flex justify-between">
-                <div class="h-6 w-0.5 bg-zinc-700"></div>
-                <div class="h-6 w-0.5 bg-zinc-700"></div>
+          <!-- Genealogy illustration with Zoom & Pan Controls -->
+          <div class="space-y-3">
+            <!-- Controls Bar -->
+            <div class="flex items-center justify-between bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/50 dark:border-white/5 p-2 rounded-xl text-xs">
+              <span class="font-semibold text-zinc-500 uppercase tracking-wider pl-2">Genealogy Visualizer</span>
+              <div class="flex items-center gap-1">
+                <button 
+                  type="button" 
+                  @click="zoomOutBinary" 
+                  class="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-lg transition text-zinc-600 dark:text-zinc-400"
+                  title="Zoom Out"
+                >
+                  <ZoomOut :size="16" />
+                </button>
+                <span class="w-12 text-center font-mono font-bold text-zinc-750 dark:text-zinc-250">
+                  {{ Math.round(binaryZoom * 100) }}%
+                </span>
+                <button 
+                  type="button" 
+                  @click="zoomInBinary" 
+                  class="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-lg transition text-zinc-600 dark:text-zinc-400"
+                  title="Zoom In"
+                >
+                  <ZoomIn :size="16" />
+                </button>
+                <button 
+                  type="button" 
+                  @click="resetBinaryZoom" 
+                  class="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-lg transition text-zinc-600 dark:text-zinc-400"
+                  title="Reset Zoom"
+                >
+                  <RotateCcw :size="16" />
+                </button>
+                <div class="h-4 w-px bg-zinc-300 dark:bg-zinc-700 mx-1" />
+                <button 
+                  type="button" 
+                  @click="toggleBinaryFullscreen" 
+                  class="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-lg transition text-zinc-600 dark:text-zinc-400"
+                  title="Toggle Fullscreen"
+                >
+                  <Maximize2 :size="16" />
+                </button>
               </div>
-              
-              <div class="w-80 flex justify-between">
-                <!-- Left -->
-                <div class="flex flex-col items-center">
-                  <div class="px-3 py-1.5 bg-brand text-white font-bold rounded-lg text-[10px] shadow">Alex (Left Branch)</div>
-                  
-                  <div class="h-4 w-0.5 bg-zinc-700"></div>
-                  <div class="w-24 border-t border-zinc-700 flex justify-between">
-                    <div class="h-4 w-0.5 bg-zinc-700"></div>
-                    <div class="h-4 w-0.5 bg-zinc-700"></div>
+            </div>
+
+            <!-- Viewport Container -->
+            <div class="relative w-full max-h-[400px] overflow-auto border border-zinc-250/20 rounded-xl bg-slate-950/40 select-none py-10">
+              <div 
+                class="flex justify-center transition-transform duration-150 ease-out origin-top min-w-max px-8"
+                :style="{ transform: `scale(${binaryZoom})` }"
+              >
+                <!-- A: Custom Uploaded Image Mode -->
+                <div v-if="settings?.['binary_tree_image']" class="max-w-xl">
+                  <img 
+                    :src="getFullMediaUrl(settings['binary_tree_image'])" 
+                    alt="Binary Tree" 
+                    class="w-full h-auto object-contain rounded-lg"
+                  />
+                </div>
+
+                <!-- B: Fallback CSS/Genealogy Tree Model -->
+                <div v-else class="flex flex-col items-center">
+                  <!-- Root node -->
+                  <div class="px-5 py-2.5 bg-accent text-slate-900 font-extrabold rounded-xl text-xs tracking-wider shadow-glow">YOU</div>
+                  <div class="h-6 w-0.5 bg-zinc-700"></div>
+
+                  <!-- Level 1 split line -->
+                  <div class="w-64 border-t border-zinc-700 flex justify-between">
+                    <div class="h-6 w-0.5 bg-zinc-700"></div>
+                    <div class="h-6 w-0.5 bg-zinc-700"></div>
                   </div>
-                  <div class="w-28 flex justify-between text-[8px] font-semibold text-zinc-500">
-                    <span class="p-1 bg-white/5 rounded">Bryan</span>
-                    <span class="p-1 bg-white/5 rounded">Chris</span>
+
+                  <!-- Level 1 children (Left & Right Teams) -->
+                  <div class="w-[360px] flex justify-between gap-6">
+                    <!-- Left Branch -->
+                    <div class="flex flex-col items-center">
+                      <div class="px-4 py-2 bg-brand text-white font-bold rounded-lg text-xs shadow">Alex (Left Branch)</div>
+                      <div class="h-6 w-0.5 bg-zinc-700"></div>
+
+                      <!-- Left sub-split -->
+                      <div class="w-28 border-t border-zinc-700 flex justify-between">
+                        <div class="h-4 w-0.5 bg-zinc-700"></div>
+                        <div class="h-4 w-0.5 bg-zinc-700"></div>
+                      </div>
+                      <div class="w-32 flex justify-between text-[10px] font-semibold text-zinc-400">
+                        <span class="px-2 py-1 bg-white/5 rounded border border-white/5">Bryan</span>
+                        <span class="px-2 py-1 bg-white/5 rounded border border-white/5">Chris</span>
+                      </div>
+                    </div>
+
+                    <!-- Match Bonus Callout -->
+                    <div class="self-center z-10 -my-4 px-3 py-1 bg-accent/20 border border-accent/40 text-accent font-black text-xs rounded-full shadow-glow">
+                      $32 MATCH PAIR
+                    </div>
+
+                    <!-- Right Branch -->
+                    <div class="flex flex-col items-center">
+                      <div class="px-4 py-2 bg-brand text-white font-bold rounded-lg text-xs shadow">Bella (Right Branch)</div>
+                      <div class="h-6 w-0.5 bg-zinc-700"></div>
+
+                      <!-- Right sub-split -->
+                      <div class="w-28 border-t border-zinc-700 flex justify-between">
+                        <div class="h-4 w-0.5 bg-zinc-700"></div>
+                        <div class="h-4 w-0.5 bg-zinc-700"></div>
+                      </div>
+                      <div class="w-32 flex justify-between text-[10px] font-semibold text-zinc-400">
+                        <span class="px-2 py-1 bg-white/5 rounded border border-white/5">Daniela</span>
+                        <span class="px-2 py-1 bg-white/5 rounded border border-white/5">Ella</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                
-                <!-- Match Indicator -->
-                <div class="self-center px-2 py-0.5 bg-accent/20 border border-accent/30 text-accent font-black text-[9px] rounded-full">
-                  $32 MATCH PAIR
+
+              </div>
+            </div>
+
+            <!-- Lightbox / Fullscreen Modal -->
+            <div 
+              v-if="isBinaryFullscreen" 
+              class="fixed inset-0 z-[100] bg-zinc-950/95 backdrop-blur-xl flex flex-col motion-safe:animate-fade-in"
+            >
+              <!-- Fullscreen Header -->
+              <div class="flex items-center justify-between border-b border-white/10 p-4 bg-zinc-900/80">
+                <span class="text-sm font-bold text-zinc-200">Genealogy Diagram (Fullscreen)</span>
+                <div class="flex items-center gap-2">
+                  <button 
+                    type="button" 
+                    @click="zoomOutBinary" 
+                    class="p-2.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white"
+                  >
+                    <ZoomOut :size="18" />
+                  </button>
+                  <span class="w-12 text-center font-mono font-bold text-zinc-300">
+                    {{ Math.round(binaryZoom * 100) }}%
+                  </span>
+                  <button 
+                    type="button" 
+                    @click="zoomInBinary" 
+                    class="p-2.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white"
+                  >
+                    <ZoomIn :size="18" />
+                  </button>
+                  <button 
+                    type="button" 
+                    @click="resetBinaryZoom" 
+                    class="p-2.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white"
+                  >
+                    <RotateCcw :size="18" />
+                  </button>
+                  <div class="h-5 w-px bg-zinc-700 mx-2" />
+                  <button 
+                    type="button" 
+                    @click="toggleBinaryFullscreen" 
+                    class="px-4 py-2 bg-accent hover:bg-accent-light text-zinc-900 font-extrabold rounded-xl transition text-xs"
+                  >
+                    Exit Fullscreen
+                  </button>
                 </div>
-                
-                <!-- Right -->
-                <div class="flex flex-col items-center">
-                  <div class="px-3 py-1.5 bg-brand text-white font-bold rounded-lg text-[10px] shadow">Bella (Right Branch)</div>
-                  
-                  <div class="h-4 w-0.5 bg-zinc-700"></div>
-                  <div class="w-24 border-t border-zinc-700 flex justify-between">
-                    <div class="h-4 w-0.5 bg-zinc-700"></div>
-                    <div class="h-4 w-0.5 bg-zinc-700"></div>
+              </div>
+
+              <!-- Fullscreen Scrollable Canvas -->
+              <div class="flex-grow overflow-auto flex items-start justify-center p-8 cursor-grab active:cursor-grabbing">
+                <div 
+                  class="transition-transform duration-150 ease-out origin-top py-12"
+                  :style="{ transform: `scale(${binaryZoom})` }"
+                >
+                  <!-- Content inside fullscreen -->
+                  <div v-if="settings?.['binary_tree_image']" class="max-w-3xl">
+                    <img 
+                      :src="getFullMediaUrl(settings['binary_tree_image'])" 
+                      alt="Binary Tree Diagram" 
+                      class="w-full h-auto object-contain rounded-xl shadow-glow"
+                    />
                   </div>
-                  <div class="w-28 flex justify-between text-[8px] font-semibold text-zinc-500">
-                    <span class="p-1 bg-white/5 rounded">Daniela</span>
-                    <span class="p-1 bg-white/5 rounded">Ella</span>
+                  <div v-else class="flex flex-col items-center">
+                    <!-- Standard fallback structure (larger inside fullscreen) -->
+                    <div class="px-6 py-3 bg-accent text-slate-900 font-black rounded-xl text-sm tracking-wider shadow-glow">YOU</div>
+                    <div class="h-8 w-0.5 bg-zinc-700"></div>
+
+                    <div class="w-80 border-t border-zinc-700 flex justify-between">
+                      <div class="h-8 w-0.5 bg-zinc-700"></div>
+                      <div class="h-8 w-0.5 bg-zinc-700"></div>
+                    </div>
+
+                    <div class="w-[500px] flex justify-between gap-12">
+                      <div class="flex flex-col items-center">
+                        <div class="px-5 py-2.5 bg-brand text-white font-bold rounded-lg text-xs shadow">Alex (Left Branch)</div>
+                        <div class="h-8 w-0.5 bg-zinc-700"></div>
+                        <div class="w-36 border-t border-zinc-700 flex justify-between">
+                          <div class="h-6 w-0.5 bg-zinc-700"></div>
+                          <div class="h-6 w-0.5 bg-zinc-700"></div>
+                        </div>
+                        <div class="w-40 flex justify-between text-xs font-semibold text-zinc-400">
+                          <span class="px-3 py-1.5 bg-white/5 rounded border border-white/5">Bryan</span>
+                          <span class="px-3 py-1.5 bg-white/5 rounded border border-white/5">Chris</span>
+                        </div>
+                      </div>
+
+                      <div class="self-center z-10 -my-4 px-4 py-1.5 bg-accent/20 border border-accent/40 text-accent font-black text-sm rounded-full shadow-glow">
+                        $32 MATCH PAIR
+                      </div>
+
+                      <div class="flex flex-col items-center">
+                        <div class="px-5 py-2.5 bg-brand text-white font-bold rounded-lg text-xs shadow">Bella (Right Branch)</div>
+                        <div class="h-8 w-0.5 bg-zinc-700"></div>
+                        <div class="w-36 border-t border-zinc-700 flex justify-between">
+                          <div class="h-6 w-0.5 bg-zinc-700"></div>
+                          <div class="h-6 w-0.5 bg-zinc-700"></div>
+                        </div>
+                        <div class="w-40 flex justify-between text-xs font-semibold text-zinc-400">
+                          <span class="px-3 py-1.5 bg-white/5 rounded border border-white/5">Daniela</span>
+                          <span class="px-3 py-1.5 bg-white/5 rounded border border-white/5">Ella</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
+
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
@@ -498,7 +667,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { JOURNEY_IDS } from '../data/learnerJourneys';
-import { Globe, ChevronDown } from 'lucide-vue-next';
+import { Globe, ChevronDown, ZoomIn, ZoomOut, Maximize2, RotateCcw } from 'lucide-vue-next';
 import AppLogo from '../components/ui/AppLogo.vue';
 import ThemeToggle from '../components/ui/ThemeToggle.vue';
 import UiSectionLabel from '../components/ui/UiSectionLabel.vue';
@@ -532,6 +701,31 @@ const prevSlide = () => {
 const selectedCountryCode = ref(localStorage.getItem('selected_country') || 'NG');
 const activeQuadrant = ref('B');
 const openFAQs = ref([]);
+
+// Binary system zoom controls
+const binaryZoom = ref(1);
+const isBinaryFullscreen = ref(false);
+
+const zoomInBinary = () => {
+  if (binaryZoom.value < 3) {
+    binaryZoom.value = Number((binaryZoom.value + 0.25).toFixed(2));
+  }
+};
+
+const zoomOutBinary = () => {
+  if (binaryZoom.value > 0.5) {
+    binaryZoom.value = Number((binaryZoom.value - 0.25).toFixed(2));
+  }
+};
+
+const resetBinaryZoom = () => {
+  binaryZoom.value = 1;
+};
+
+const toggleBinaryFullscreen = () => {
+  isBinaryFullscreen.value = !isBinaryFullscreen.value;
+  binaryZoom.value = 1;
+};
 const searchQuery = ref('');
 const rawFAQs = ref([]);
 
