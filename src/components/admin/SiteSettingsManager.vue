@@ -30,6 +30,13 @@
             :placeholder="field.type === 'json' ? 'JSON array or one option per line' : ''"
             class="w-full bg-slate-900 border border-gray-800 rounded-lg p-3 text-xs text-white focus:border-amber-400 font-mono"
           />
+          <MediaPicker
+            v-else-if="field.type === 'image'"
+            v-model="form[field.key]"
+            :is-url-mode="true"
+            :label="''"
+            class="mt-1"
+          />
           <input
             v-else
             v-model="form[field.key]"
@@ -79,6 +86,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useSettingsStore } from '../../stores/settings';
 import { SETTING_GROUPS, JSON_SETTING_KEYS } from '../../config/settingMeta';
+import MediaPicker from './MediaPicker.vue';
 
 const settingsStore = useSettingsStore();
 const form = ref({});

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LandingPage from '../views/LandingPage.vue';
 import PresentationPage from '../views/PresentationPage.vue';
 import FunnelPage from '../views/FunnelPage.vue';
+import PackageDetails from '../views/PackageDetails.vue';
 import AdminLogin from '../views/admin/AdminLogin.vue';
 import AdminDashboard from '../views/admin/AdminDashboard.vue';
 import TrainingPage from '../views/member/TrainingPage.vue';
@@ -17,6 +18,7 @@ const routes = [
   { path: '/', name: 'landing', component: LandingPage },
   { path: '/funnel/:funnelId', name: 'funnel', component: FunnelPage },
   { path: '/presentation', name: 'presentation', component: PresentationPage },
+  { path: '/package-details/:slug', name: 'package-details', component: PackageDetails },
   { path: '/app/training', name: 'training', component: TrainingPage, meta: { requiresLearner: true } },
   { path: '/app/learn/:courseId', name: 'member-course', component: CoursePage, meta: { requiresLearner: true } },
   { path: '/app/learn/:courseId/:lessonId', name: 'member-lesson', component: LessonPage, meta: { requiresLearner: true } },

@@ -550,16 +550,141 @@
         </div>
 
         <div class="space-y-4">
-          <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-500">Earning Streams Breakdown</h3>
+          <div class="flex justify-between items-end">
+            <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-500">Earning Streams Breakdown</h3>
+          </div>
+          <p class="text-xs text-zinc-400">Click on any earning stream to show detailed explanations, dynamic calculators, and simulations.</p>
           <div class="space-y-3">
-            <div v-for="stream in earningStreams" :key="stream.id" class="nma-card p-5 flex gap-4 hover:border-accent transition duration-300">
-              <span class="text-2xl">{{ stream.icon || '💰' }}</span>
-              <div>
-                <h4 class="font-extrabold text-sm text-zinc-900 dark:text-white">{{ stream.title }}</h4>
-                <p class="text-xs text-zinc-500 leading-relaxed mt-1 font-light">{{ stream.shortDescription }}</p>
-                <p v-if="stream.longDescription" class="text-[10px] text-zinc-400 mt-2 border-t border-zinc-200/50 dark:border-white/5 pt-2 font-light">
-                  {{ stream.longDescription }}
-                </p>
+            <div 
+              v-for="stream in earningStreams" 
+              :key="stream.id" 
+              @click="toggleFocusStream(stream.id)"
+              class="nma-card p-5 flex flex-col gap-4 hover:border-accent transition duration-300 cursor-pointer"
+              :class="{ 'border-accent ring-1 ring-accent bg-zinc-950/20': focusedStreamId === stream.id }"
+            >
+              <div class="flex gap-4">
+                <span class="text-2xl">{{ stream.icon || '💰' }}</span>
+                <div class="flex-grow">
+                  <div class="flex justify-between items-center">
+                    <h4 class="font-extrabold text-sm" :class="focusedStreamId === stream.id ? 'text-accent' : 'text-zinc-900 dark:text-white'">
+                      {{ stream.title }}
+                    </h4>
+                    <span class="text-[10px] text-zinc-500 font-semibold">
+                      {{ focusedStreamId === stream.id ? 'Hide Details' : 'Show Details & Simulator' }}
+                    </span>
+                  </div>
+                  <p class="text-xs text-zinc-500 leading-relaxed mt-1 font-light">{{ stream.shortDescription }}</p>
+                  <p v-if="stream.longDescription && focusedStreamId === stream.id" class="text-[10px] text-zinc-400 mt-2 border-t border-zinc-200/50 dark:border-white/5 pt-2 font-light">
+                    {{ stream.longDescription }}
+                  </p>
+                </div>
+              </div>
+              
+              <!-- Simulators for Focused Earning Streams -->
+              <div v-if="focusedStreamId === stream.id" @click.stop class="border-t border-white/5 pt-4 mt-2">
+                <!-- 1. DRB Simulator -->
+                <div v-if="stream.slug === 'drb'" class="space-y-4 animate-fade-in">
+                  <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Direct Referral Income Simulator</h5>
+                  <div class="space-y-3">
+                    <div>
+                      <label class="block text-[10px] text-zinc-400 uppercase font-bold mb-1">Select referral package level:</label>
+                      <select v-model="drbSimPkgId" class="w-full bg-slate-900 border border-gray-800 rounded p-2 text-xs text-white">
+                        <option v-for="p in catalogStore.packages" :key="p.id" :value="p.id">
+                          {{ p.name }} (Referral bonus: {{ currencySymbol }}{{ getPriceForCountry(p, 'referralBonus') }})
+                        </option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="flex justify-between text-[10px] text-zinc-400 uppercase font-bold mb-1">
+                        <span>Number of personal referrals:</span>
+                        <span class="text-amber-500 font-mono font-bold">{{ drbSimCount }}</span>
+                      </label>
+                      <input type="range" min="1" max="50" v-model.number="drbSimCount" class="w-full accent-amber-500" />
+                    </div>
+                    <div class="border-t border-white/5 pt-3 flex justify-between items-center text-xs">
+                      <span class="font-bold text-zinc-350">Total Simulated DRB Earnings:</span>
+                      <span class="font-mono text-base font-black text-amber-400">
+                        {{ currencySymbol }}{{ formatNumber(simulatedDRBEarnings) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. MSB Simulator -->
+                <div v-else-if="stream.slug === 'msb'" class="space-y-4 animate-fade-in">
+                  <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Matched Sales (Pairing) Income Simulator</h5>
+                  <div class="space-y-3">
+                    <div>
+                      <label class="block text-[10px] text-zinc-400 uppercase font-bold mb-1">Select structural package level:</label>
+                      <select v-model="msbSimPkgId" class="w-full bg-slate-900 border border-gray-800 rounded p-2 text-xs text-white">
+                        <option v-for="p in catalogStore.packages" :key="p.id" :value="p.id">
+                          {{ p.name }} (Pair bonus: {{ currencySymbol }}{{ getPriceForCountry(p, 'matchBonus') }})
+                        </option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="flex justify-between text-[10px] text-zinc-400 uppercase font-bold mb-1">
+                        <span>Number of matched pairs (Left & Right):</span>
+                        <span class="text-amber-500 font-mono font-bold">{{ msbSimCount }}</span>
+                      </label>
+                      <input type="range" min="1" max="50" v-model.number="msbSimCount" class="w-full accent-amber-500" />
+                    </div>
+                    <div class="border-t border-white/5 pt-3 flex justify-between items-center text-xs">
+                      <span class="font-bold text-zinc-350">Total Simulated MSB Earnings:</span>
+                      <span class="font-mono text-base font-black text-amber-400">
+                        {{ currencySymbol }}{{ formatNumber(simulatedMSBEarnings) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 3. Unilevel Simulator -->
+                <div v-else-if="stream.slug === 'unilevel'" class="space-y-4 animate-fade-in">
+                  <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Unilevel Passive Income Simulator</h5>
+                  <p class="text-[10px] text-zinc-400 leading-relaxed">
+                    Simulate active downline members ordering just 1 product package (e.g. C24/7 at 5% = $1.35) monthly.
+                  </p>
+                  <div class="space-y-3">
+                    <div>
+                      <label class="flex justify-between text-[10px] text-zinc-400 uppercase font-bold mb-1">
+                        <span>Active Team Size (Downlines):</span>
+                        <span class="text-amber-500 font-mono font-bold">{{ unilevelSimCount }}</span>
+                      </label>
+                      <input type="range" min="5" max="1000" step="5" v-model.number="unilevelSimCount" class="w-full accent-amber-500" />
+                    </div>
+                    <div class="border-t border-white/5 pt-3 flex justify-between items-center text-xs">
+                      <span class="font-bold text-zinc-350">Estimated Monthly Passive Income:</span>
+                      <span class="font-mono text-base font-black text-amber-400">
+                        {{ currencySymbol }}{{ formatNumber(unilevelSimCount * 1.35 * conversionRate) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 4. Stairstep Matrix -->
+                <div v-else-if="stream.slug === 'stairstep'" class="space-y-4 animate-fade-in">
+                  <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Stairstep Rank Promotions Matrix</h5>
+                  <div class="space-y-2 text-[10px]">
+                    <div class="flex justify-between items-center p-2 bg-white/5 rounded border border-white/5">
+                      <span class="font-bold text-zinc-300">Silver Executive</span>
+                      <span class="text-accent font-black">10 Points Required (Get +10% rebate)</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-white/5 rounded border border-white/5">
+                      <span class="font-bold text-zinc-300">Gold Executive</span>
+                      <span class="text-accent font-black">100 Points Required (Get +20% rebate)</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-white/5 rounded border border-white/5">
+                      <span class="font-bold text-zinc-300">Global Ambassador</span>
+                      <span class="text-accent font-black">1,000 Points Required (Get +30% rebate)</span>
+                    </div>
+                    <p class="text-[9px] text-zinc-500 italic mt-2">Points accumulate through group orders with no demotions and no time limit.</p>
+                  </div>
+                </div>
+
+                <!-- Fallback info for other focused streams -->
+                <div v-else class="text-[10px] text-zinc-400 leading-relaxed font-light">
+                  This earning stream multiplies your passive income through long-term network duplication and team-wide reorders.
+                </div>
               </div>
             </div>
           </div>
@@ -593,9 +718,14 @@
               </div>
             </div>
 
-            <UiButton variant="primary" full-width @click="consultTrainerPackage(pkg)">
-              Submit WhatsApp Order
-            </UiButton>
+            <div class="flex flex-col sm:flex-row gap-2 mt-2">
+              <UiButton variant="primary" class="flex-grow" @click="consultTrainerPackage(pkg)">
+                Submit WhatsApp Order
+              </UiButton>
+              <UiButton variant="outline" class="flex-grow text-xs" @click="goToDetails(pkg.slug)">
+                Benefits & Details
+              </UiButton>
+            </div>
           </div>
         </div>
       </div>
@@ -666,6 +796,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { JOURNEY_IDS } from '../data/learnerJourneys';
 import { Globe, ChevronDown, ZoomIn, ZoomOut, Maximize2, RotateCcw } from 'lucide-vue-next';
 import AppLogo from '../components/ui/AppLogo.vue';
@@ -680,6 +811,7 @@ import { useMemberStore } from '../stores/member';
 import OwnerMentorCard from '../components/journey/OwnerMentorCard.vue';
 import api, { getFullMediaUrl } from '../api';
 
+const router = useRouter();
 const memberStore = useMemberStore();
 const catalogStore = useCatalogStore();
 const settingsStore = useSettingsStore();
@@ -687,6 +819,40 @@ const contentStore = useContentStore();
 
 const currentSlide = ref(1);
 const totalSlides = 8;
+
+const focusedStreamId = ref(null);
+
+const toggleFocusStream = (id) => {
+  focusedStreamId.value = focusedStreamId.value === id ? null : id;
+};
+
+// Simulators data
+const drbSimPkgId = ref(null);
+const drbSimCount = ref(10);
+const msbSimPkgId = ref(null);
+const msbSimCount = ref(10);
+const unilevelSimCount = ref(100);
+
+const simulatedDRBEarnings = computed(() => {
+  const pkg = catalogStore.packages.find(p => p.id === drbSimPkgId.value) || catalogStore.packages[0];
+  if (!pkg) return 0;
+  const priceObj = pkg.prices?.find((p) => p.countryCode === selectedCountryCode.value);
+  const bonus = priceObj ? priceObj.referralBonus : (pkg.referralBonus || 0) * conversionRate.value;
+  return bonus * drbSimCount.value;
+});
+
+const simulatedMSBEarnings = computed(() => {
+  const pkg = catalogStore.packages.find(p => p.id === msbSimPkgId.value) || catalogStore.packages[0];
+  if (!pkg) return 0;
+  const priceObj = pkg.prices?.find((p) => p.countryCode === selectedCountryCode.value);
+  const bonus = priceObj ? priceObj.matchBonus : (pkg.matchBonus || 0) * conversionRate.value;
+  return bonus * msbSimCount.value;
+});
+
+const goToDetails = (slug) => {
+  sessionStorage.setItem('presentation_slide', '7');
+  router.push(`/package-details/${slug}`);
+};
 const showPostSignupWelcome = ref(false);
 
 const nextSlide = () => {
@@ -755,6 +921,12 @@ const quadrantData = {
 const activeQuadrantInfo = computed(() => quadrantData[activeQuadrant.value]);
 
 onMounted(async () => {
+  const cachedSlide = sessionStorage.getItem('presentation_slide');
+  if (cachedSlide) {
+    currentSlide.value = parseInt(cachedSlide, 10);
+    sessionStorage.removeItem('presentation_slide');
+  }
+
   if (sessionStorage.getItem('nma_post_signup_journey') === JOURNEY_IDS.BUILD) {
     showPostSignupWelcome.value = true;
     sessionStorage.removeItem('nma_post_signup_journey');
@@ -771,6 +943,11 @@ onMounted(async () => {
   
   if (catalogStore.countries.length > 0 && !catalogStore.countries.some((c) => c.code === selectedCountryCode.value)) {
     selectedCountryCode.value = catalogStore.countries[0].code;
+  }
+
+  if (catalogStore.packages.length > 0) {
+    drbSimPkgId.value = catalogStore.packages[0].id;
+    msbSimPkgId.value = catalogStore.packages[0].id;
   }
 });
 

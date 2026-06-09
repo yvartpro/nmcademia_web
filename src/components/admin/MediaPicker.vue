@@ -60,7 +60,8 @@ import { useMediaStore } from '../../stores/media';
 
 const props = defineProps({
   modelValue: { type: [Number, String, null], default: null },
-  label: { type: String, default: 'Photo / image' }
+  label: { type: String, default: 'Photo / image' },
+  isUrlMode: { type: Boolean, default: false }
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -72,7 +73,15 @@ const imageAssets = computed(() => mediaStore.assets.filter(a => a.type === 'ima
 
 const selectedAsset = computed(() => {
   if (!props.modelValue) return null;
-  return mediaStore.getById(Number(props.modelValue));
+  if (!props.isUrlMode) {
+    return mediaStore.getById(Number(props.modelValue));
+  }
+  // Find asset matching by path/URL in URL mode
+  return mediaStore.assets.find(a => 
+    a.filePath === props.modelValue || 
+    a.publicUrl === props.modelValue || 
+    mediaStore.getCopyUrl(a) === props.modelValue
+  );
 });
 
 onMounted(() => {
@@ -91,12 +100,13 @@ watch(
 );
 
 const select = (asset) => {
-  emit('update:modelValue', asset.id);
+  const value = props.isUrlMode ? asset.filePath : asset.id;
+  emit('update:modelValue', value);
   showLibrary.value = false;
 };
 
 const clear = () => {
-  emit('update:modelValue', null);
+  emit('update:modelValue', props.isUrlMode ? '' : null);
 };
 
 const onUpload = async (e) => {
@@ -104,7 +114,8 @@ const onUpload = async (e) => {
   if (!file) return;
   try {
     const asset = await mediaStore.uploadImage(file, { title: file.name });
-    emit('update:modelValue', asset.id);
+    const value = props.isUrlMode ? asset.filePath : asset.id;
+    emit('update:modelValue', value);
   } catch (_err) {
     alert('Upload failed. Try again.');
   }
