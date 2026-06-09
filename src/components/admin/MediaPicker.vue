@@ -105,7 +105,7 @@ const onUpload = async (e) => {
   try {
     const asset = await mediaStore.uploadImage(file, { title: file.name });
     emit('update:modelValue', asset.id);
-  } catch (err) {
+  } catch (_err) {
     alert('Upload failed. Try again.');
   }
   e.target.value = '';

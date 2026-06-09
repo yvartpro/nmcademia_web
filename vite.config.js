@@ -18,11 +18,11 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: process.env.VITE_BACKEND_ORIGIN || 'http://localhost:5000',
+        target: import.meta.env?.VITE_BACKEND_ORIGIN ?? 'http://localhost:5000',
         changeOrigin: true
       },
       '/uploads': {
-        target: process.env.VITE_BACKEND_ORIGIN || 'http://localhost:5000',
+        target: import.meta.env?.VITE_BACKEND_ORIGIN ?? 'http://localhost:5000',
         changeOrigin: true
       }
     }

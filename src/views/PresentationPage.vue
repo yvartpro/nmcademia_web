@@ -1,17 +1,18 @@
 <template>
-  <div class="min-h-screen bg-surface-0 dark:bg-surface-0-dark pb-28 nma-gradient-mesh">
+  <div class="min-h-screen bg-surface-0 dark:bg-surface-0-dark pb-28 nma-gradient-mesh font-sans">
+    
     <!-- Header -->
     <header class="sticky top-0 z-50 border-b border-zinc-200/80 dark:border-white/[0.06] bg-surface-1/90 dark:bg-surface-1-dark/90 backdrop-blur-xl">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <AppLogo size="sm" />
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-3">
           <ThemeToggle />
-          <div class="flex items-center gap-2 bg-zinc-100 dark:bg-zinc-800 rounded-xl px-3 py-1.5">
+          <div class="flex items-center gap-2 bg-zinc-100 dark:bg-zinc-800 rounded-xl px-3 py-1.5 border border-zinc-200 dark:border-white/5">
             <Globe :size="14" class="text-zinc-400" />
             <select
               v-model="selectedCountryCode"
               @change="changeCountry"
-              class="bg-transparent text-xs font-medium text-zinc-700 dark:text-zinc-300 focus:outline-none cursor-pointer"
+              class="bg-transparent text-xs font-semibold text-zinc-700 dark:text-zinc-300 focus:outline-none cursor-pointer"
             >
               <option v-for="c in catalogStore.countries" :key="c.code" :value="c.code">
                 {{ c.code }} ({{ c.currencySymbol }})
@@ -25,16 +26,19 @@
       </div>
     </header>
 
-    <!-- Journey context for registered learners -->
-    <div
-      v-if="memberStore.isRegistered"
-      class="max-w-3xl mx-auto px-4 sm:px-6 pt-4"
-    >
-      <div class="nma-card px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-accent/20">
+    <!-- Post-signup journey welcome -->
+    <div v-if="memberStore.isRegistered" class="max-w-3xl mx-auto px-4 sm:px-6 pt-6 space-y-4">
+      <div v-if="showPostSignupWelcome" class="p-4 bg-accent/10 border border-accent/20 rounded-xl">
+        <p class="text-sm font-semibold text-zinc-900 dark:text-white">
+          Welcome back, leader. Review this business overview, and transition to your training curriculum when ready.
+        </p>
+      </div>
+      
+      <div class="nma-card-glass p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <p class="text-[10px] font-bold uppercase tracking-wider text-accent">Your path</p>
-          <p class="text-sm font-medium">{{ memberStore.journey.title }}</p>
-          <p class="text-xs text-zinc-500">{{ memberStore.journey.welcomeLine }}</p>
+          <span class="text-[9px] font-bold uppercase tracking-widest text-accent">Your Academy Route</span>
+          <h4 class="text-sm font-extrabold text-zinc-900 dark:text-white mt-0.5">{{ memberStore.journey.title }}</h4>
+          <p class="text-xs text-zinc-500 mt-1">{{ memberStore.journey.welcomeLine }}</p>
         </div>
         <UiButton
           v-if="memberStore.canFeature('courses')"
@@ -43,70 +47,74 @@
           to="/app/training"
           class="shrink-0"
         >
-          Training
+          Go to Training Curriculum
         </UiButton>
       </div>
     </div>
 
-    <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-      <!-- Slide 1 -->
-      <div v-if="currentSlide === 1" class="motion-safe:animate-fade-in space-y-6">
-        <UiSectionLabel>Partner Company</UiSectionLabel>
-        <h2 class="text-2xl md:text-3xl font-display font-bold">
-          {{ settings['partner_company_name'] || 'Alliance In Motion Global Group of Companies' }}
-        </h2>
-        <div class="nma-card p-6">
-          <p class="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-400 whitespace-pre-line">
-            {{ settings['partner_company_intro'] }}
-          </p>
+    <!-- Presentation Main Viewport -->
+    <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+      
+      <!-- Slide 1: Company Profile -->
+      <div v-if="currentSlide === 1" class="motion-safe:animate-fade-in space-y-8">
+        <UiSectionLabel>Slide 1: Partner Company</UiSectionLabel>
+        <div class="space-y-4">
+          <h2 class="text-3xl sm:text-4xl font-display font-black leading-tight text-zinc-950 dark:text-white">
+            {{ settings['partner_company_name'] || 'Alliance In Motion Global Group of Companies' }}
+          </h2>
+          <p class="text-sm text-zinc-500 font-semibold tracking-wide">ESTABLISHED SINCE 2006 • OVER 40+ COUNTRIES</p>
+        </div>
+        
+        <div class="nma-card p-6 bg-gradient-to-br from-indigo-950/20 to-accent/5 leading-relaxed text-zinc-650 dark:text-zinc-400 whitespace-pre-line text-sm sm:text-base border-accent/20">
+          {{ settings['partner_company_intro'] }}
         </div>
       </div>
 
-      <!-- Slide 2 -->
-      <div v-if="currentSlide === 2" class="motion-safe:animate-fade-in space-y-8">
-        <div class="space-y-4">
-          <UiSectionLabel>Company Profile</UiSectionLabel>
-          <h2 class="text-2xl md:text-3xl font-display font-bold">About Alliance In Motion Global</h2>
-          <p class="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-400 whitespace-pre-line nma-card p-6">
-            {{ settings['partner_company_profile'] }}
-          </p>
+      <!-- Slide 2: Founders & Partners -->
+      <div v-if="currentSlide === 2" class="motion-safe:animate-fade-in space-y-10">
+        <div class="space-y-2">
+          <UiSectionLabel>Slide 2: Company Leadership</UiSectionLabel>
+          <h2 class="text-2xl sm:text-3xl font-display font-black">Visionary Founders</h2>
+          <p class="text-xs text-zinc-500 whitespace-pre-line">{{ settings['partner_company_profile'] }}</p>
         </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div v-for="founder in founders" :key="founder.id" class="nma-card p-5 space-y-4 hover:border-accent transition-all duration-300">
+            <div class="w-16 h-16 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center overflow-hidden border border-zinc-200 dark:border-white/5 shrink-0">
+              <img v-if="founder.photo" :src="getFullMediaUrl(founder.photo)" :alt="founder.name" class="w-full h-full object-cover" />
+              <span v-else class="text-zinc-500 font-bold text-lg">{{ founder.name.split(' ').map(n=>n[0]).join('') }}</span>
+            </div>
+            <div>
+              <h4 class="font-extrabold text-sm text-zinc-900 dark:text-white">{{ founder.name }}</h4>
+              <p class="text-[10px] text-accent font-bold uppercase tracking-wider">{{ founder.role }}</p>
+            </div>
+            <p class="text-xs text-zinc-500 leading-relaxed font-light">{{ founder.bio }}</p>
+          </div>
+        </div>
+
         <div class="space-y-4">
-          <h3 class="text-lg font-display font-semibold">Visionary Founders</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div v-for="founder in founders" :key="founder.id" class="nma-card p-4 flex flex-col gap-3">
-              <div class="w-14 h-14 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center overflow-hidden shrink-0">
-                <img v-if="founder.photo" :src="getFullMediaUrl(founder.photo)" :alt="founder.name" class="w-full h-full object-cover" />
-                <span v-else class="text-zinc-500 font-bold">{{ founder.initials || founder.name.split(' ').map(n=>n[0]).join('') }}</span>
+          <h3 class="text-lg font-bold font-display">Global Manufacturing Partners</h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div v-for="partner in partners" :key="partner.id" class="p-5 bg-white/5 border border-white/5 hover:border-accent rounded-xl flex items-center gap-4 transition">
+              <div class="w-12 h-12 bg-white rounded-lg p-1.5 flex items-center justify-center border border-zinc-200 shrink-0">
+                <img v-if="partner.logo" :src="getFullMediaUrl(partner.logo)" :alt="partner.name" class="w-full h-full object-contain" />
+                <span v-else class="text-slate-800 font-bold text-xs">{{ partner.name.substring(0, 3) }}</span>
               </div>
               <div>
-                <h4 class="font-bold text-sm">{{ founder.name }}</h4>
-                <p class="text-xs text-accent font-medium">{{ founder.role }}</p>
+                <h5 class="font-bold text-sm">{{ partner.name }}</h5>
+                <p class="text-[10px] text-zinc-500">{{ partner.country }}</p>
               </div>
-              <p class="text-xs text-zinc-500 leading-relaxed">{{ founder.bio }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="space-y-4">
-          <h3 class="text-lg font-display font-semibold">Manufacturing Partners</h3>
-          <div class="grid grid-cols-2 gap-4">
-            <div v-for="partner in partners" :key="partner.id" class="nma-card p-4 flex flex-col items-center text-center">
-              <div class="w-16 h-16 mb-2">
-                <img v-if="partner.logo" :src="getFullMediaUrl(partner.logo)" :alt="partner.name" class="w-full h-full object-contain opacity-70" />
-                <div v-else class="w-full h-full bg-zinc-100 dark:bg-zinc-800 rounded-xl flex items-center justify-center text-xs text-zinc-400">{{ partner.name }}</div>
-              </div>
-              <h5 class="font-bold text-sm">{{ partner.name }}</h5>
-              <p class="text-xs text-zinc-500">{{ partner.country }}</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Slide 3 -->
-      <div v-if="currentSlide === 3" class="motion-safe:animate-fade-in space-y-6">
-        <UiSectionLabel>Our Products</UiSectionLabel>
-        <h2 class="text-2xl md:text-3xl font-display font-bold">World-Class Health & Wellness</h2>
-        <div class="aspect-video bg-zinc-900 rounded-xl overflow-hidden shadow-glow">
+      <!-- Slide 3: Products Catalog -->
+      <div v-if="currentSlide === 3" class="motion-safe:animate-fade-in space-y-8">
+        <UiSectionLabel>Slide 3: Product Ecosystem</UiSectionLabel>
+        <h2 class="text-2xl sm:text-3xl font-display font-black">World-Class Health & Wellness</h2>
+        
+        <div class="aspect-video bg-zinc-900 rounded-2xl overflow-hidden shadow-glow">
           <iframe
             v-if="settings['video_url']"
             :src="settings['video_url']"
@@ -117,195 +125,272 @@
             class="w-full h-full"
           />
           <div v-else class="w-full h-full flex flex-col items-center justify-center text-zinc-500 text-sm">
-            <Play :size="32" class="mb-2 opacity-50" />
             Video presentation goes here
           </div>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-          <div v-for="product in catalogStore.products" :key="product.id" class="nma-card p-4 flex flex-col items-center text-center">
-            <div class="w-16 h-16 mb-2 bg-zinc-50 dark:bg-zinc-800 rounded-xl p-2">
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div v-for="product in catalogStore.products" :key="product.id" class="nma-card p-5 flex flex-col items-center text-center hover:border-accent transition duration-300">
+            <div class="w-20 h-20 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl p-2 border border-zinc-250/20 mb-3 flex items-center justify-center">
               <img v-if="product.image" :src="getFullMediaUrl(product.image)" :alt="product.name" class="w-full h-full object-contain" />
             </div>
-            <h4 class="font-bold text-sm">{{ product.name }}</h4>
-            <p class="text-xs text-zinc-500 line-clamp-2 mt-1">{{ product.description }}</p>
+            <h4 class="font-extrabold text-sm text-zinc-900 dark:text-white">{{ product.name }}</h4>
+            <p class="text-xs text-zinc-500 line-clamp-2 mt-2 font-light">{{ product.description }}</p>
           </div>
         </div>
       </div>
 
-      <!-- Slide 4 -->
+      <!-- Slide 4: Success Stories & Dream -->
       <div v-if="currentSlide === 4" class="motion-safe:animate-fade-in space-y-8">
         <div class="space-y-4">
-          <UiSectionLabel>Aspirations</UiSectionLabel>
-          <h2 class="text-2xl md:text-3xl font-display font-bold">What is Your Dream?</h2>
-          <p class="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 nma-card p-6">{{ settings['dream_section_text'] }}</p>
+          <UiSectionLabel>Slide 4: Aspirational Vision</UiSectionLabel>
+          <h2 class="text-2xl sm:text-3xl font-display font-black">What is Your Dream?</h2>
+          <p class="text-sm leading-relaxed text-zinc-650 dark:text-zinc-400 bg-accent/5 p-6 rounded-xl border border-accent/10">
+            {{ settings['dream_section_text'] }}
+          </p>
         </div>
+
         <div class="space-y-4">
-          <h3 class="text-lg font-display font-semibold">Success Stories</h3>
-          <div class="flex gap-4 overflow-x-auto pb-2 nma-scrollbar -mx-1 px-1">
-            <div
-              v-for="test in testimonials"
-              :key="test.id"
-              class="shrink-0 w-72 nma-card p-5 flex flex-col gap-3"
-            >
-              <div class="w-14 h-14 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
-                <img v-if="test.photo" :src="getFullMediaUrl(test.photo)" :alt="test.name" class="w-full h-full object-cover" />
+          <h3 class="text-lg font-bold font-display">Testimonials</h3>
+          <div class="grid gap-4">
+            <div v-for="test in testimonials" :key="test.id" class="nma-card p-5 flex flex-col sm:flex-row gap-4 items-start">
+              <div class="w-12 h-12 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0 text-accent font-bold text-sm">
+                {{ test.name.split(' ').map(n=>n[0]).join('') }}
               </div>
-              <p class="text-sm text-zinc-600 dark:text-zinc-400 italic flex-1">"{{ test.quote }}"</p>
-              <div>
-                <h4 class="font-bold text-sm">{{ test.name }}</h4>
-                <span v-if="test.lifestyleTag" class="text-[10px] bg-zinc-100 dark:bg-zinc-800 text-zinc-500 px-2 py-0.5 rounded-full">{{ test.lifestyleTag }}</span>
+              <div class="space-y-2">
+                <p class="text-sm text-zinc-650 dark:text-zinc-400 italic">"{{ test.quote }}"</p>
+                <div class="flex items-center gap-2">
+                  <h4 class="font-bold text-xs">{{ test.name }}</h4>
+                  <span v-if="test.lifestyleTag" class="text-[9px] bg-white/5 px-2 py-0.5 border rounded-full text-zinc-400 font-semibold">{{ test.lifestyleTag }}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Slide 5: Interactive Quadrant -->
-      <div v-if="currentSlide === 5" class="motion-safe:animate-fade-in space-y-6">
-        <UiSectionLabel>Financial Education</UiSectionLabel>
-        <h2 class="text-2xl md:text-3xl font-display font-bold">The Cashflow Quadrant</h2>
-        <p class="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{{ settings['cashflow_quadrant_explanation'] }}</p>
+      <!-- Slide 5: Cashflow Quadrant -->
+      <div v-if="currentSlide === 5" class="motion-safe:animate-fade-in space-y-8">
+        <div class="space-y-2">
+          <UiSectionLabel>Slide 5: Financial Intelligence</UiSectionLabel>
+          <h2 class="text-2xl sm:text-3xl font-display font-black">The Cashflow Quadrant</h2>
+          <p class="text-xs text-zinc-500 leading-relaxed">{{ settings['cashflow_quadrant_explanation'] }}</p>
+        </div>
 
-        <div class="grid grid-cols-2 gap-2">
+        <div class="grid grid-cols-2 gap-3">
           <button
             v-for="(q, key) in quadrantData"
             :key="key"
             type="button"
             @click="activeQuadrant = key"
-            class="nma-card p-4 text-center space-y-2 transition-all duration-200 border-t-4"
+            class="nma-card p-5 text-center space-y-2 transition-all duration-300 border-t-4"
             :class="[
               quadrantColors[key].border,
-              activeQuadrant === key ? 'ring-2 ring-accent shadow-glow scale-[1.02]' : 'hover:scale-[1.01]',
+              activeQuadrant === key ? 'ring-2 ring-accent bg-accent/5 scale-[1.02]' : 'hover:scale-[1.01]',
             ]"
           >
-            <div class="text-2xl font-black">{{ key }}</div>
-            <h4 class="font-bold text-xs uppercase text-zinc-500">{{ q.title.split(' - ')[1] || q.title.split(' ').slice(1).join(' ') }}</h4>
+            <div class="text-3xl font-black text-zinc-950 dark:text-white">{{ key }}</div>
+            <h4 class="font-bold text-[10px] uppercase tracking-wider text-zinc-500">{{ q.title.split(' - ')[1] || q.title }}</h4>
           </button>
         </div>
 
-        <div v-if="activeQuadrantInfo" class="nma-card p-5 border-accent/30 motion-safe:animate-fade-in">
-          <h4 class="font-display font-bold text-lg mb-2">{{ activeQuadrantInfo.title }}</h4>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-3">{{ activeQuadrantInfo.description }}</p>
-          <p class="text-xs font-medium text-accent">
-            <span class="text-zinc-500">Leverage:</span> {{ activeQuadrantInfo.leverage }}
-          </p>
-          <p v-if="activeQuadrant === 'B'" class="mt-3 text-sm font-semibold nma-gradient-text">
-            Network Marketing = B Quadrant
+        <div v-if="activeQuadrantInfo" class="nma-card p-6 border-accent/30 bg-gradient-to-br from-zinc-900 to-indigo-950/20 motion-safe:animate-fade-in">
+          <h4 class="font-display font-extrabold text-lg text-accent mb-2">{{ activeQuadrantInfo.title }}</h4>
+          <p class="text-sm text-zinc-650 dark:text-zinc-400 mb-4 leading-relaxed">{{ activeQuadrantInfo.description }}</p>
+          <div class="flex items-center gap-2 text-xs border-t border-zinc-200/50 dark:border-white/5 pt-3">
+            <span class="text-zinc-500 font-bold uppercase tracking-wider">Leverage Factor:</span>
+            <span class="text-zinc-700 dark:text-zinc-350 font-semibold">{{ activeQuadrantInfo.leverage }}</span>
+          </div>
+          <p v-if="activeQuadrant === 'B'" class="mt-4 text-xs font-bold text-accent uppercase tracking-wider">
+            ★ Network Marketing = B Quadrant
           </p>
         </div>
       </div>
 
-      <!-- Slide 6 -->
-      <div v-if="currentSlide === 6" class="motion-safe:animate-fade-in space-y-6">
-        <UiSectionLabel>Compensation Plan</UiSectionLabel>
-        <h2 class="text-2xl md:text-3xl font-display font-bold">Ways of Earning</h2>
-        <div class="space-y-3">
-          <div v-for="(stream, idx) in earningStreams" :key="stream.id" class="nma-card p-5 flex gap-4">
-            <div class="text-2xl mt-0.5">{{ stream.icon || '💰' }}</div>
-            <div>
-              <h4 class="font-bold text-sm">{{ idx + 1 }}. {{ stream.title }}</h4>
-              <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">{{ stream.shortDescription }}</p>
-              <p v-if="stream.longDescription" class="text-xs text-zinc-500 mt-2 border-t border-zinc-100 dark:border-zinc-800 pt-2">{{ stream.longDescription }}</p>
+      <!-- Slide 6: Compensation Genealogy Binary -->
+      <div v-if="currentSlide === 6" class="motion-safe:animate-fade-in space-y-8">
+        <UiSectionLabel>Slide 6: Duplication Power</UiSectionLabel>
+        <h2 class="text-2xl sm:text-3xl font-display font-black">Matched Sales Binary Model</h2>
+        
+        <div class="p-5 bg-white/5 border border-white/5 rounded-xl space-y-4">
+          <p class="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            A <strong>Binary Structure</strong> means you build only two sides: a <strong>Left Team</strong> and a <strong>Right Team</strong>. Every time you place a package referral on the Left and another on the Right, they pair to generate a <strong>Pairing Match Bonus (MSB)</strong>.
+          </p>
+          
+          <!-- Genealogy illustration -->
+          <div class="py-6 flex flex-col items-center select-none bg-slate-950/40 rounded-xl border border-white/[0.03] overflow-x-auto">
+            <div class="flex flex-col items-center min-w-[340px]">
+              
+              <!-- Root -->
+              <div class="px-4 py-2 bg-accent text-slate-900 font-black rounded-lg text-xs tracking-wider shadow">YOU</div>
+              
+              <div class="h-6 w-0.5 bg-zinc-700"></div>
+              
+              <!-- Level 1 split -->
+              <div class="w-64 border-t border-zinc-700 flex justify-between">
+                <div class="h-6 w-0.5 bg-zinc-700"></div>
+                <div class="h-6 w-0.5 bg-zinc-700"></div>
+              </div>
+              
+              <div class="w-80 flex justify-between">
+                <!-- Left -->
+                <div class="flex flex-col items-center">
+                  <div class="px-3 py-1.5 bg-brand text-white font-bold rounded-lg text-[10px] shadow">Alex (Left Branch)</div>
+                  
+                  <div class="h-4 w-0.5 bg-zinc-700"></div>
+                  <div class="w-24 border-t border-zinc-700 flex justify-between">
+                    <div class="h-4 w-0.5 bg-zinc-700"></div>
+                    <div class="h-4 w-0.5 bg-zinc-700"></div>
+                  </div>
+                  <div class="w-28 flex justify-between text-[8px] font-semibold text-zinc-500">
+                    <span class="p-1 bg-white/5 rounded">Bryan</span>
+                    <span class="p-1 bg-white/5 rounded">Chris</span>
+                  </div>
+                </div>
+                
+                <!-- Match Indicator -->
+                <div class="self-center px-2 py-0.5 bg-accent/20 border border-accent/30 text-accent font-black text-[9px] rounded-full">
+                  $32 MATCH PAIR
+                </div>
+                
+                <!-- Right -->
+                <div class="flex flex-col items-center">
+                  <div class="px-3 py-1.5 bg-brand text-white font-bold rounded-lg text-[10px] shadow">Bella (Right Branch)</div>
+                  
+                  <div class="h-4 w-0.5 bg-zinc-700"></div>
+                  <div class="w-24 border-t border-zinc-700 flex justify-between">
+                    <div class="h-4 w-0.5 bg-zinc-700"></div>
+                    <div class="h-4 w-0.5 bg-zinc-700"></div>
+                  </div>
+                  <div class="w-28 flex justify-between text-[8px] font-semibold text-zinc-500">
+                    <span class="p-1 bg-white/5 rounded">Daniela</span>
+                    <span class="p-1 bg-white/5 rounded">Ella</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-500">Earning Streams Breakdown</h3>
+          <div class="space-y-3">
+            <div v-for="stream in earningStreams" :key="stream.id" class="nma-card p-5 flex gap-4 hover:border-accent transition duration-300">
+              <span class="text-2xl">{{ stream.icon || '💰' }}</span>
+              <div>
+                <h4 class="font-extrabold text-sm text-zinc-900 dark:text-white">{{ stream.title }}</h4>
+                <p class="text-xs text-zinc-500 leading-relaxed mt-1 font-light">{{ stream.shortDescription }}</p>
+                <p v-if="stream.longDescription" class="text-[10px] text-zinc-400 mt-2 border-t border-zinc-200/50 dark:border-white/5 pt-2 font-light">
+                  {{ stream.longDescription }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Slide 7 -->
+      <!-- Slide 7: Entry Packages Selection -->
       <div v-if="currentSlide === 7" class="motion-safe:animate-fade-in space-y-6">
-        <UiSectionLabel>Registration</UiSectionLabel>
-        <h2 class="text-2xl md:text-3xl font-display font-bold">How To Join ({{ selectedCountryCode }})</h2>
-        <p class="text-sm text-zinc-500">Select a registration package to start your journey.</p>
-        <p v-if="settings['how_to_join_note']" class="text-xs leading-relaxed text-zinc-500 nma-card p-4 whitespace-pre-line">{{ settings['how_to_join_note'] }}</p>
+        <UiSectionLabel>Slide 7: Packaging & Entry</UiSectionLabel>
+        <h2 class="text-2xl sm:text-3xl font-display font-black">Choose Your Entry Level ({{ selectedCountryCode }})</h2>
+        <p class="text-xs text-zinc-500">Prices are automatically adjusted for country packaging and conversion rates.</p>
 
-        <div class="space-y-4">
-          <div v-for="pkg in catalogStore.packages" :key="pkg.id" class="nma-card p-5 space-y-4">
-            <div class="flex justify-between items-start border-b border-zinc-100 dark:border-zinc-800 pb-3">
+        <div class="grid gap-4">
+          <div v-for="pkg in catalogStore.packages" :key="pkg.id" class="nma-card p-5 space-y-4 flex flex-col justify-between hover:border-accent transition">
+            <div class="flex justify-between items-start border-b border-zinc-200/50 dark:border-white/5 pb-3">
               <div>
-                <h3 class="font-bold text-lg">{{ pkg.name }}</h3>
-                <p class="text-xs text-zinc-500">Provides {{ pkg.points }} points</p>
+                <h3 class="font-extrabold text-lg text-zinc-900 dark:text-white">{{ pkg.name }}</h3>
+                <p class="text-[10px] text-zinc-500 mt-0.5">Points value: {{ pkg.points }} pts</p>
               </div>
-              <span class="font-black text-xl nma-gradient-text">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'price') }}</span>
+              <span class="font-black text-xl text-accent">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'price') }}</span>
             </div>
+            
             <div class="grid grid-cols-2 gap-3 text-xs">
-              <div class="bg-zinc-50 dark:bg-zinc-800 p-3 rounded-xl">
-                <span class="block text-zinc-500 mb-0.5">Referral Bonus</span>
-                <strong>{{ currencySymbol }}{{ getPriceForCountry(pkg, 'referralBonus') }}</strong>
+              <div class="bg-zinc-100 dark:bg-zinc-900 p-3 rounded-xl border border-zinc-200/50 dark:border-white/5">
+                <span class="block text-zinc-500 text-[10px] uppercase font-bold mb-0.5">Direct Bonus</span>
+                <strong class="text-zinc-800 dark:text-zinc-200 text-sm font-extrabold">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'referralBonus') }}</strong>
               </div>
-              <div class="bg-zinc-50 dark:bg-zinc-800 p-3 rounded-xl">
-                <span class="block text-zinc-500 mb-0.5">Match Bonus</span>
-                <strong>{{ currencySymbol }}{{ getPriceForCountry(pkg, 'matchBonus') }}</strong>
+              <div class="bg-zinc-100 dark:bg-zinc-900 p-3 rounded-xl border border-zinc-200/50 dark:border-white/5">
+                <span class="block text-zinc-500 text-[10px] uppercase font-bold mb-0.5">Pairing Match</span>
+                <strong class="text-zinc-800 dark:text-zinc-200 text-sm font-extrabold">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'matchBonus') }}</strong>
               </div>
             </div>
-            <UiButton variant="secondary" full-width @click="consultTrainerPackage(pkg)">
-              Register via WhatsApp
+
+            <UiButton variant="primary" full-width @click="consultTrainerPackage(pkg)">
+              Submit WhatsApp Order
             </UiButton>
           </div>
         </div>
       </div>
 
-      <!-- Slide 8 -->
-      <div v-if="currentSlide === 8" class="motion-safe:animate-fade-in space-y-6">
-        <UiSectionLabel>Information</UiSectionLabel>
-        <h2 class="text-2xl md:text-3xl font-display font-bold">Frequently Asked Questions</h2>
-        <input v-model="searchQuery" type="search" placeholder="Search questions…" class="nma-input" />
+      <!-- Slide 8: FAQs & Finish -->
+      <div v-if="currentSlide === 8" class="motion-safe:animate-fade-in space-y-8">
+        <UiSectionLabel>Slide 8: Frequently Asked Questions</UiSectionLabel>
+        <h2 class="text-2xl sm:text-3xl font-display font-black">Answers to Common Questions</h2>
+        
+        <input 
+          v-model="searchQuery" 
+          type="search" 
+          placeholder="Search question keywords…" 
+          class="nma-input-glass" 
+        />
 
-        <div class="nma-card overflow-hidden divide-y divide-zinc-200/80 dark:divide-white/[0.06]">
-          <div v-for="faq in filteredFAQsList" :key="faq.id">
+        <div class="nma-card overflow-hidden divide-y divide-zinc-200/50 dark:divide-white/5">
+          <div v-for="faq in filteredFAQsList" :key="faq.id" class="transition-colors">
             <button
               type="button"
               @click="toggleFAQ(faq.id)"
-              class="w-full text-left p-4 flex items-center justify-between hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
+              class="w-full text-left p-4 flex items-center justify-between hover:bg-white/5 transition"
             >
-              <span class="font-medium text-sm pr-4">{{ faq.question }}</span>
+              <span class="font-bold text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 pr-4">{{ faq.question }}</span>
               <ChevronDown :size="16" class="text-zinc-400 shrink-0 transition-transform" :class="{ 'rotate-180': openFAQs.includes(faq.id) }" />
             </button>
-            <div v-if="openFAQs.includes(faq.id)" class="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-400">
+            <div v-if="openFAQs.includes(faq.id)" class="px-4 pb-4 text-xs sm:text-sm text-zinc-650 dark:text-zinc-400 leading-relaxed font-light whitespace-pre-line animate-fade-in">
               {{ faq.answer }}
             </div>
           </div>
         </div>
 
-        <div class="nma-card p-6 text-center space-y-4 border-accent/30 bg-accent-muted/20 dark:bg-accent/5">
-          <h3 class="font-display font-bold text-lg">
-            {{ finishTitle }}
-          </h3>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400">{{ finishMessage }}</p>
-          <div v-if="memberStore.isRegistered && memberStore.canFeature('ownerMentor')" class="text-left">
-            <OwnerMentorCard cta-label="Speak with Your Coach" />
+        <!-- Call to action card -->
+        <div class="nma-card p-6 sm:p-8 text-center space-y-5 border-accent/30 bg-gradient-to-br from-indigo-950/20 to-accent/5">
+          <h3 class="font-display font-extrabold text-xl text-accent">{{ finishTitle }}</h3>
+          <p class="text-xs sm:text-sm text-zinc-650 dark:text-zinc-400 max-w-lg mx-auto">{{ finishMessage }}</p>
+          
+          <div v-if="memberStore.isRegistered && memberStore.canFeature('ownerMentor')" class="text-left pt-2">
+            <OwnerMentorCard cta-label="Contact Coordinator Coach" />
           </div>
-          <div class="flex flex-col sm:flex-row gap-3 justify-center">
-            <UiButton variant="primary" @click="consultTrainerPackage({ name: 'General Entry' })">
-              Contact Coach on WhatsApp
+
+          <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+            <UiButton variant="primary" @click="consultTrainerPackage({ name: 'Enrollment Request' })">
+              Message Coordinator (WhatsApp)
             </UiButton>
-            <UiButton
-              v-if="memberStore.canFeature('courses')"
-              variant="outline"
-              to="/app/training"
-            >
+            <UiButton v-if="memberStore.canFeature('courses')" variant="outline" to="/app/training">
               Continue to Training →
             </UiButton>
           </div>
         </div>
       </div>
+
     </main>
 
-    <!-- Bottom nav -->
-    <div class="fixed bottom-0 left-0 right-0 border-t border-zinc-200/80 dark:border-white/[0.06] bg-surface-1/95 dark:bg-surface-1-dark/95 backdrop-blur-xl p-4 z-50 nma-safe-bottom">
+    <!-- Navigation Footer Bar -->
+    <div class="fixed bottom-0 left-0 right-0 border-t border-zinc-200/80 dark:border-white/[0.06] bg-surface-1/95 dark:bg-surface-1-dark/95 backdrop-blur-xl p-4 z-50 nma-safe-bottom shadow-lg">
       <div class="max-w-3xl mx-auto flex items-center justify-between">
-        <UiButton variant="ghost" size="sm" :disabled="currentSlide === 1" @click="prevSlide">Previous</UiButton>
-        <span class="text-xs text-zinc-500 font-mono font-medium">{{ currentSlide }} / {{ totalSlides }}</span>
+        <UiButton variant="ghost" size="sm" :disabled="currentSlide === 1" @click="prevSlide">Previous Slide</UiButton>
+        <span class="text-xs text-zinc-500 font-mono font-bold">{{ currentSlide }} / {{ totalSlides }}</span>
         <UiButton variant="primary" size="sm" :disabled="currentSlide === totalSlides" @click="nextSlide">
-          {{ currentSlide === totalSlides ? 'Finish' : 'Next' }}
+          {{ currentSlide === totalSlides ? 'Done' : 'Next Slide →' }}
         </UiButton>
       </div>
     </div>
+
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { Globe, Play, ChevronDown } from 'lucide-vue-next';
+import { JOURNEY_IDS } from '../data/learnerJourneys';
+import { Globe, ChevronDown } from 'lucide-vue-next';
 import AppLogo from '../components/ui/AppLogo.vue';
 import ThemeToggle from '../components/ui/ThemeToggle.vue';
 import UiSectionLabel from '../components/ui/UiSectionLabel.vue';
@@ -319,13 +404,13 @@ import OwnerMentorCard from '../components/journey/OwnerMentorCard.vue';
 import api, { getFullMediaUrl } from '../api';
 
 const memberStore = useMemberStore();
-
 const catalogStore = useCatalogStore();
 const settingsStore = useSettingsStore();
 const contentStore = useContentStore();
 
 const currentSlide = ref(1);
 const totalSlides = 8;
+const showPostSignupWelcome = ref(false);
 
 const nextSlide = () => {
   if (currentSlide.value < totalSlides) currentSlide.value++;
@@ -345,36 +430,41 @@ const rawFAQs = ref([]);
 const quadrantColors = {
   E: { border: 'border-t-red-500' },
   S: { border: 'border-t-orange-500' },
-  B: { border: 'border-t-brand' },
+  B: { border: 'border-t-accent' },
   I: { border: 'border-t-success' },
 };
 
 const quadrantData = {
   E: {
     title: 'E - Employee',
-    description: 'You trade your time directly for a salary. You work for a system that controls your time, earnings, and advancement. If you stop working, your income instantly drops to zero.',
-    leverage: 'Zero leverage. Your income is 100% dependent on your personal hourly presence.',
+    description: 'You work for a boss and exchange hours directly for a paycheck. Your salary relies entirely on your attendance. If you stop working, your active income ceases.',
+    leverage: 'Zero leverage. Your income is 100% dependent on your personal hourly time exchange.',
   },
   S: {
-    title: 'S - Self-Employed / Specialist',
-    description: 'You own your job, but you are still the primary system. If you take a vacation, the business closes.',
-    leverage: 'Very low leverage. You cannot duplicate yourself easily without expanding overhead dramatically.',
+    title: 'S - Self-Employed',
+    description: 'You own a small business or specialization (doctors, lawyers, consultants). If you do not perform, the business closes.',
+    leverage: 'Individual leverage. Highly active, you cannot easily step away without stopping cashflow.',
   },
   B: {
     title: 'B - Business Owner',
-    description: 'You own a system and lead people. You create a network where other people\'s efforts produce revenue for the ecosystem.',
-    leverage: 'Maximum leverage. Network marketing is the most accessible vehicle to cross into the B quadrant without huge capital.',
+    description: 'You build a system and lead a network of people. Cashflow is generated through duplication and leverage, continuing even in your absence.',
+    leverage: 'High leverage. Duplicating networks makes this the lowest risk system to step into the B quadrant.',
   },
   I: {
     title: 'I - Investor',
-    description: 'Your money works for you. You invest resources into assets that yield passive returns.',
-    leverage: 'Capital leverage. Money works as your duplicate employee.',
+    description: 'You acquire assets that generate money (real estate, dividends). Your investments act as leverage.',
+    leverage: 'Compound capital leverage. Money works as your ultimate employee.',
   },
 };
 
 const activeQuadrantInfo = computed(() => quadrantData[activeQuadrant.value]);
 
 onMounted(async () => {
+  if (sessionStorage.getItem('nma_post_signup_journey') === JOURNEY_IDS.BUILD) {
+    showPostSignupWelcome.value = true;
+    sessionStorage.removeItem('nma_post_signup_journey');
+  }
+
   await Promise.all([
     catalogStore.fetchCountries(),
     catalogStore.fetchPackages(),
@@ -383,6 +473,7 @@ onMounted(async () => {
     contentStore.fetchAll(),
     fetchFAQs(),
   ]);
+  
   if (catalogStore.countries.length > 0 && !catalogStore.countries.some((c) => c.code === selectedCountryCode.value)) {
     selectedCountryCode.value = catalogStore.countries[0].code;
   }
@@ -406,19 +497,19 @@ const earningStreams = computed(() => contentStore.earningStreams);
 const settings = computed(() => settingsStore.settings);
 
 const finishTitle = computed(() => {
-  if (!memberStore.isRegistered) return 'Ready to begin?';
-  if (memberStore.canFeature('courses')) return 'Presentation complete';
-  return 'Thank you for reviewing the opportunity';
+  if (!memberStore.isRegistered) return 'Ready to start your academy enrollment?';
+  if (memberStore.canFeature('courses')) return 'Overview Complete';
+  return 'Thank you for reviewing the business model';
 });
 
 const finishMessage = computed(() => {
   if (!memberStore.isRegistered) {
-    return 'Your coach is waiting to guide you through the next steps.';
+    return 'Speak to a trainer on WhatsApp to assist with packaging and pioneer positioning.';
   }
   if (memberStore.canFeature('courses')) {
-    return 'When you are ready, continue to your personalized training track.';
+    return 'Proceed directly to your personalized learning curriculum dashboard.';
   }
-  return 'Your path is focused on this presentation. Reach out to your coach with any questions.';
+  return 'Your assigned journey is set to this slide-overview. Direct any questions to your active coordinator.';
 });
 
 const changeCountry = () => {
@@ -440,7 +531,7 @@ const formatNumber = (num) => {
 
 const consultTrainerPackage = (pkg) => {
   const number = catalogStore.selectedCountry?.whatsappNumber || settingsStore.settings['whatsapp_number'] || '+2348030001111';
-  const text = encodeURIComponent(`Hello Trainer, I am interested in registering for the ${pkg.name} (${currencySymbol.value}${getPriceForCountry(pkg, 'price')}) in ${selectedCountryName.value}. Please guide me on registration.`);
+  const text = encodeURIComponent(`Hello Trainer, I am reviewing the ${pkg.name} (${currencySymbol.value}${getPriceForCountry(pkg, 'price')}) in ${selectedCountryName.value}. Please guide me on binary slot positioning.`);
   window.open(`https://wa.me/${number.replace(/\+/g, '')}?text=${text}`, '_blank');
 };
 
@@ -474,7 +565,14 @@ select option {
   color: #000;
 }
 .dark select option {
-  background-color: #18181b;
+  background-color: #0b1329;
   color: #fff;
+}
+.animate-fade-in {
+  animation: fadeIn 0.35s ease-out forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>

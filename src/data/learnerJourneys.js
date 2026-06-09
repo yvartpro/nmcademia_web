@@ -34,9 +34,21 @@ export function resolveJourneyId(profileType) {
     return JOURNEY_IDS.EXPLORE;
   }
   const t = profileType.trim();
+  const lower = t.toLowerCase();
+
   if (SEGMENT_EXPLORE.some((s) => s === t)) return JOURNEY_IDS.EXPLORE;
   if (SEGMENT_BUILD.some((s) => s === t)) return JOURNEY_IDS.BUILD;
   if (SEGMENT_LEARN.some((s) => s === t)) return JOURNEY_IDS.LEARN;
+
+  // Fuzzy match when CMS option text differs slightly
+  if (lower.includes('exploring opportunit')) return JOURNEY_IDS.EXPLORE;
+  if (lower.includes('already in network marketing') || lower.includes('not satisfied') || lower.includes('by all means')) {
+    return JOURNEY_IDS.BUILD;
+  }
+  if (lower.includes('new to network marketing') || lower.includes('tired of') || lower.includes('jobless')) {
+    return JOURNEY_IDS.LEARN;
+  }
+
   return JOURNEY_IDS.LEARN;
 }
 
@@ -61,8 +73,8 @@ export const JOURNEYS = {
     id: JOURNEY_IDS.LEARN,
     title: 'Mentorship Track',
     subtitle: 'Learn with guidance from your Academia coach',
-    welcomeLine: 'Train under your coach — courses without formal certification.',
-    afterSignupRoute: '/presentation',
+    welcomeLine: 'You go straight into mentorship training — the business presentation comes later if you need it.',
+    afterSignupRoute: '/app/training',
     defaultRoute: '/app/training',
     features: {
       presentation: true,
@@ -76,10 +88,10 @@ export const JOURNEYS = {
   [JOURNEY_IDS.BUILD]: {
     id: JOURNEY_IDS.BUILD,
     title: 'Leader Development',
-    subtitle: 'Grow skills, track progress, earn credentials',
-    welcomeLine: 'For active builders ready to level up with structured training.',
+    subtitle: 'Review the opportunity, then level up with training',
+    welcomeLine: 'You start with the full partner presentation — then continue to advanced training.',
     afterSignupRoute: '/presentation',
-    defaultRoute: '/app/training',
+    defaultRoute: '/presentation',
     features: {
       presentation: true,
       courses: true,

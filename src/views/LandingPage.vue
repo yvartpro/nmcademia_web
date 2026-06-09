@@ -1,417 +1,291 @@
 <template>
-  <OnboardingShell
-    :current-step="currentStep"
-    :total-steps="9"
-    :logo-url="logoUrl"
-    :show-footer="currentStep > 1"
-  >
-    <!-- Step 1: Hero -->
-    <div v-if="currentStep === STEPS.HERO" class="space-y-8 motion-safe:animate-fade-in text-center sm:text-left">
-      <div class="space-y-6 max-w-3xl mx-auto">
-        <UiSectionLabel>Welcome Visionary</UiSectionLabel>
-        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-display font-bold tracking-tight leading-[1.15] text-zinc-900 dark:text-white">
+  <div class="min-h-screen bg-surface-0 dark:bg-surface-0-dark text-zinc-900 dark:text-zinc-50 nma-gradient-mesh font-sans relative overflow-x-hidden">
+    
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 border-b border-zinc-200/80 dark:border-white/[0.06] bg-surface-1/90 dark:bg-surface-1-dark/90 backdrop-blur-xl">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        <AppLogo size="sm" />
+        <div class="flex items-center gap-4">
+          <ThemeToggle />
+          <a href="#journeys" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-900 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
+            Start Journey
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center space-y-8 relative">
+      <!-- Background glow -->
+      <div class="absolute inset-0 -z-10 flex items-center justify-center">
+        <div class="w-96 h-96 bg-accent/10 rounded-full blur-[100px] pointer-events-none"></div>
+      </div>
+
+      <div class="space-y-4 max-w-4xl mx-auto">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-wider">
+          <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span> Welcome Visionary
+        </span>
+        <h1 class="text-4xl sm:text-6xl font-display font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white">
           Network Marketing Academia is not here to entertain you—
-          <span class="nma-gradient-text">it is here to confront you.</span>
-        </h2>
-        <div class="space-y-4 text-sm sm:text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
-          <p
-            v-for="(para, i) in heroParagraphs"
-            :key="i"
-            :class="{
-              'border-l-4 border-accent pl-4 py-2 font-medium text-zinc-800 dark:text-zinc-200 bg-accent-muted/40 dark:bg-accent/10 rounded-r-xl text-left': i === 1 && heroParagraphs.length > 2,
-            }"
-          >
-            {{ para }}
-          </p>
-        </div>
-      </div>
-
-      <!-- Proof strip -->
-      <div class="grid grid-cols-3 gap-3 max-w-lg mx-auto sm:mx-0">
-        <div v-for="stat in proofStats" :key="stat.label" class="nma-card p-3 text-center">
-          <p class="text-lg sm:text-xl font-display font-bold nma-gradient-text">{{ stat.value }}</p>
-          <p class="text-[10px] sm:text-xs text-zinc-500 mt-0.5">{{ stat.label }}</p>
-        </div>
-      </div>
-
-      <div class="flex flex-col sm:flex-row gap-3 justify-center sm:justify-start">
-        <UiButton variant="primary" size="lg" @click="nextStep">
-          {{ settings['landing_cta_text'] || 'Enter the Vision' }} →
-        </UiButton>
-      </div>
-    </div>
-
-    <!-- Step 2: Mission -->
-    <div v-else-if="currentStep === STEPS.MISSION" class="space-y-6 motion-safe:animate-fade-in">
-      <UiSectionLabel>Mission</UiSectionLabel>
-      <h3 class="text-2xl font-display font-bold">A wake-up call for a new economy</h3>
-      <p class="text-sm sm:text-base leading-relaxed text-zinc-600 dark:text-zinc-400 whitespace-pre-line">{{ settings['mission_statement'] }}</p>
-      <StepNav @back="prevStep" @next="nextStep" />
-    </div>
-
-    <!-- Step 3: Objectives -->
-    <div v-else-if="currentStep === STEPS.OBJECTIVES" class="space-y-6 motion-safe:animate-fade-in">
-      <UiSectionLabel>Objectives</UiSectionLabel>
-      <h3 class="text-2xl font-display font-bold">The defining business model of the 21st century</h3>
-      <p class="text-sm sm:text-base leading-relaxed text-zinc-600 dark:text-zinc-400 whitespace-pre-line">{{ settings['objectives_statement'] }}</p>
-      <StepNav @back="prevStep" @next="nextStep" />
-    </div>
-
-    <!-- Step 4: Vision -->
-    <div v-else-if="currentStep === STEPS.VISION" class="space-y-6 motion-safe:animate-fade-in">
-      <UiSectionLabel>Vision</UiSectionLabel>
-      <div class="grid sm:grid-cols-2 gap-3">
-        <div class="nma-card p-4 border-zinc-300 dark:border-zinc-700">
-          <p class="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Some see</p>
-          <p class="font-display font-bold text-lg">Impossibility</p>
-        </div>
-        <div class="nma-card p-4 border-accent/40 bg-accent-muted/30 dark:bg-accent/10">
-          <p class="text-xs font-bold uppercase tracking-wider text-accent mb-2">Others see</p>
-          <p class="font-display font-bold text-lg nma-gradient-text">The future before it arrives</p>
-        </div>
-      </div>
-      <p class="text-sm sm:text-base leading-relaxed text-zinc-600 dark:text-zinc-400 whitespace-pre-line">{{ settings['vision_statement'] }}</p>
-      <StepNav @back="prevStep" @next="nextStep" />
-    </div>
-
-    <!-- Step 5: Video -->
-    <div v-else-if="currentStep === STEPS.NM_VIDEO" class="space-y-6 motion-safe:animate-fade-in">
-      <UiSectionLabel>Education</UiSectionLabel>
-      <h3 class="text-xl font-display font-bold">What is network marketing?</h3>
-      <div v-if="nmVideoUrl" class="aspect-video bg-zinc-900 rounded-xl overflow-hidden shadow-glow">
-        <iframe
-          :src="nmVideoUrl"
-          title="What is Network Marketing"
-          class="w-full h-full"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        />
-      </div>
-      <p v-else class="text-sm text-zinc-500 nma-card p-6 text-center">Video will appear here once configured in Site Settings.</p>
-      <StepNav @back="prevStep" @next="nextStep" />
-    </div>
-
-    <!-- Step 6: Segment -->
-    <div v-else-if="currentStep === STEPS.SEGMENT" class="space-y-6 motion-safe:animate-fade-in">
-      <div>
-        <h3 class="text-2xl font-display font-bold">Which best describes you?</h3>
-        <p class="text-sm text-zinc-500 mt-1">Select the option that mirrors your current situation.</p>
-      </div>
-      <div class="space-y-2 max-h-[360px] overflow-y-auto nma-scrollbar pr-1" role="radiogroup">
-        <UiSelectionCard
-          v-for="(opt, idx) in segmentOptions"
-          :key="idx"
-          :label="opt"
-          :icon="segmentIcons[idx] || '→'"
-          :selected="selectedSegment === opt"
-          @select="selectedSegment = opt"
-        />
-        <p v-if="selectedSegment" class="text-xs text-zinc-500 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl p-3">
-          {{ segmentJourneyHint(selectedSegment) }}
+          <span class="bg-gradient-to-r from-accent via-accent-light to-accent-dark bg-clip-text text-transparent">it is here to confront you.</span>
+        </h1>
+        <p class="text-base sm:text-xl text-zinc-550 dark:text-zinc-400 max-w-3xl mx-auto leading-relaxed pt-2">
+          The world you were prepared for is no longer the world you are living in. Jobs are shrinking, inflation is rising, and the promise that traditional education alone guarantees freedom is collapsing.
         </p>
       </div>
-      <StepNav @back="prevStep" :next-disabled="!selectedSegment" @next="submitSegmentSelection" next-label="Continue" />
-    </div>
 
-    <!-- Step 7A: Already in NM -->
-    <div v-else-if="currentStep === STEPS.PROFILE && isAlreadyInNM" class="space-y-6 motion-safe:animate-fade-in">
-      <div>
-        <h4 class="text-xl font-display font-bold">Congratulations on Your Decision</h4>
-        <p class="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 mt-2 whitespace-pre-line">{{ settings['already_in_nm_message'] }}</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <a href="#journeys" class="w-full sm:w-auto bg-gradient-to-r from-accent to-accent-dark hover:from-accent-light hover:to-accent text-slate-950 font-black px-8 py-4 rounded-xl text-sm uppercase tracking-wide transition-all shadow-glow hover:scale-[1.02] text-center">
+          Start Your Journey
+        </a>
+        <a href="#why-nm" class="w-full sm:w-auto bg-white/5 border border-zinc-350 dark:border-white/10 hover:bg-white/10 text-zinc-900 dark:text-white font-bold px-8 py-4 rounded-xl text-sm transition text-center">
+          Watch Introduction
+        </a>
       </div>
+    </header>
 
-      <details class="nma-card group">
-        <summary class="p-4 cursor-pointer font-semibold text-sm text-red-600 dark:text-red-400 flex items-center justify-between">
-          Why Many Distributors Fail
-          <span class="text-zinc-400 group-open:rotate-180 transition-transform">▼</span>
-        </summary>
-        <ul class="px-4 pb-4 space-y-2">
-          <li v-for="(reason, i) in whyFailReasons" :key="i" class="flex gap-2 text-sm text-zinc-600 dark:text-zinc-400">
-            <span class="text-red-500 shrink-0">×</span>{{ reason }}
-          </li>
-        </ul>
-      </details>
-
-      <details class="nma-card group" open>
-        <summary class="p-4 cursor-pointer font-semibold text-sm text-success flex items-center justify-between">
-          Why Having an Experienced Coach Matters
-          <span class="text-zinc-400 group-open:rotate-180 transition-transform">▼</span>
-        </summary>
-        <ul class="px-4 pb-4 space-y-2">
-          <li v-for="(benefit, i) in coachingBenefits" :key="i" class="flex gap-2 text-sm text-zinc-600 dark:text-zinc-400">
-            <span class="text-success shrink-0">✓</span>{{ benefit }}
-          </li>
-        </ul>
-      </details>
-
-      <div>
-        <label class="block text-sm font-medium mb-2">What challenges have you experienced?</label>
-        <textarea
-          v-model="challengesText"
-          rows="3"
-          placeholder="E.g., Lack of duplication, team members quitting..."
-          class="nma-input resize-none"
-        />
-      </div>
-
-      <StepNav
-        @back="prevStep"
-        @next="nextStep"
-        :next-label="settings['coaching_cta_text'] || 'Get Coaching & Mentorship'"
-      />
-    </div>
-
-    <!-- Step 7B: New / Exploring -->
-    <div v-else-if="currentStep === STEPS.PROFILE && !isAlreadyInNM" class="space-y-6 motion-safe:animate-fade-in">
-      <div>
-        <h4 class="text-xl font-display font-bold">Welcome to Network Marketing Academia</h4>
-        <p class="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 mt-2 whitespace-pre-line">{{ settings['new_exploring_message'] }}</p>
-        <p class="text-sm font-semibold mt-4">Are you: (check all that apply)</p>
-      </div>
-      <div class="flex flex-wrap gap-2 max-h-[280px] overflow-y-auto nma-scrollbar">
-        <UiChip
-          v-for="(subOpt, idx) in listOptions"
-          :key="idx"
-          :label="subOpt"
-          :selected="selectedListOptions.includes(subOpt)"
-          @toggle="toggleListOption(subOpt)"
-        />
-      </div>
-      <StepNav @back="prevStep" @next="nextStep" next-label="Proceed" />
-    </div>
-
-    <!-- Step 8: Country -->
-    <div v-else-if="currentStep === STEPS.COUNTRY" class="space-y-6 motion-safe:animate-fade-in">
-      <div>
-        <h4 class="text-xl font-display font-bold">Your Location</h4>
-        <p class="text-sm text-zinc-500 mt-1">Where are you joining from?</p>
-      </div>
-      <div>
-        <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-2">Select Your Country 🌍</label>
-        <select v-model="selectedCountry" class="nma-input">
-          <option v-for="c in catalogStore.countries" :key="c.code" :value="c.code">
-            {{ c.name }}
-          </option>
-        </select>
-      </div>
-      <StepNav @back="prevStep" @next="nextStep" />
-    </div>
-
-    <!-- Step 9: Personal -->
-    <div v-else-if="currentStep === STEPS.PERSONAL" class="space-y-6 motion-safe:animate-fade-in">
-      <div>
-        <h4 class="text-xl font-display font-bold">Personal Information</h4>
-        <p class="text-sm text-zinc-500 mt-1">Enter your details to join the ecosystem.</p>
-      </div>
-      <form @submit.prevent="submitContactDetails" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">Full Name</label>
-          <input v-model="form.fullName" type="text" required class="nma-input" />
+    <!-- Social Proof Section -->
+    <section class="border-y border-zinc-200/80 dark:border-white/[0.06] bg-zinc-50/50 dark:bg-white/[0.01] py-12">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div v-for="stat in proofStats" :key="stat.label" class="text-center space-y-1">
+            <p class="text-4xl sm:text-5xl font-display font-black text-accent">{{ stat.value }}</p>
+            <p class="text-sm text-zinc-500 font-semibold uppercase tracking-wider">{{ stat.label }}</p>
+          </div>
         </div>
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">Email Address</label>
-          <input v-model="form.email" type="email" required class="nma-input" />
+      </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 py-20 space-y-12">
+      <div class="text-center space-y-3">
+        <UiSectionLabel>Our Mission</UiSectionLabel>
+        <h2 class="text-3xl sm:text-4xl font-display font-black">A Wake-Up Call for a New Economy</h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div class="space-y-6">
+          <h3 class="text-xl font-bold text-accent">Power belongs to those who build networks.</h3>
+          <p class="text-zinc-650 dark:text-zinc-400 leading-relaxed">
+            Network Marketing Academia exists to educate a new generation of thinkers, leaders, and builders who understand that the future belongs to those who can create networks, influence people, and build communities in the digital age.
+          </p>
+          <p class="text-zinc-650 dark:text-zinc-400 leading-relaxed">
+            This is more than selling products. It is the science of human connection, leadership multiplied through team duplication, and entrepreneurship powered by networks.
+          </p>
         </div>
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">Phone Number (Optional)</label>
-          <input v-model="form.phone" type="tel" class="nma-input" />
+        <div class="nma-card p-6 sm:p-8 space-y-4 bg-gradient-to-br from-indigo-950/20 to-accent/5">
+          <h4 class="font-display font-extrabold text-lg">In the Modern Digital Economy:</h4>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-3">
+              <span class="text-accent text-lg">✦</span>
+              <p class="text-sm text-zinc-700 dark:text-zinc-350"><strong>Leverage is power:</strong> Turn relationships into global economic ecosystems.</p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-accent text-lg">✦</span>
+              <p class="text-sm text-zinc-700 dark:text-zinc-350"><strong>Mobile independence:</strong> Direct your global team from a single smartphone.</p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-accent text-lg">✦</span>
+              <p class="text-sm text-zinc-700 dark:text-zinc-350"><strong>Pioneer advantage:</strong> Position yourself early in expanding markets.</p>
+            </li>
+          </ul>
         </div>
-        <label class="flex items-start gap-3 cursor-pointer">
-          <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
-          <span class="text-sm text-zinc-600 dark:text-zinc-400">
-            By signing up, I agree to receive learning materials, updates, and communications from Network Marketing Academia.
-          </span>
-        </label>
-        <p v-if="errorMessage" class="text-sm text-red-500 font-medium">{{ errorMessage }}</p>
-        <StepNav
-          @back="prevStep"
-          :next-disabled="submitting || !form.consent"
-          :next-loading="submitting"
-          next-label="Enter the Academia"
-          is-submit
-        />
-      </form>
-    </div>
-  </OnboardingShell>
+      </div>
+    </section>
+
+    <!-- Why Network Marketing Section -->
+    <section id="why-nm" class="border-t border-zinc-200/80 dark:border-white/[0.06] bg-zinc-50/50 dark:bg-white/[0.01] py-20">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
+        <div class="text-center space-y-3">
+          <UiSectionLabel>Understanding the Industry</UiSectionLabel>
+          <h2 class="text-3xl sm:text-4xl font-display font-black">Why Network Marketing?</h2>
+          <p class="text-sm text-zinc-500 max-w-xl mx-auto">Watch industry expert Eric Worre explain the mechanics of professional network building.</p>
+        </div>
+
+        <div class="max-w-3xl mx-auto aspect-video bg-zinc-900 rounded-2xl overflow-hidden shadow-glow">
+          <iframe
+            src="https://www.youtube.com/embed/j-j72H2rJqA"
+            title="Eric Worre - What is Network Marketing"
+            class="w-full h-full"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials / Success Stories -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 py-20 space-y-12">
+      <div class="text-center space-y-3">
+        <UiSectionLabel>Success Stories</UiSectionLabel>
+        <h2 class="text-3xl sm:text-4xl font-display font-black">Real People. Real Duplications.</h2>
+        <p class="text-sm text-zinc-500 max-w-xl mx-auto">Read authentic results from people who refused dependency and chose leverage.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div 
+          v-for="test in testimonials" 
+          :key="test.name" 
+          class="nma-card p-6 flex flex-col justify-between hover:shadow-glow transition-all duration-300"
+        >
+          <p class="text-sm text-zinc-650 dark:text-zinc-400 italic font-light leading-relaxed">"{{ test.quote }}"</p>
+          <div class="flex items-center gap-4 pt-6 border-t border-zinc-200/50 dark:border-white/5 mt-6">
+            <div class="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center text-accent font-bold">
+              {{ test.name.split(' ').map(n=>n[0]).join('') }}
+            </div>
+            <div>
+              <h4 class="font-bold text-sm text-zinc-900 dark:text-white">{{ test.name }}</h4>
+              <span class="text-[10px] bg-accent/10 text-accent font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">{{ test.tag }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Funnel Journey Selection Section -->
+    <section id="journeys" class="border-t border-zinc-200/80 dark:border-white/[0.06] bg-gradient-to-b from-transparent to-zinc-950/20 py-24 scroll-mt-16">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
+        <div class="text-center space-y-4">
+          <UiSectionLabel>Personalized Funnel</UiSectionLabel>
+          <h2 class="text-3xl sm:text-5xl font-display font-black">Which Best Describes You?</h2>
+          <p class="text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto text-sm sm:text-base">
+            Your selection determines your entire user journey. We do not believe in one-size-fits-all presentation plans.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <router-link
+            v-for="j in journeys"
+            :key="j.title"
+            :to="`/funnel/${j.id}`"
+            class="nma-card p-6 hover:border-accent hover:shadow-glow flex flex-col justify-between transition-all duration-300 group"
+          >
+            <div class="space-y-4">
+              <span class="text-3xl block group-hover:scale-110 transition-transform duration-300">{{ j.icon }}</span>
+              <h3 class="text-lg font-bold text-zinc-950 dark:text-white font-display group-hover:text-accent transition-colors">
+                {{ j.title }}
+              </h3>
+              <p class="text-xs sm:text-sm text-zinc-550 dark:text-zinc-400 leading-relaxed">
+                {{ j.desc }}
+              </p>
+            </div>
+            <div class="pt-6 flex justify-end">
+              <span class="text-xs font-bold text-accent group-hover:translate-x-1.5 transition-transform duration-300">
+                Continue {{ j.ctaLabel }} →
+              </span>
+            </div>
+          </router-link>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-zinc-200/80 dark:border-white/[0.06] bg-surface-1 dark:bg-surface-0-dark py-8 px-4 text-center">
+      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+        <p>© 2026 Network Marketing Academia • All Rights Reserved</p>
+        <p>Partner Company: Alliance In Motion Global</p>
+      </div>
+    </footer>
+
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import OnboardingShell from '../layouts/OnboardingShell.vue';
-import UiButton from '../components/ui/UiButton.vue';
+// Vue reactivity APIs used in this file (none currently needed here)
+import AppLogo from '../components/ui/AppLogo.vue';
+import ThemeToggle from '../components/ui/ThemeToggle.vue';
 import UiSectionLabel from '../components/ui/UiSectionLabel.vue';
-import UiSelectionCard from '../components/ui/UiSelectionCard.vue';
-import UiChip from '../components/ui/UiChip.vue';
-import StepNav from '../components/onboarding/StepNav.vue';
-import { useCatalogStore } from '../stores/catalog';
-import { useLeadsStore } from '../stores/leads';
-import { useChatStore } from '../stores/chat';
-import { useSettingsStore } from '../stores/settings';
-import { useMemberStore } from '../stores/member';
-import { getFullMediaUrl } from '../api';
-import { resolveJourneyId, getJourney } from '../data/learnerJourneys';
-
-function segmentJourneyHint(segment) {
-  return getJourney(resolveJourneyId(segment)).welcomeLine;
-}
-
-const STEPS = {
-  HERO: 1,
-  MISSION: 2,
-  OBJECTIVES: 3,
-  VISION: 4,
-  NM_VIDEO: 5,
-  SEGMENT: 6,
-  PROFILE: 7,
-  COUNTRY: 8,
-  PERSONAL: 9,
-};
-
-const router = useRouter();
-const catalogStore = useCatalogStore();
-const leadsStore = useLeadsStore();
-const chatStore = useChatStore();
-const settingsStore = useSettingsStore();
-const memberStore = useMemberStore();
-
-const currentStep = ref(1);
-const selectedSegment = ref(null);
-const challengesText = ref('');
-const selectedListOptions = ref([]);
-const selectedCountry = ref('NG');
-const submitting = ref(false);
-const errorMessage = ref('');
-
-const form = ref({
-  fullName: '',
-  email: '',
-  phone: '',
-  consent: false,
-});
-
-const settings = computed(() => settingsStore.settings);
-
-const logoUrl = computed(() => {
-  const url = settings.value['logo_url'];
-  return url ? getFullMediaUrl(url) : '';
-});
-
-const nmVideoUrl = computed(() => settings.value['nm_video_url'] || settings.value['video_url'] || '');
 
 const proofStats = [
-  { value: '50K+', label: 'Learners' },
-  { value: '40+', label: 'Countries' },
-  { value: '4.9★', label: 'Rating' },
+  { value: '50,000+', label: 'Active Learners' },
+  { value: '40+', label: 'Countries Represented' },
+  { value: '25,000+', label: 'Success Stories' },
 ];
 
-const segmentIcons = ['🌱', '📈', '🔄', '🔍', '💰', '🎯', '🔥'];
-
-const defaultHeroParagraphs = [
-  'The world you were prepared for is no longer the world you are living in. Jobs are shrinking, automation is rising, inflation is eating salaries, and the promise that education alone guarantees freedom is quietly collapsing. Yet most people still wait, hoping the old system will somehow fix what it has already outgrown.',
-  'This is a new economy. Power no longer belongs to those who simply work hard, but to those who understand networks, influence, and digital connection.',
-  'Network Marketing Academia exists to train a generation that refuses dependency—people who build, lead, and create income through human networks instead of waiting for permission. The only real question now is not whether the world is changing—but whether you will change with it or be left explaining why you didn\'t.',
+const testimonials = [
+  {
+    name: 'David Kamara',
+    quote: 'Before I joined this business, I was working long hours every day and still struggling financially. At first, I doubted network marketing because many people around me didn\'t understand it. But after staying consistent, learning new skills, and building my team step by step, everything started changing. Today, I earn more than I ever imagined.',
+    tag: 'African Professional',
+  },
+  {
+    name: 'Jessica Miller',
+    quote: 'I used to feel trapped in the corporate routine — waking up early, commuting every day, and living paycheck to paycheck despite having a good job. What attracted me to this opportunity was the flexibility and the possibility of building something for myself. Now I work from anywhere and spend more time with my children.',
+    tag: 'Western Lifestyle',
+  },
+  {
+    name: 'Sarah Johnson',
+    quote: 'As a single mother, life was extremely difficult. I tried small businesses and side hustles, but nothing gave me stability. When a friend introduced me to network marketing, I decided to give myself one more chance. Slowly, I started seeing results. The extra income helped me pay school fees and improve my home.',
+    tag: 'Single Mother',
+  },
 ];
 
-const heroParagraphs = computed(() => {
-  const text = settings.value['landing_hero_text'];
-  if (!text || !text.trim()) return defaultHeroParagraphs;
-  const parts = text.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
-  return parts.length ? parts : defaultHeroParagraphs;
-});
-
-const segmentOptions = computed(() => {
-  try { return JSON.parse(settingsStore.settings['segment_options']); } catch {
-    return ['I am new to network marketing', 'I am already in network marketing', 'I am in network marketing but not satisfied and want to switch companies', 'I am just exploring opportunities', 'I am tired of depending on one source of income', 'I am tired of being jobless', 'I want this business by all means'];
-  }
-});
-
-const listOptions = computed(() => {
-  try { return JSON.parse(settingsStore.settings['list_options']); } catch {
-    return ['Tired of depending on a single income?', 'Tired of working hard but not progressing financially?', 'Tired of job uncertainty and rising living costs?', 'A single mother looking for a flexible way to support your family?', 'An employee looking for an additional source of income?', 'Unemployed and searching for an opportunity?', 'A student exploring future possibilities?', 'An entrepreneur looking to expand your income streams?'];
-  }
-});
-
-const whyFailReasons = computed(() => {
-  try { return JSON.parse(settingsStore.settings['nm_why_fail_reasons']); } catch { return []; }
-});
-
-const coachingBenefits = computed(() => {
-  try { return JSON.parse(settingsStore.settings['nm_coaching_benefits']); } catch { return []; }
-});
-
-const isAlreadyInNM = computed(() =>
-  selectedSegment.value === 'I am already in network marketing'
-  || selectedSegment.value === 'I am in network marketing but not satisfied and want to switch companies'
-);
-
-onMounted(async () => {
-  await Promise.all([
-    catalogStore.fetchCountries(),
-    settingsStore.fetchSettings(),
-  ]);
-  if (catalogStore.countries.length > 0) {
-    const saved = localStorage.getItem('selected_country');
-    if (saved && catalogStore.countries.some((c) => c.code === saved)) {
-      selectedCountry.value = saved;
-    } else {
-      const ng = catalogStore.countries.find((c) => c.code === 'NG');
-      selectedCountry.value = ng ? 'NG' : catalogStore.countries[0].code;
-    }
-  }
-});
-
-const nextStep = () => { currentStep.value++; };
-const prevStep = () => { currentStep.value--; };
-
-const toggleListOption = (opt) => {
-  const index = selectedListOptions.value.indexOf(opt);
-  if (index === -1) selectedListOptions.value.push(opt);
-  else selectedListOptions.value.splice(index, 1);
-};
-
-const submitSegmentSelection = () => { nextStep(); };
-
-const submitContactDetails = async () => {
-  submitting.value = true;
-  errorMessage.value = '';
-  try {
-    const payload = {
-      fullName: form.value.fullName,
-      email: form.value.email,
-      phone: form.value.phone,
-      country: selectedCountry.value,
-      profileType: selectedSegment.value,
-      challenges: isAlreadyInNM.value ? challengesText.value : selectedListOptions.value,
-      consent: form.value.consent,
-    };
-
-    await leadsStore.submitLead(payload);
-    chatStore.markLeadRegistered();
-
-    localStorage.setItem('chat_visitor_name', form.value.fullName);
-    localStorage.setItem('chat_visitor_email', form.value.email);
-    localStorage.setItem('chat_visitor_phone', form.value.phone || '');
-
-    try {
-      await chatStore.initGuestSession(form.value.fullName, form.value.email, form.value.phone);
-    } catch (e) {
-      console.warn('Silent chat setup warning:', e);
-    }
-
-    catalogStore.selectCountry(selectedCountry.value);
-    const journey = memberStore.registerFromLead({
-      fullName: form.value.fullName,
-      email: form.value.email,
-      country: selectedCountry.value,
-      profileType: selectedSegment.value,
-    });
-    router.push(journey.afterSignupRoute);
-  } catch (err) {
-    errorMessage.value = err.response?.data?.message || 'Submission failed. Please check your inputs.';
-  } finally {
-    submitting.value = false;
-  }
-};
+const journeys = [
+  {
+    id: 'new-to-nm',
+    icon: '🌱',
+    title: 'New to Network Marketing',
+    desc: 'Learn the fundamentals of duplication, binary systems, and digital lead generation from the ground up.',
+    ctaLabel: 'Onboarding',
+  },
+  {
+    id: 'already-in-nm',
+    icon: '📈',
+    title: 'Already in Network Marketing',
+    desc: 'Skip basic definitions. Supercharge your coaching, team retention, upline support, and global recruiting.',
+    ctaLabel: 'Assessment',
+  },
+  {
+    id: 'switch-companies',
+    icon: '🔄',
+    title: 'Want to Switch Companies',
+    desc: 'Evaluate key company choices, group points accumulation, and position early inside pioneer nodes.',
+    ctaLabel: 'Evaluation',
+  },
+  {
+    id: 'exploring',
+    icon: '🔍',
+    title: 'Just Exploring Opportunities',
+    desc: 'Take a short, visual presentation of the company plan and explore the network economy at your own pace.',
+    ctaLabel: 'Qualifications',
+  },
+  {
+    id: 'income-diversification',
+    icon: '💰',
+    title: 'Tired of Depending on Single Income',
+    desc: 'Learn how side network leverage works without quitting your job, and buffer yourself against inflation.',
+    ctaLabel: 'Benefits',
+  },
+  {
+    id: 'jobless',
+    icon: '🎯',
+    title: 'Tired of Being Jobless',
+    desc: 'Gain high-demand marketing, digital leadership, and communication skills with a zero-risk startup model.',
+    ctaLabel: 'Hope Flow',
+  },
+  {
+    id: 'fast-track',
+    icon: '🔥',
+    title: 'I Want This Business By All Means',
+    desc: 'Compare entry packages immediately, get assigned a direct mentor, and secure WhatsApp registration assistance.',
+    ctaLabel: 'Fast Track',
+  },
+];
 </script>
+
+<style scoped>
+html {
+  scroll-behavior: smooth;
+}
+.shadow-glow {
+  box-shadow: 0 0 50px -10px rgba(212, 175, 55, 0.25);
+}
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out forwards;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>

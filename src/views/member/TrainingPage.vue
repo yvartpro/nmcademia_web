@@ -1,6 +1,15 @@
 <template>
   <JourneyLayout>
     <div class="space-y-6 motion-safe:animate-fade-in">
+      <div
+        v-if="showPostSignupWelcome"
+        class="nma-card p-4 border-accent/40 bg-accent-muted/30 dark:bg-accent/10 motion-safe:animate-fade-in"
+      >
+        <p class="text-sm font-medium text-zinc-900 dark:text-white">
+          Welcome to your mentorship track. Start with the curriculum below — your coach is here to guide you.
+        </p>
+      </div>
+
       <div>
         <p class="text-xs font-bold uppercase tracking-wider text-accent">{{ journey.title }}</p>
         <h1 class="text-2xl sm:text-3xl font-display font-bold mt-1">
@@ -19,7 +28,7 @@
         <h2 class="font-display font-semibold mb-3">Continue</h2>
         <router-link
           :to="`/app/learn/${continueCourse.id}`"
-          class="nma-card p-4 flex gap-4 hover:shadow-glow transition-shadow block"
+          class="nma-card-glass p-4 flex gap-4 hover:shadow-glow hover:scale-[1.01] hover:border-accent/30 transition-all duration-305 block"
         >
           <div class="w-16 h-16 rounded-xl bg-gradient-to-br shrink-0" :class="continueCourse.gradient" />
           <div class="flex-1 min-w-0">
@@ -43,7 +52,7 @@
             v-for="course in filteredCourses"
             :key="course.id"
             :to="`/app/learn/${course.id}`"
-            class="nma-card p-4 flex gap-4 hover:shadow-glow transition-all block"
+            class="nma-card-glass p-4 flex gap-4 hover:shadow-glow hover:scale-[1.01] hover:border-accent/30 transition-all duration-305 block"
           >
             <div class="w-14 h-14 rounded-xl bg-gradient-to-br shrink-0" :class="course.gradient" />
             <div class="flex-1 min-w-0">
@@ -66,15 +75,22 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import JourneyLayout from '../../layouts/JourneyLayout.vue';
 import OwnerMentorCard from '../../components/journey/OwnerMentorCard.vue';
 import { useMemberStore } from '../../stores/member';
 import { JOURNEY_IDS } from '../../data/learnerJourneys';
 
 const memberStore = useMemberStore();
+const showPostSignupWelcome = ref(false);
 
-onMounted(() => memberStore.checkDailyStreak());
+onMounted(() => {
+  memberStore.checkDailyStreak();
+  if (sessionStorage.getItem('nma_post_signup_journey') === JOURNEY_IDS.LEARN) {
+    showPostSignupWelcome.value = true;
+    sessionStorage.removeItem('nma_post_signup_journey');
+  }
+});
 
 const journey = computed(() => memberStore.journey);
 

@@ -58,7 +58,7 @@ export const useMemberStore = defineStore('member', {
     displayName: (state) => state.profile.fullName || 'Learner',
     journeyId: (state) =>
       state.profile.journeyId || resolveJourneyId(state.profile.profileType),
-    journey(state) {
+    journey() {
       return getJourney(this.journeyId);
     },
     canFeature: (state) => (feature) => {
@@ -105,12 +105,14 @@ export const useMemberStore = defineStore('member', {
 
     registerFromLead({ fullName, email, country, profileType }) {
       const journeyId = resolveJourneyId(profileType);
+      const journey = getJourney(journeyId);
       this.profile.registered = true;
       this.profile.fullName = fullName;
       this.profile.email = email;
       this.profile.country = country;
       this.profile.profileType = profileType;
       this.profile.journeyId = journeyId;
+      sessionStorage.setItem('nma_post_signup_journey', journeyId);
       this.profile.xp = journeyId === JOURNEY_IDS.EXPLORE ? 0 : 50;
       this.profile.streak = journeyId === JOURNEY_IDS.EXPLORE ? 0 : 1;
       this.profile.lastActiveDate = new Date().toISOString().slice(0, 10);
@@ -118,7 +120,7 @@ export const useMemberStore = defineStore('member', {
         this.checkDailyStreak();
       }
       this.persist();
-      return getJourney(journeyId);
+      return journey;
     },
 
     checkDailyStreak() {

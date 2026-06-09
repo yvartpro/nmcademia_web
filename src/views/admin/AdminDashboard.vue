@@ -158,6 +158,26 @@
         <!-- Tab 1: Leads Dashboard -->
         <div v-if="activeTab === 'leads'" class="space-y-6 animate-fade-in">
           
+          <!-- Summary statistics cards -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-5 bg-slate-900/40 border border-gray-850 rounded-xl">
+              <span class="text-xs text-gray-400 font-bold uppercase tracking-wider block">Total Captured</span>
+              <p class="text-2xl font-black text-white mt-1">{{ totalLeads }}</p>
+            </div>
+            <div class="p-5 bg-slate-900/40 border border-gray-850 rounded-xl">
+              <span class="text-xs text-amber-500 font-bold uppercase tracking-wider block">Pending</span>
+              <p class="text-2xl font-black text-amber-500 mt-1">{{ pendingLeads }}</p>
+            </div>
+            <div class="p-5 bg-slate-900/40 border border-gray-850 rounded-xl">
+              <span class="text-xs text-blue-400 font-bold uppercase tracking-wider block">Contacted</span>
+              <p class="text-2xl font-black text-blue-400 mt-1">{{ contactedLeads }}</p>
+            </div>
+            <div class="p-5 bg-slate-900/40 border border-gray-850 rounded-xl">
+              <span class="text-xs text-emerald-400 font-bold uppercase tracking-wider block">Joined Alliance</span>
+              <p class="text-2xl font-black text-emerald-400 mt-1">{{ joinedLeads }}</p>
+            </div>
+          </div>
+
           <!-- Filters area -->
           <div class="bg-slate-900/30 border border-gray-900 rounded-xl p-4 flex flex-wrap gap-4 items-center justify-between">
             <div class="flex flex-wrap gap-3">
@@ -476,6 +496,11 @@ const chatStore = useChatStore();
 const catalogStore = useCatalogStore();
 const contentStore = useContentStore();
 const mediaStore = useMediaStore();
+
+const totalLeads = computed(() => leadsStore.leads.length);
+const pendingLeads = computed(() => leadsStore.leads.filter(l => l.status === 'Pending').length);
+const contactedLeads = computed(() => leadsStore.leads.filter(l => l.status === 'Contacted').length);
+const joinedLeads = computed(() => leadsStore.leads.filter(l => l.status === 'Joined').length);
 
 const activeTab = ref('leads');
 const leadsFilter = ref({ country: '', status: '' });

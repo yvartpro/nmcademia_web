@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LandingPage from '../views/LandingPage.vue';
 import PresentationPage from '../views/PresentationPage.vue';
+import FunnelPage from '../views/FunnelPage.vue';
 import AdminLogin from '../views/admin/AdminLogin.vue';
 import AdminDashboard from '../views/admin/AdminDashboard.vue';
 import TrainingPage from '../views/member/TrainingPage.vue';
@@ -14,6 +15,7 @@ import { isRouteAllowed, getJourney } from '../data/learnerJourneys';
 
 const routes = [
   { path: '/', name: 'landing', component: LandingPage },
+  { path: '/funnel/:funnelId', name: 'funnel', component: FunnelPage },
   { path: '/presentation', name: 'presentation', component: PresentationPage },
   { path: '/app/training', name: 'training', component: TrainingPage, meta: { requiresLearner: true } },
   { path: '/app/learn/:courseId', name: 'member-course', component: CoursePage, meta: { requiresLearner: true } },
