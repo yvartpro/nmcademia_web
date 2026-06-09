@@ -12,6 +12,7 @@ export const JOURNEY_IDS = {
 /** Segment strings (must match CMS / defaults in LandingPage) */
 const SEGMENT_EXPLORE = [
   'I am just exploring opportunities',
+  'I am new to network marketing',
 ];
 
 const SEGMENT_BUILD = [
@@ -21,7 +22,6 @@ const SEGMENT_BUILD = [
 ];
 
 const SEGMENT_LEARN = [
-  'I am new to network marketing',
   'I am tired of depending on one source of income',
   'I am tired of being jobless',
 ];
@@ -41,11 +41,11 @@ export function resolveJourneyId(profileType) {
   if (SEGMENT_LEARN.some((s) => s === t)) return JOURNEY_IDS.LEARN;
 
   // Fuzzy match when CMS option text differs slightly
-  if (lower.includes('exploring opportunit')) return JOURNEY_IDS.EXPLORE;
+  if (lower.includes('exploring opportunit') || lower.includes('new to network marketing')) return JOURNEY_IDS.EXPLORE;
   if (lower.includes('already in network marketing') || lower.includes('not satisfied') || lower.includes('by all means')) {
     return JOURNEY_IDS.BUILD;
   }
-  if (lower.includes('new to network marketing') || lower.includes('tired of') || lower.includes('jobless')) {
+  if (lower.includes('tired of') || lower.includes('jobless')) {
     return JOURNEY_IDS.LEARN;
   }
 
