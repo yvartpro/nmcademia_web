@@ -54,6 +54,7 @@ export const SETTING_GROUPS = [
     keys: [
       { key: 'dream_section_text', label: '“What is your dream?” section', type: 'textarea' },
       { key: 'cashflow_quadrant_explanation', label: 'Cashflow quadrant intro', type: 'textarea' },
+      { key: 'cashflow_quadrant_image', label: 'Cashflow Quadrant Image URL / Media Path', type: 'text' },
       { key: 'binary_system_explanation', label: 'Binary / MSB explanation', type: 'textarea' },
       { key: 'how_to_join_note', label: 'How to join — pioneer / shipping note', type: 'textarea' }
     ]

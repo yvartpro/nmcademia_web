@@ -177,21 +177,129 @@
           <p class="text-xs text-zinc-500 leading-relaxed">{{ settings['cashflow_quadrant_explanation'] }}</p>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <button
-            v-for="(q, key) in quadrantData"
-            :key="key"
-            type="button"
-            @click="activeQuadrant = key"
-            class="nma-card p-5 text-center space-y-2 transition-all duration-300 border-t-4"
-            :class="[
-              quadrantColors[key].border,
-              activeQuadrant === key ? 'ring-2 ring-accent bg-accent/5 scale-[1.02]' : 'hover:scale-[1.01]',
-            ]"
-          >
-            <div class="text-3xl font-black text-zinc-950 dark:text-white">{{ key }}</div>
-            <h4 class="font-bold text-[10px] uppercase tracking-wider text-zinc-500">{{ q.title.split(' - ')[1] || q.title }}</h4>
-          </button>
+        <!-- Cashflow Quadrant Interactive Image/Fallback Diagram -->
+        <div class="relative w-full max-w-lg mx-auto aspect-square rounded-2xl overflow-hidden border border-zinc-200/80 dark:border-white/[0.08] bg-zinc-950/40 shadow-xl group">
+          <!-- 1. Custom Image Mode -->
+          <img
+            v-if="settings?.['cashflow_quadrant_image']"
+            :src="getFullMediaUrl(settings['cashflow_quadrant_image'])"
+            alt="Cashflow Quadrant"
+            class="w-full h-full object-cover transition-all duration-500"
+          />
+
+          <!-- 2. Gorgeous CSS Fallback Mode (If no image uploaded) -->
+          <div v-else class="w-full h-full grid grid-cols-2 grid-rows-2 p-4 gap-4 bg-gradient-to-br from-zinc-900 to-indigo-950/40">
+            <!-- E sector fallback -->
+            <div 
+              class="relative rounded-2xl border transition-all duration-300 flex flex-col justify-between p-4"
+              :class="activeQuadrant === 'E' ? 'bg-red-500/10 border-red-500/40 ring-1 ring-red-500/30' : 'bg-white/[0.02] border-white/[0.05]'"
+            >
+              <span class="text-3xl font-black text-red-500/80 dark:text-red-400">E</span>
+              <div>
+                <h4 class="text-xs font-extrabold text-zinc-300">Employee</h4>
+                <p class="text-[9px] text-zinc-500 mt-0.5">Time for Money</p>
+              </div>
+            </div>
+
+            <!-- B sector fallback -->
+            <div 
+              class="relative rounded-2xl border transition-all duration-300 flex flex-col justify-between p-4"
+              :class="activeQuadrant === 'B' ? 'bg-accent/10 border-accent/40 ring-1 ring-accent/30' : 'bg-white/[0.02] border-white/[0.05]'"
+            >
+              <span class="text-3xl font-black text-accent">B</span>
+              <div>
+                <h4 class="text-xs font-extrabold text-zinc-300">Business Owner</h4>
+                <p class="text-[9px] text-zinc-500 mt-0.5">Leverage Systems</p>
+              </div>
+            </div>
+
+            <!-- S sector fallback -->
+            <div 
+              class="relative rounded-2xl border transition-all duration-300 flex flex-col justify-between p-4"
+              :class="activeQuadrant === 'S' ? 'bg-orange-500/10 border-orange-500/40 ring-1 ring-orange-500/30' : 'bg-white/[0.02] border-white/[0.05]'"
+            >
+              <span class="text-3xl font-black text-orange-500/80 dark:text-orange-400">S</span>
+              <div>
+                <h4 class="text-xs font-extrabold text-zinc-300">Self-Employed</h4>
+                <p class="text-[9px] text-zinc-500 mt-0.5">Own Your Job</p>
+              </div>
+            </div>
+
+            <!-- I sector fallback -->
+            <div 
+              class="relative rounded-2xl border transition-all duration-300 flex flex-col justify-between p-4"
+              :class="activeQuadrant === 'I' ? 'bg-emerald-500/10 border-emerald-500/40 ring-1 ring-emerald-500/30' : 'bg-white/[0.02] border-white/[0.05]'"
+            >
+              <span class="text-3xl font-black text-emerald-500/80 dark:text-emerald-400">I</span>
+              <div>
+                <h4 class="text-xs font-extrabold text-zinc-300">Investor</h4>
+                <p class="text-[9px] text-zinc-500 mt-0.5">Money Works for You</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Absolute Clickable Interactive Hotspots (Works for both Image & Fallback modes) -->
+          <div class="absolute inset-0 grid grid-cols-2 grid-rows-2 p-2 gap-2">
+            <!-- Top Left: E -->
+            <button
+              type="button"
+              @click="activeQuadrant = 'E'"
+              class="relative rounded-xl border transition-all duration-350 focus:outline-none flex flex-col justify-between p-4"
+              :class="[
+                settings?.['cashflow_quadrant_image']
+                  ? (activeQuadrant === 'E' ? 'bg-red-500/15 border-red-500/50 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)] ring-1 ring-red-500/30 scale-[0.98]' : 'border-transparent hover:bg-red-500/5 hover:border-red-500/20')
+                  : 'border-transparent'
+              ]"
+              aria-label="Select Employee Quadrant"
+            >
+              <div v-if="settings?.['cashflow_quadrant_image']" class="absolute top-3 left-3 bg-red-950/80 border border-red-500/30 rounded-lg px-2 py-0.5 text-[10px] font-black text-red-400 backdrop-blur-md">E</div>
+            </button>
+
+            <!-- Top Right: B -->
+            <button
+              type="button"
+              @click="activeQuadrant = 'B'"
+              class="relative rounded-xl border transition-all duration-350 focus:outline-none flex flex-col justify-between p-4"
+              :class="[
+                settings?.['cashflow_quadrant_image']
+                  ? (activeQuadrant === 'B' ? 'bg-accent/15 border-accent/50 shadow-[inset_0_0_20px_rgba(212,163,89,0.2)] ring-1 ring-accent/30 scale-[0.98]' : 'border-transparent hover:bg-accent/5 hover:border-accent/20')
+                  : 'border-transparent'
+              ]"
+              aria-label="Select Business Owner Quadrant"
+            >
+              <div v-if="settings?.['cashflow_quadrant_image']" class="absolute top-3 right-3 bg-amber-950/80 border border-accent/30 rounded-lg px-2 py-0.5 text-[10px] font-black text-accent backdrop-blur-md">B</div>
+            </button>
+
+            <!-- Bottom Left: S -->
+            <button
+              type="button"
+              @click="activeQuadrant = 'S'"
+              class="relative rounded-xl border transition-all duration-350 focus:outline-none flex flex-col justify-between p-4"
+              :class="[
+                settings?.['cashflow_quadrant_image']
+                  ? (activeQuadrant === 'S' ? 'bg-orange-500/15 border-orange-500/50 shadow-[inset_0_0_20px_rgba(249,115,22,0.2)] ring-1 ring-orange-500/30 scale-[0.98]' : 'border-transparent hover:bg-orange-500/5 hover:border-orange-500/20')
+                  : 'border-transparent'
+              ]"
+              aria-label="Select Self-Employed Quadrant"
+            >
+              <div v-if="settings?.['cashflow_quadrant_image']" class="absolute bottom-3 left-3 bg-orange-950/80 border border-orange-500/30 rounded-lg px-2 py-0.5 text-[10px] font-black text-orange-400 backdrop-blur-md">S</div>
+            </button>
+
+            <!-- Bottom Right: I -->
+            <button
+              type="button"
+              @click="activeQuadrant = 'I'"
+              class="relative rounded-xl border transition-all duration-350 focus:outline-none flex flex-col justify-between p-4"
+              :class="[
+                settings?.['cashflow_quadrant_image']
+                  ? (activeQuadrant === 'I' ? 'bg-emerald-500/15 border-emerald-500/50 shadow-[inset_0_0_20px_rgba(16,185,129,0.2)] ring-1 ring-emerald-500/30 scale-[0.98]' : 'border-transparent hover:bg-emerald-500/5 hover:border-emerald-500/20')
+                  : 'border-transparent'
+              ]"
+              aria-label="Select Investor Quadrant"
+            >
+              <div v-if="settings?.['cashflow_quadrant_image']" class="absolute bottom-3 right-3 bg-emerald-950/80 border border-emerald-500/30 rounded-lg px-2 py-0.5 text-[10px] font-black text-emerald-400 backdrop-blur-md">I</div>
+            </button>
+          </div>
         </div>
 
         <div v-if="activeQuadrantInfo" class="nma-card p-6 border-accent/30 bg-gradient-to-br from-zinc-900 to-indigo-950/20 motion-safe:animate-fade-in">
@@ -426,13 +534,6 @@ const activeQuadrant = ref('B');
 const openFAQs = ref([]);
 const searchQuery = ref('');
 const rawFAQs = ref([]);
-
-const quadrantColors = {
-  E: { border: 'border-t-red-500' },
-  S: { border: 'border-t-orange-500' },
-  B: { border: 'border-t-accent' },
-  I: { border: 'border-t-success' },
-};
 
 const quadrantData = {
   E: {
