@@ -21,10 +21,7 @@
       </div>
 
       <div class="space-y-4 max-w-4xl mx-auto">
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-wider">
-          <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span> Welcome Visionary
-        </span>
-        <h1 class="text-4xl sm:text-6xl font-display font-extrabold tracking-tight leading-[1.1] text-zinc-950">
+        <h1 class="text-3xl sm:text-5xl font-display font-extrabold tracking-tight leading-[1.1] text-zinc-950">
           Network Marketing Academia is not here to entertain you—
           <span class="bg-gradient-to-r from-accent via-accent-light to-accent-dark bg-clip-text text-transparent">it is here to confront you.</span>
         </h1>
@@ -96,9 +93,10 @@
     <section id="why-nm" class="border-t border-zinc-200/80 bg-zinc-50/50 py-20">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         <div class="text-center space-y-3">
-          <UiSectionLabel>Understanding the Industry</UiSectionLabel>
-          <h2 class="text-3xl sm:text-4xl font-display font-black">Why Network Marketing?</h2>
-          <p class="text-sm text-zinc-500 max-w-xl mx-auto">Watch industry expert Eric Worre explain the mechanics of professional network building.</p>
+          <h2 class="text-3xl sm:text-4xl font-display font-black">What Is Network Marketing ?</h2>
+          <p class="text-sm text-zinc-500 max-w-xl mx-auto">A network marketing company is a business that sells its products or services through a network of independent distributors rather than through traditional retail stores. These companies outsource their entire sales and marketing function to individual representatives who earn commissions on personal sales and on the sales of their recruited teams. Network marketing companies operate across many industries: health supplements, skincare, nutrition, financial services, travel, and technology.</p>
+          <h3 class="text-xl font-bold text-accent">How a Network Marketing Company Operates</h3>
+          <p class="">The company handles product development, manufacturing, shipping, and commission payments. Distributors handle customer acquisition, product promotion, and team recruitment.</p>
         </div>
 
         <div class="max-w-3xl mx-auto aspect-video bg-zinc-900 rounded-2xl overflow-hidden shadow-glow">
@@ -114,39 +112,10 @@
       </div>
     </section>
 
-    <!-- Testimonials / Success Stories -->
-    <section class="max-w-6xl mx-auto px-4 sm:px-6 py-20 space-y-12">
-      <div class="text-center space-y-3">
-        <UiSectionLabel>Success Stories</UiSectionLabel>
-        <h2 class="text-3xl sm:text-4xl font-display font-black">Real People. Real Duplications.</h2>
-        <p class="text-sm text-zinc-500 max-w-xl mx-auto">Read authentic results from people who refused dependency and chose leverage.</p>
-      </div>
-
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div 
-          v-for="test in testimonials" 
-          :key="test.name" 
-          class="nma-card p-6 flex flex-col justify-between hover:shadow-glow transition-all duration-300"
-        >
-          <p class="text-sm text-zinc-650 italic font-light leading-relaxed">"{{ test.quote }}"</p>
-          <div class="flex items-center gap-4 pt-6 border-t border-zinc-200/50 mt-6">
-            <div class="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center text-accent font-bold">
-              {{ test.name.split(' ').map(n=>n[0]).join('') }}
-            </div>
-            <div>
-              <h4 class="font-bold text-sm text-zinc-900">{{ test.name }}</h4>
-              <span class="text-[10px] bg-accent/10 text-accent font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">{{ test.tag }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Funnel Journey Selection Section -->
     <section id="journeys" class="border-t border-zinc-200/80 bg-gradient-to-b from-transparent to-zinc-950/20 py-24 scroll-mt-16">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         <div class="text-center space-y-4">
-          <UiSectionLabel>Personalized Funnel</UiSectionLabel>
           <h2 class="text-3xl sm:text-5xl font-display font-black">Which Best Describes You?</h2>
           <p class="text-zinc-600 max-w-xl mx-auto text-sm sm:text-base">
             Your selection determines your entire user journey. We do not believe in one-size-fits-all presentation plans.
