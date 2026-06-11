@@ -4,8 +4,8 @@
       v-if="logoUrl"
       :src="logoUrl"
       alt="Network Marketing Academia"
-      class="rounded-xl object-contain"
-      :class="size === 'sm' ? 'w-8 h-8' : 'w-10 h-10'"
+      class="object-contain transition-all"
+      :class="size === 'sm' ? 'h-8 md:h-9 w-auto max-w-[150px]' : 'h-10 md:h-12 w-auto max-w-[200px]'"
     />
     <div
       v-else

@@ -24,14 +24,27 @@ export const getMediaUrl = (filePath) => normalizeMediaPath(filePath);
 
 export const getFullMediaUrl = (filePathOrAsset) => {
   if (!filePathOrAsset) return '';
+  
+  let value = '';
   if (typeof filePathOrAsset === 'object') {
-    if (filePathOrAsset.publicUrl) return normalizeMediaPath(filePathOrAsset.publicUrl);
-    return getFullMediaUrl(filePathOrAsset.filePath);
+    value = filePathOrAsset.publicUrl || filePathOrAsset.filePath || '';
+  } else {
+    value = filePathOrAsset;
   }
-  const value = filePathOrAsset;
+  
+  if (!value) return '';
+
+  // Normalize localhost:5000 urls to use current backend origin
+  if (value.startsWith('http://localhost:5000') || value.startsWith('https://localhost:5000')) {
+    const origin = getBackendOrigin().replace(/\/+$/, '');
+    const path = value.replace(/^https?:\/\/localhost:5000/, '');
+    return normalizeMediaPath(`${origin}${path}`);
+  }
+  
   if (value.startsWith('http://') || value.startsWith('https://')) {
     return normalizeMediaPath(value);
   }
+  
   const origin = getBackendOrigin().replace(/\/+$/, '');
   const path = normalizeMediaPath(value);
   return `${origin}${path}`;

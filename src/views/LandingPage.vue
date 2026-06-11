@@ -23,7 +23,7 @@
       <div class="space-y-4 max-w-4xl mx-auto">
         <h1 class="text-3xl sm:text-5xl font-display font-extrabold tracking-tight leading-[1.1] text-zinc-950">
           Network Marketing Academia is not here to entertain you—
-          <span class="bg-gradient-to-r from-accent via-accent-light to-accent-dark bg-clip-text text-transparent">it is here to confront you.</span>
+          <span class="text-accent">it is here to confront you.</span>
         </h1>
         <p class="text-base sm:text-xl text-zinc-550 max-w-3xl mx-auto leading-relaxed pt-2">
           The world you were prepared for is no longer the world you are living in. Jobs are shrinking, inflation is rising, and the promise that traditional education alone guarantees freedom is collapsing.
@@ -55,7 +55,6 @@
     <!-- Mission Section -->
     <section class="max-w-6xl mx-auto px-4 sm:px-6 py-20 space-y-12">
       <div class="text-center space-y-3">
-        <UiSectionLabel>Our Mission</UiSectionLabel>
         <h2 class="text-3xl sm:text-4xl font-display font-black">A Wake-Up Call for a New Economy</h2>
       </div>
 

@@ -62,7 +62,6 @@ export const useMediaStore = defineStore('media', () => {
   const getCopyUrl = (asset) => {
     if (!asset) return '';
     const url = asset.publicUrl || asset.filePath;
-    if (url.startsWith('http://') || url.startsWith('https://')) return url;
     return getFullMediaUrl(url);
   };
 
