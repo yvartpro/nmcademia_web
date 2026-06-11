@@ -1,16 +1,15 @@
 <template>
   <div class="space-y-6 animate-fade-in">
     <div class="flex items-center justify-between">
-      <h3 class="text-base font-bold text-amber-400 font-display uppercase tracking-wider">Testimonials Management</h3>
-      <button @click="openModal()" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-2 px-4 rounded-lg text-xs transition">
+      <h3 class="text-base font-bold text-[#008A20] font-display uppercase tracking-wider">Testimonials Management</h3>
+      <button @click="openModal()" class="bg-[#008A20] hover:bg-[#006616] text-white font-bold py-2 px-4 rounded-lg text-xs transition">
         + Add Testimonial
       </button>
     </div>
 
-    <!-- Data Table -->
-    <div class="bg-slate-950 border border-gray-900 rounded-xl overflow-hidden shadow-2xl">
+    <div class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
       <table class="w-full text-left text-xs">
-        <thead class="bg-slate-900 text-[10px] text-gray-500 uppercase tracking-widest border-b border-gray-950">
+        <thead class="bg-[#F4F6F5] text-[10px] text-[#0A0F0D] font-bold uppercase tracking-widest border-b border-zinc-200">
           <tr>
             <th class="p-4">Name</th>
             <th class="p-4">Tag</th>
@@ -18,52 +17,56 @@
             <th class="p-4 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-950 text-gray-300">
-          <tr v-for="item in contentStore.testimonials" :key="item.id" class="hover:bg-slate-900/30">
-            <td class="p-4 font-bold text-white">{{ item.name }}</td>
-            <td class="p-4 text-amber-500 font-mono">{{ item.lifestyleTag }}</td>
+        <tbody class="divide-y divide-zinc-100 text-zinc-600">
+          <tr v-for="item in contentStore.testimonials" :key="item.id" class="hover:bg-[#F4F6F5]/60 transition">
+            <td class="p-4 font-bold text-[#0A0F0D]">{{ item.name }}</td>
+            <td class="p-4 text-[#008A20] font-mono font-semibold">{{ item.lifestyleTag }}</td>
             <td class="p-4 truncate max-w-xs">{{ item.quote }}</td>
             <td class="p-4 text-right space-x-2 shrink-0">
-              <button @click="openModal(item)" class="text-amber-400 hover:text-amber-300 transition">Edit</button>
-              <button @click="handleDelete(item.id)" class="text-red-400 hover:text-red-300 transition">Delete</button>
+              <button @click="openModal(item)" class="text-[#008A20] hover:text-[#006616] font-semibold transition">Edit</button>
+              <button @click="requestDelete(item.id)" class="text-red-500 hover:text-red-700 font-semibold transition">Delete</button>
             </td>
           </tr>
           <tr v-if="contentStore.testimonials.length === 0">
-            <td colspan="4" class="p-6 text-center text-gray-500">No testimonials found.</td>
+            <td colspan="4" class="p-6 text-center text-zinc-400">No testimonials found.</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Modal -->
-    <div v-if="isModalOpen" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div class="max-w-lg w-full bg-slate-950 border border-gray-800 rounded-2xl p-6 space-y-4 shadow-2xl relative">
-        <h4 class="text-lg font-bold text-amber-400 border-b border-gray-900 pb-2">
-          {{ editingId ? 'Edit Testimonial' : 'New Testimonial' }}
-        </h4>
-        <form @submit.prevent="saveItem" class="space-y-4 text-xs">
-          <div>
-            <label class="block text-gray-400 uppercase tracking-wider font-bold mb-1">Name</label>
-            <input v-model="form.name" required class="w-full bg-slate-900 border border-gray-800 rounded p-2 focus:border-amber-400 text-white" />
-          </div>
-          <div>
-            <label class="block text-gray-400 uppercase tracking-wider font-bold mb-1">Lifestyle Tag</label>
-            <input v-model="form.lifestyleTag" placeholder="e.g. Student, Executive" class="w-full bg-slate-900 border border-gray-800 rounded p-2 focus:border-amber-400 text-white" />
-          </div>
-          <div>
-            <label class="block text-gray-400 uppercase tracking-wider font-bold mb-1">Quote</label>
-            <textarea v-model="form.quote" rows="3" required class="w-full bg-slate-900 border border-gray-800 rounded p-2 focus:border-amber-400 text-white"></textarea>
-          </div>
-          <MediaPicker v-model="form.mediaAssetId" label="Profile photo" />
-          <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-900">
-            <button type="button" @click="isModalOpen = false" class="text-gray-400 hover:text-white transition">Cancel</button>
-            <button type="submit" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded transition">
-              {{ editingId ? 'Save Changes' : 'Create' }}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <!-- Form Modal -->
+    <UiModal v-model="isModalOpen" :title="editingId ? 'Edit Testimonial' : 'New Testimonial'" subtitle="Success Stories">
+      <form id="testimonial-form" @submit.prevent="saveItem" class="space-y-4 text-xs">
+        <div class="adm-field">
+          <label class="adm-label">Name</label>
+          <input v-model="form.name" required class="adm-input" />
+        </div>
+        <div class="adm-field">
+          <label class="adm-label">Lifestyle Tag</label>
+          <input v-model="form.lifestyleTag" placeholder="e.g. Student, Executive" class="adm-input" />
+        </div>
+        <div class="adm-field">
+          <label class="adm-label">Quote</label>
+          <textarea v-model="form.quote" rows="3" required class="adm-input"></textarea>
+        </div>
+        <MediaPicker v-model="form.mediaAssetId" label="Profile photo" />
+      </form>
+      <template #footer>
+        <button type="button" class="adm-btn-ghost" @click="isModalOpen = false">Cancel</button>
+        <button type="submit" form="testimonial-form" class="adm-btn-primary">
+          {{ editingId ? 'Save Changes' : 'Create' }}
+        </button>
+      </template>
+    </UiModal>
+
+    <!-- Confirm Delete -->
+    <UiConfirmModal
+      v-model="confirmOpen"
+      title="Delete this testimonial?"
+      message="This will permanently remove the testimonial. This action cannot be undone."
+      confirm-label="Yes, Delete"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
@@ -71,12 +74,17 @@
 import { ref } from 'vue';
 import { useContentStore } from '../../stores/content';
 import MediaPicker from './MediaPicker.vue';
+import UiModal from '../ui/UiModal.vue';
+import UiConfirmModal from '../ui/UiConfirmModal.vue';
 
 const contentStore = useContentStore();
 
 const isModalOpen = ref(false);
 const editingId = ref(null);
 const form = ref({ name: '', lifestyleTag: '', quote: '', mediaAssetId: null });
+
+const confirmOpen = ref(false);
+const pendingDeleteId = ref(null);
 
 const openModal = (item = null) => {
   if (item) {
@@ -98,9 +106,24 @@ const saveItem = async () => {
   isModalOpen.value = false;
 };
 
-const handleDelete = async (id) => {
-  if (confirm('Delete this testimonial?')) {
-    await contentStore.adminDeleteTestimonial(id);
-  }
+const requestDelete = (id) => {
+  pendingDeleteId.value = id;
+  confirmOpen.value = true;
+};
+
+const executeDelete = async () => {
+  if (pendingDeleteId.value) await contentStore.adminDeleteTestimonial(pendingDeleteId.value);
+  pendingDeleteId.value = null;
 };
 </script>
+
+<style scoped>
+.adm-field { display: flex; flex-direction: column; gap: 0.25rem; }
+.adm-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #6b7280; }
+.adm-input { width: 100%; background: #F4F6F5; border: 1px solid #e4e4e7; border-radius: 0.5rem; padding: 0.5rem 0.75rem; color: #0A0F0D; font-size: 0.75rem; outline: none; transition: border-color 0.15s; }
+.adm-input:focus { border-color: #008A20; }
+.adm-btn-ghost { font-size: 0.75rem; font-weight: 700; color: #6b7280; background: transparent; border: 1px solid #e4e4e7; cursor: pointer; padding: 0.5rem 0.875rem; border-radius: 0.5rem; transition: color 0.15s, border-color 0.15s; }
+.adm-btn-ghost:hover { color: #0A0F0D; border-color: #a1a1aa; }
+.adm-btn-primary { font-size: 0.75rem; font-weight: 800; background: #008A20; color: #fff; padding: 0.55rem 1.25rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: filter 0.15s; }
+.adm-btn-primary:hover { filter: brightness(1.1); }
+</style>

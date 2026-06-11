@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-surface-0 dark:bg-surface-0-dark min-h-screen text-zinc-900 dark:text-zinc-50 font-sans transition-colors duration-300">
+  <div class="bg-surface-0 min-h-screen text-zinc-900 font-sans transition-colors duration-300">
     <router-view />
 
     <ChatWidget v-if="showChatWidget" />

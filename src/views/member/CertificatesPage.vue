@@ -7,7 +7,7 @@
       </div>
 
       <div v-if="certificates.length === 0" class="nma-card p-8 text-center">
-        <Award :size="48" class="text-zinc-300 dark:text-zinc-600 mx-auto mb-4" />
+        <Award :size="48" class="text-zinc-300 mx-auto mb-4" />
         <h3 class="font-semibold">No certificates yet</h3>
         <p class="text-sm text-zinc-500 mt-2">Complete a course to earn your credential.</p>
         <UiButton variant="primary" class="mt-4" to="/app/training">Go to Training</UiButton>

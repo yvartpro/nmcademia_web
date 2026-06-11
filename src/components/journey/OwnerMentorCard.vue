@@ -1,15 +1,15 @@
 <template>
-  <div class="nma-card p-5 border-accent/25 bg-accent-muted/20 dark:bg-accent/5">
+  <div class="nma-card p-5 border-accent/25 bg-accent-muted/20">
     <div class="flex gap-4">
       <div class="w-12 h-12 rounded-xl nma-gradient-gold flex items-center justify-center shrink-0">
         <GraduationCap :size="22" class="text-zinc-900" />
       </div>
       <div class="flex-1 min-w-0">
         <p class="text-[10px] font-bold uppercase tracking-wider text-accent">Your Academia Coach</p>
-        <h3 class="font-display font-semibold text-zinc-900 dark:text-white mt-0.5">
+        <h3 class="font-display font-semibold text-zinc-900 mt-0.5">
           {{ coachName }}
         </h3>
-        <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-2 leading-relaxed">
+        <p class="text-sm text-zinc-600 mt-2 leading-relaxed">
           {{ description }}
         </p>
       </div>

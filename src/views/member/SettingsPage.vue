@@ -6,7 +6,7 @@
         <p class="text-sm text-zinc-500 mt-1">{{ memberStore.journey.title }}</p>
       </div>
 
-      <section class="nma-card divide-y divide-zinc-200/80 dark:divide-white/[0.06]">
+      <section class="nma-card divide-y divide-zinc-200/80">
         <div class="p-4 flex items-center gap-4">
           <div class="w-14 h-14 rounded-2xl nma-gradient-gold flex items-center justify-center text-xl font-bold text-zinc-900">
             {{ initials }}
@@ -44,40 +44,40 @@
             @click="setTheme(mode.id)"
             class="flex-1 py-2.5 rounded-xl text-sm font-medium border transition-colors"
             :class="currentTheme === mode.id
-              ? 'border-accent bg-accent/10 text-accent-dark dark:text-accent-light'
-              : 'border-zinc-200 dark:border-zinc-700 text-zinc-500'"
+              ? 'border-accent bg-accent/10 text-accent-dark'
+              : 'border-zinc-200 text-zinc-500'"
           >
             {{ mode.label }}
           </button>
         </div>
       </section>
 
-      <section class="nma-card divide-y divide-zinc-200/80 dark:divide-white/[0.06]">
+      <section class="nma-card divide-y divide-zinc-200/80">
         <router-link
           v-if="memberStore.canFeature('presentation')"
           to="/presentation"
-          class="flex items-center justify-between p-4 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+          class="flex items-center justify-between p-4 text-sm hover:bg-zinc-50"
         >
           Partner presentation <span class="text-zinc-400">→</span>
         </router-link>
         <router-link
           v-if="memberStore.canFeature('courses')"
           to="/app/training"
-          class="flex items-center justify-between p-4 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+          class="flex items-center justify-between p-4 text-sm hover:bg-zinc-50"
         >
           Training <span class="text-zinc-400">→</span>
         </router-link>
         <router-link
           v-if="memberStore.canFeature('progress')"
           to="/app/progress"
-          class="flex items-center justify-between p-4 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+          class="flex items-center justify-between p-4 text-sm hover:bg-zinc-50"
         >
           Progress <span class="text-zinc-400">→</span>
         </router-link>
         <router-link
           v-if="memberStore.canFeature('certificates')"
           to="/app/certificates"
-          class="flex items-center justify-between p-4 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+          class="flex items-center justify-between p-4 text-sm hover:bg-zinc-50"
         >
           Certificates <span class="text-zinc-400">→</span>
         </router-link>

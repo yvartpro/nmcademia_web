@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <div v-if="showLabel" class="flex justify-between items-center mb-2 text-xs text-zinc-500 dark:text-zinc-400">
+    <div v-if="showLabel" class="flex justify-between items-center mb-2 text-xs text-zinc-500">
       <span>{{ label || `Step ${current} of ${total}` }}</span>
       <span v-if="percentage !== null">{{ Math.round(percentage) }}%</span>
     </div>
@@ -8,7 +8,7 @@
       <div
         v-for="i in total"
         :key="i"
-        class="h-1 flex-1 rounded-full overflow-hidden bg-zinc-200 dark:bg-zinc-800"
+        class="h-1 flex-1 rounded-full overflow-hidden bg-zinc-200"
       >
         <div
           class="h-full rounded-full transition-all duration-500 ease-out"

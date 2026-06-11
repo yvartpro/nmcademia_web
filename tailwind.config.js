@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: 'class',
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}',
@@ -12,34 +11,34 @@ export default {
         display: ['Outfit', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
       },
-      colors: {
+  colors: {
         surface: {
-          0: '#F8FAFC',
+          0: '#FFFFFF',
           1: '#FFFFFF',
-          2: '#F1F5F9',
-          '0-dark': '#030712',
-          '1-dark': '#0B1329',
-          '2-dark': '#1C2541',
+          2: '#F4F6F5',
+          '0-dark': '#FFFFFF',
+          '1-dark': '#FFFFFF',
+          '2-dark': '#F4F6F5',
         },
         accent: {
-          DEFAULT: '#D4AF37',
-          light: '#F3E5AB',
-          dark: '#AA7C11',
-          muted: 'rgba(212, 175, 55, 0.15)',
+          DEFAULT: '#008A20',
+          light: '#EAF6EC',
+          dark: '#006616',
+          muted: 'rgba(0, 138, 32, 0.1)',
         },
         brand: {
-          DEFAULT: '#2563EB',
-          light: '#3B82F6',
-          dark: '#1D4ED8',
+          DEFAULT: '#008A20',
+          light: '#008A20',
+          dark: '#006616',
         },
         gold: {
-          light: '#F3E5AB',
-          DEFAULT: '#D4AF37',
-          dark: '#AA7C11',
+          light: '#EAF6EC',
+          DEFAULT: '#008A20',
+          dark: '#006616',
         },
-        primary: '#030712',
+        primary: '#0A0F0D',
         streak: '#F97316',
-        success: '#10B981',
+        success: '#008A20',
       },
       borderRadius: {
         card: '12px',

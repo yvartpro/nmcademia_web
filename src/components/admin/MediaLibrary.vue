@@ -2,33 +2,33 @@
   <div class="space-y-6 animate-fade-in">
     <div class="flex items-center justify-between flex-wrap gap-3">
       <div>
-        <h3 class="text-base font-bold text-amber-400 font-display uppercase tracking-wider">Media Library</h3>
-        <p class="text-gray-500 text-xs mt-1">
-          Images are saved once as compressed WebP in <code class="text-amber-500/80">uploads/images/</code>.
-          Videos go to <code class="text-amber-500/80">uploads/videos/</code>.
+        <h3 class="text-base font-bold text-[#008A20] font-display uppercase tracking-wider">Media Library</h3>
+        <p class="text-zinc-500 text-xs mt-1">
+          Images are saved once as compressed WebP in <code class="text-[#008A20]/80">uploads/images/</code>.
+          Videos go to <code class="text-[#008A20]/80">uploads/videos/</code>.
         </p>
       </div>
       <div class="flex gap-2">
-        <label class="cursor-pointer bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-2 px-4 rounded-lg text-xs transition">
+        <label class="cursor-pointer bg-[#008A20] hover:bg-[#006616] text-white font-bold py-2 px-4 rounded-lg text-xs transition">
           {{ mediaStore.uploading ? 'Uploading…' : '+ Upload image' }}
           <input type="file" accept="image/*" class="hidden" :disabled="mediaStore.uploading" @change="uploadFile('image', $event)" />
         </label>
-        <label class="cursor-pointer bg-slate-900 hover:bg-slate-800 border border-gray-800 text-gray-200 font-bold py-2 px-4 rounded-lg text-xs transition">
+        <label class="cursor-pointer bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 font-bold py-2 px-4 rounded-lg text-xs transition">
           + Upload video
           <input type="file" accept="video/*" class="hidden" :disabled="mediaStore.uploading" @change="uploadFile('video', $event)" />
         </label>
       </div>
     </div>
 
-    <div v-if="mediaStore.loading" class="text-gray-500 text-xs">Loading media…</div>
+    <div v-if="mediaStore.loading" class="text-zinc-400 text-xs">Loading media…</div>
 
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       <div
         v-for="asset in mediaStore.assets"
         :key="asset.id"
-        class="bg-slate-950 border border-gray-900 rounded-xl overflow-hidden shadow-lg"
+        class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm"
       >
-        <div class="aspect-square bg-slate-900 relative flex items-center justify-center overflow-hidden">
+        <div class="aspect-square bg-[#F4F6F5] relative flex items-center justify-center overflow-hidden">
           <img
             v-if="asset.type === 'image'"
             :src="previewUrl(asset)"
@@ -45,32 +45,32 @@
             playsinline
             preload="metadata"
           />
-          <span class="absolute top-2 left-2 text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-black/70 text-gray-300">
+          <span class="absolute top-2 left-2 text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-white/80 text-zinc-600 border border-zinc-200">
             {{ asset.type }}
           </span>
           <span
             v-if="brokenPreviews.has(asset.id)"
-            class="absolute inset-0 flex items-center justify-center bg-red-950/80 text-red-300 text-[10px] p-2 text-center"
+            class="absolute inset-0 flex items-center justify-center bg-red-50/90 text-red-500 text-[10px] p-2 text-center"
           >
             Preview failed — check SITE_URL / uploads path
           </span>
         </div>
         <div class="p-3 space-y-2">
-          <p class="text-white text-xs font-bold truncate" :title="asset.title">{{ asset.title || 'Untitled' }}</p>
-          <p class="text-gray-500 text-[9px] font-mono truncate" :title="mediaStore.getCopyUrl(asset)">
+          <p class="text-[#0A0F0D] text-xs font-bold truncate" :title="asset.title">{{ asset.title || 'Untitled' }}</p>
+          <p class="text-zinc-400 text-[9px] font-mono truncate" :title="mediaStore.getCopyUrl(asset)">
             {{ mediaStore.getCopyUrl(asset) }}
           </p>
           <button
             type="button"
             @click="copyUrl(asset)"
-            class="w-full text-[10px] text-gray-300 hover:text-amber-400 border border-gray-800 rounded py-1.5 transition font-semibold"
+            class="w-full text-[10px] text-zinc-600 hover:text-[#008A20] border border-zinc-200 hover:border-[#008A20]/30 rounded py-1.5 transition font-semibold"
           >
             Copy file URL
           </button>
           <button
             type="button"
             @click="handleDelete(asset.id)"
-            class="w-full text-[10px] text-red-400 hover:text-red-300 border border-red-900/30 rounded py-1 transition"
+            class="w-full text-[10px] text-red-500 hover:text-red-700 border border-red-100 hover:border-red-200 rounded py-1 transition"
           >
             Delete
           </button>
@@ -78,7 +78,7 @@
       </div>
     </div>
 
-    <p v-if="!mediaStore.loading && mediaStore.assets.length === 0" class="text-center text-gray-500 text-sm py-12">
+    <p v-if="!mediaStore.loading && mediaStore.assets.length === 0" class="text-center text-zinc-400 text-sm py-12">
       No media uploaded yet.
     </p>
   </div>

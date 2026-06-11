@@ -3,9 +3,9 @@
     <div class="space-y-6 motion-safe:animate-fade-in">
       <div
         v-if="showPostSignupWelcome"
-        class="nma-card p-4 border-accent/40 bg-accent-muted/30 dark:bg-accent/10 motion-safe:animate-fade-in"
+        class="nma-card p-4 border-accent/40 bg-accent-muted/30 motion-safe:animate-fade-in"
       >
-        <p class="text-sm font-medium text-zinc-900 dark:text-white">
+        <p class="text-sm font-medium text-zinc-900">
           Welcome to your mentorship track. Start with the curriculum below — your coach is here to guide you.
         </p>
       </div>
@@ -33,7 +33,7 @@
           <div class="w-16 h-16 rounded-xl bg-gradient-to-br shrink-0" :class="continueCourse.gradient" />
           <div class="flex-1 min-w-0">
             <h3 class="font-semibold truncate">{{ continueCourse.title }}</h3>
-            <div class="mt-2 h-1.5 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+            <div class="mt-2 h-1.5 bg-zinc-200 rounded-full overflow-hidden">
               <div class="h-full nma-gradient-gold rounded-full" :style="{ width: `${continueProgress}%` }" />
             </div>
             <p class="text-xs text-zinc-500 mt-1">{{ continueProgress }}% complete</p>
@@ -59,7 +59,7 @@
               <span class="text-[10px] font-bold uppercase text-accent">{{ course.category }}</span>
               <h3 class="font-semibold text-sm mt-0.5">{{ course.title }}</h3>
               <p class="text-xs text-zinc-500 line-clamp-1">{{ course.subtitle }}</p>
-              <div v-if="memberStore.getCourseProgress(course.id) > 0" class="mt-2 h-1 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+              <div v-if="memberStore.getCourseProgress(course.id) > 0" class="mt-2 h-1 bg-zinc-200 rounded-full overflow-hidden">
                 <div class="h-full nma-gradient-gold rounded-full" :style="{ width: `${memberStore.getCourseProgress(course.id)}%` }" />
               </div>
             </div>

@@ -26,7 +26,7 @@
           v-for="post in filteredPosts"
           :key="post.id"
           class="nma-card p-4"
-          :class="post.isWin ? 'border-accent/40 bg-accent-muted/20 dark:bg-accent/5' : ''"
+          :class="post.isWin ? 'border-accent/40 bg-accent-muted/20' : ''"
         >
           <div class="flex gap-3">
             <div class="w-10 h-10 rounded-full nma-gradient-gold flex items-center justify-center text-sm font-bold text-zinc-900 shrink-0">
@@ -35,10 +35,10 @@
             <div class="flex-1 min-w-0">
               <div class="flex items-center gap-2 flex-wrap">
                 <span class="font-semibold text-sm">{{ post.author }}</span>
-                <span class="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500">
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-500">
                   Lvl {{ post.level }}
                 </span>
-                <span v-if="post.isWin" class="text-[10px] px-2 py-0.5 rounded-full bg-accent/20 text-accent-dark dark:text-accent-light font-bold">
+                <span v-if="post.isWin" class="text-[10px] px-2 py-0.5 rounded-full bg-accent/20 text-accent-dark font-bold">
                   🏆 Win
                 </span>
                 <span class="text-xs text-zinc-400 ml-auto">{{ post.time }}</span>

@@ -32,12 +32,12 @@
               </div>
             </div>
           </div>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-3 line-clamp-2">{{ mentor.bio }}</p>
+          <p class="text-sm text-zinc-600 mt-3 line-clamp-2">{{ mentor.bio }}</p>
           <div class="flex flex-wrap gap-1.5 mt-3">
             <span
               v-for="tag in mentor.specialties"
               :key="tag"
-              class="text-[10px] px-2 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
+              class="text-[10px] px-2 py-1 rounded-lg bg-zinc-100 text-zinc-600"
             >
               {{ tag }}
             </span>

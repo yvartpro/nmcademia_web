@@ -7,7 +7,7 @@
 
       <div class="nma-card overflow-hidden">
         <div class="h-32 nma-gradient-mesh relative">
-          <div class="absolute -bottom-8 left-6 w-20 h-20 rounded-2xl nma-gradient-gold flex items-center justify-center text-2xl font-bold text-zinc-900 border-4 border-surface-1 dark:border-surface-1-dark">
+          <div class="absolute -bottom-8 left-6 w-20 h-20 rounded-2xl nma-gradient-gold flex items-center justify-center text-2xl font-bold text-zinc-900 border-4 border-surface-1">
             {{ mentor.name.split(' ')[1]?.[0] || 'C' }}
           </div>
         </div>
@@ -18,7 +18,7 @@
             <span class="flex items-center gap-1"><Star :size="14" class="text-accent fill-accent" /> {{ mentor.rating }}</span>
             <span>Responds {{ mentor.responseTime }}</span>
           </div>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-4 leading-relaxed">{{ mentor.bio }}</p>
+          <p class="text-sm text-zinc-600 mt-4 leading-relaxed">{{ mentor.bio }}</p>
         </div>
       </div>
 
@@ -26,7 +26,7 @@
         <div class="nma-card p-5">
           <h3 class="text-sm font-semibold mb-2">Specialties</h3>
           <div class="flex flex-wrap gap-2 mt-2">
-            <span v-for="s in mentor.specialties" :key="s" class="text-xs px-3 py-1.5 rounded-xl bg-accent/10 text-accent-dark dark:text-accent-light">
+            <span v-for="s in mentor.specialties" :key="s" class="text-xs px-3 py-1.5 rounded-xl bg-accent/10 text-accent-dark">
               {{ s }}
             </span>
           </div>

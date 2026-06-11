@@ -12,7 +12,7 @@
         </div>
         <h2 class="text-lg font-display font-bold">{{ memberStore.levelTitle }}</h2>
         <p class="text-sm text-zinc-500 mt-1">{{ memberStore.xp.toLocaleString() }} XP</p>
-        <div class="mt-4 h-2 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden max-w-xs mx-auto">
+        <div class="mt-4 h-2 bg-zinc-200 rounded-full overflow-hidden max-w-xs mx-auto">
           <div class="h-full nma-gradient-gold rounded-full" :style="{ width: `${memberStore.levelInfo.progress}%` }" />
         </div>
       </div>
@@ -32,7 +32,7 @@
 
       <section v-if="memberStore.canFeature('courses')">
         <h2 class="font-display font-semibold text-lg mb-3">Course progress</h2>
-        <div class="nma-card divide-y divide-zinc-200/80 dark:divide-white/[0.06]">
+        <div class="nma-card divide-y divide-zinc-200/80">
           <div
             v-for="course in memberStore.filteredCourses"
             :key="course.id"
@@ -41,7 +41,7 @@
             <div class="w-10 h-10 rounded-xl bg-gradient-to-br shrink-0" :class="course.gradient" />
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium truncate">{{ course.title }}</p>
-              <div class="mt-1.5 h-1 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+              <div class="mt-1.5 h-1 bg-zinc-200 rounded-full overflow-hidden">
                 <div class="h-full nma-gradient-gold rounded-full" :style="{ width: `${memberStore.getCourseProgress(course.id)}%` }" />
               </div>
             </div>

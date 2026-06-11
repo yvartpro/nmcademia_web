@@ -15,10 +15,10 @@
       NMA
     </div>
     <div v-if="showText">
-      <h1 class="font-display font-semibold leading-tight text-zinc-900 dark:text-zinc-100" :class="size === 'sm' ? 'text-sm' : 'text-base'">
+      <h1 class="font-display font-semibold leading-tight text-zinc-900" :class="size === 'sm' ? 'text-sm' : 'text-base'">
         Network Marketing Academia
       </h1>
-      <p v-if="showTagline && size !== 'sm'" class="text-[10px] text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+      <p v-if="showTagline && size !== 'sm'" class="text-[10px] text-zinc-500 uppercase tracking-wider">
         Build. Lead. Earn.
       </p>
     </div>

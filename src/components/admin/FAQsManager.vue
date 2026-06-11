@@ -1,23 +1,23 @@
 <template>
   <div class="space-y-6 animate-fade-in">
     <div class="flex items-center justify-between flex-wrap gap-3">
-      <h3 class="text-base font-bold text-amber-400 font-display uppercase tracking-wider">FAQs</h3>
+      <h3 class="text-base font-bold text-[#008A20] font-display uppercase tracking-wider">FAQs</h3>
       <div class="flex gap-2 flex-grow sm:flex-grow-0">
         <input
           v-model="search"
           type="search"
           placeholder="Search questions…"
-          class="flex-grow sm:w-48 bg-slate-900 border border-gray-800 rounded-lg px-3 py-2 text-xs focus:border-amber-400 text-white"
+          class="flex-grow sm:w-48 bg-[#F4F6F5] border border-zinc-200 rounded-lg px-3 py-2 text-xs focus:border-[#008A20] focus:outline-none text-[#0A0F0D]"
         />
-        <button @click="openModal()" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-2 px-4 rounded-lg text-xs transition shrink-0">
+        <button @click="openModal()" class="bg-[#008A20] hover:bg-[#006616] text-white font-bold py-2 px-4 rounded-lg text-xs transition shrink-0">
           + Add FAQ
         </button>
       </div>
     </div>
 
-    <div class="bg-slate-950 border border-gray-900 rounded-xl overflow-hidden shadow-2xl">
+    <div class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
       <table class="w-full text-left text-xs">
-        <thead class="bg-slate-900 text-[10px] text-gray-500 uppercase tracking-widest border-b border-gray-950">
+        <thead class="bg-[#F4F6F5] text-[10px] text-[#0A0F0D] font-bold uppercase tracking-widest border-b border-zinc-200">
           <tr>
             <th class="p-4 w-12">#</th>
             <th class="p-4">Question</th>
@@ -25,69 +25,81 @@
             <th class="p-4 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-950 text-gray-300">
-          <tr v-for="item in filtered" :key="item.id" class="hover:bg-slate-900/30">
-            <td class="p-4 font-mono text-amber-500">{{ item.order }}</td>
+        <tbody class="divide-y divide-zinc-100 text-zinc-600">
+          <tr v-for="item in filtered" :key="item.id" class="hover:bg-[#F4F6F5]/60 transition">
+            <td class="p-4 font-mono text-[#008A20] font-bold">{{ item.order }}</td>
             <td class="p-4">
-              <p class="font-bold text-white">{{ item.question }}</p>
-              <p class="text-gray-500 mt-1 line-clamp-2">{{ item.answer }}</p>
+              <p class="font-bold text-[#0A0F0D]">{{ item.question }}</p>
+              <p class="text-zinc-400 mt-1 line-clamp-2">{{ item.answer }}</p>
             </td>
-            <td class="p-4 hidden lg:table-cell text-gray-500">{{ item.category }}</td>
+            <td class="p-4 hidden lg:table-cell text-zinc-400">{{ item.category }}</td>
             <td class="p-4 text-right space-x-2 shrink-0">
-              <button @click="openModal(item)" class="text-amber-400 hover:text-amber-300">Edit</button>
-              <button @click="handleDelete(item.id)" class="text-red-400 hover:text-red-300">Delete</button>
+              <button @click="openModal(item)" class="text-[#008A20] hover:text-[#006616] font-semibold">Edit</button>
+              <button @click="requestDelete(item.id)" class="text-red-500 hover:text-red-700 font-semibold">Delete</button>
             </td>
           </tr>
           <tr v-if="filtered.length === 0">
-            <td colspan="4" class="p-6 text-center text-gray-500">No FAQs match your search.</td>
+            <td colspan="4" class="p-6 text-center text-zinc-400">No FAQs match your search.</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div v-if="isModalOpen" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div class="max-w-lg w-full bg-slate-950 border border-gray-800 rounded-2xl p-6 space-y-4 shadow-2xl my-8">
-        <h4 class="text-lg font-bold text-amber-400 border-b border-gray-900 pb-2">
-          {{ editingId ? 'Edit FAQ' : 'New FAQ' }}
-        </h4>
-        <form @submit.prevent="saveItem" class="space-y-4 text-xs">
-          <div>
-            <label class="block text-gray-400 uppercase font-bold mb-1">Question</label>
-            <input v-model="form.question" required class="w-full bg-slate-900 border border-gray-800 rounded p-2 text-white focus:border-amber-400" />
+    <!-- Form Modal -->
+    <UiModal v-model="isModalOpen" :title="editingId ? 'Edit FAQ' : 'New FAQ'" subtitle="Knowledge Base">
+      <form id="faq-form" @submit.prevent="saveItem" class="space-y-4 text-xs">
+        <div class="adm-field">
+          <label class="adm-label">Question</label>
+          <input v-model="form.question" required class="adm-input" />
+        </div>
+        <div class="adm-field">
+          <label class="adm-label">Answer</label>
+          <textarea v-model="form.answer" rows="5" required class="adm-input"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="adm-field">
+            <label class="adm-label">Display order</label>
+            <input v-model.number="form.order" type="number" class="adm-input" />
           </div>
-          <div>
-            <label class="block text-gray-400 uppercase font-bold mb-1">Answer</label>
-            <textarea v-model="form.answer" rows="5" required class="w-full bg-slate-900 border border-gray-800 rounded p-2 text-white focus:border-amber-400"></textarea>
+          <div class="adm-field">
+            <label class="adm-label">Category</label>
+            <input v-model="form.category" class="adm-input" />
           </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-gray-400 uppercase font-bold mb-1">Display order</label>
-              <input v-model.number="form.order" type="number" class="w-full bg-slate-900 border border-gray-800 rounded p-2 text-white focus:border-amber-400" />
-            </div>
-            <div>
-              <label class="block text-gray-400 uppercase font-bold mb-1">Category</label>
-              <input v-model="form.category" class="w-full bg-slate-900 border border-gray-800 rounded p-2 text-white focus:border-amber-400" />
-            </div>
-          </div>
-          <div class="flex justify-end gap-3 pt-4 border-t border-gray-900">
-            <button type="button" @click="isModalOpen = false" class="text-gray-400 hover:text-white">Cancel</button>
-            <button type="submit" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded">Save</button>
-          </div>
-        </form>
-      </div>
-    </div>
+        </div>
+      </form>
+      <template #footer>
+        <button type="button" class="adm-btn-ghost" @click="isModalOpen = false">Cancel</button>
+        <button type="submit" form="faq-form" class="adm-btn-primary">
+          {{ editingId ? 'Save Changes' : 'Create FAQ' }}
+        </button>
+      </template>
+    </UiModal>
+
+    <!-- Confirm Delete Modal -->
+    <UiConfirmModal
+      v-model="confirmOpen"
+      title="Delete this FAQ?"
+      message="This will permanently remove the question and its answer. This action cannot be undone."
+      confirm-label="Yes, Delete"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useContentStore } from '../../stores/content';
+import UiModal from '../ui/UiModal.vue';
+import UiConfirmModal from '../ui/UiConfirmModal.vue';
 
 const contentStore = useContentStore();
 const search = ref('');
 const isModalOpen = ref(false);
 const editingId = ref(null);
 const form = ref({ question: '', answer: '', order: 0, category: 'General' });
+
+const confirmOpen = ref(false);
+const pendingDeleteId = ref(null);
 
 onMounted(() => contentStore.fetchFAQs());
 
@@ -117,7 +129,24 @@ const saveItem = async () => {
   isModalOpen.value = false;
 };
 
-const handleDelete = async (id) => {
-  if (confirm('Delete this FAQ?')) await contentStore.adminDeleteFAQ(id);
+const requestDelete = (id) => {
+  pendingDeleteId.value = id;
+  confirmOpen.value = true;
+};
+
+const executeDelete = async () => {
+  if (pendingDeleteId.value) await contentStore.adminDeleteFAQ(pendingDeleteId.value);
+  pendingDeleteId.value = null;
 };
 </script>
+
+<style scoped>
+.adm-field { display: flex; flex-direction: column; gap: 0.25rem; }
+.adm-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #6b7280; }
+.adm-input { width: 100%; background: #F4F6F5; border: 1px solid #e4e4e7; border-radius: 0.5rem; padding: 0.5rem 0.75rem; color: #0A0F0D; font-size: 0.75rem; outline: none; transition: border-color 0.15s; }
+.adm-input:focus { border-color: #008A20; }
+.adm-btn-ghost { font-size: 0.75rem; font-weight: 700; color: #6b7280; background: transparent; border: 1px solid #e4e4e7; cursor: pointer; padding: 0.5rem 0.875rem; border-radius: 0.5rem; transition: color 0.15s, border-color 0.15s; }
+.adm-btn-ghost:hover { color: #0A0F0D; border-color: #a1a1aa; }
+.adm-btn-primary { font-size: 0.75rem; font-weight: 800; background: #008A20; color: #fff; padding: 0.55rem 1.25rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: filter 0.15s; }
+.adm-btn-primary:hover { filter: brightness(1.1); }
+</style>

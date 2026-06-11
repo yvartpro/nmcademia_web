@@ -1,15 +1,15 @@
 <template>
-  <div class="min-h-screen bg-[#0b0f19] text-white flex flex-col justify-between font-sans relative overflow-hidden">
-    <!-- Background glowing bubbles -->
-    <div class="absolute top-1/3 left-1/3 w-80 h-80 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+  <div class="min-h-screen bg-white text-[#0A0F0D] flex flex-col justify-between font-sans relative overflow-hidden">
+    <!-- Subtle background accent -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-[#008A20]/5 rounded-full blur-[100px] pointer-events-none"></div>
 
-    <header class="p-6">
+    <header class="p-6 border-b border-zinc-100">
       <div class="max-w-6xl mx-auto flex items-center gap-3">
         <router-link to="/" class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center font-bold text-slate-900 text-sm shadow">
+          <div class="w-8 h-8 rounded-lg bg-[#008A20] flex items-center justify-center font-bold text-white text-sm shadow">
             NMA
           </div>
-          <span class="font-display font-bold text-sm tracking-wide bg-gradient-to-r from-amber-400 to-yellow-250 bg-clip-text text-transparent">
+          <span class="font-display font-bold text-sm tracking-wide text-[#0A0F0D]">
             Network Marketing Academia
           </span>
         </router-link>
@@ -17,43 +17,46 @@
     </header>
 
     <main class="flex-grow flex items-center justify-center px-4 relative z-10">
-      <div class="max-w-md w-full bg-slate-900/40 border border-gray-800 backdrop-blur-xl rounded-2xl p-8 shadow-2xl space-y-6">
+      <div class="max-w-md w-full bg-white border border-zinc-200 rounded-2xl p-8 shadow-lg space-y-6">
         <div class="text-center space-y-2">
-          <h2 class="text-2xl font-display font-bold bg-gradient-to-r from-amber-300 to-yellow-100 bg-clip-text text-transparent">Trainer Workspace</h2>
-          <p class="text-xs text-gray-400">Authenticate using administrator credentials to manage catalog, leads, settings, and support inquiries.</p>
+          <div class="w-12 h-12 rounded-xl bg-[#008A20]/10 flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl">🔐</span>
+          </div>
+          <h2 class="text-2xl font-display font-bold text-[#0A0F0D]">Trainer Workspace</h2>
+          <p class="text-xs text-zinc-500 leading-relaxed">Authenticate using administrator credentials to manage catalog, leads, settings, and support inquiries.</p>
         </div>
 
         <form @submit.prevent="handleLogin" class="space-y-4">
           <div class="space-y-1">
-            <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider">Username</label>
+            <label class="block text-xs font-bold text-zinc-600 uppercase tracking-wider">Username</label>
             <input 
               type="text" 
               v-model="username" 
               required 
               placeholder="admin"
-              class="w-full bg-slate-950 border border-gray-800 rounded-lg p-3 text-xs focus:outline-none focus:border-amber-400 transition" 
+              class="w-full bg-[#F4F6F5] border border-zinc-200 rounded-lg p-3 text-xs text-[#0A0F0D] focus:outline-none focus:border-[#008A20] focus:ring-1 focus:ring-[#008A20]/20 transition placeholder:text-zinc-400" 
             />
           </div>
 
           <div class="space-y-1">
-            <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider">Password</label>
+            <label class="block text-xs font-bold text-zinc-600 uppercase tracking-wider">Password</label>
             <input 
               type="password" 
               v-model="password" 
               required 
               placeholder="••••••••"
-              class="w-full bg-slate-950 border border-gray-800 rounded-lg p-3 text-xs focus:outline-none focus:border-amber-400 transition" 
+              class="w-full bg-[#F4F6F5] border border-zinc-200 rounded-lg p-3 text-xs text-[#0A0F0D] focus:outline-none focus:border-[#008A20] focus:ring-1 focus:ring-[#008A20]/20 transition" 
             />
           </div>
 
-          <div v-if="authStore.error" class="text-xs text-red-500 font-semibold p-2 bg-red-500/10 border border-red-500/20 rounded">
+          <div v-if="authStore.error" class="text-xs text-red-600 font-semibold p-3 bg-red-50 border border-red-200 rounded-lg">
             ⚠️ {{ authStore.error }}
           </div>
 
           <button 
             type="submit" 
             :disabled="authStore.loading"
-            class="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-3 rounded-lg text-xs transition disabled:opacity-50 font-display flex items-center justify-center gap-2"
+            class="w-full bg-[#008A20] hover:bg-[#006616] text-white font-bold py-3 rounded-lg text-sm transition disabled:opacity-50 font-display flex items-center justify-center gap-2 shadow-sm"
           >
             <span>{{ authStore.loading ? 'Authenticating...' : 'Sign In to Workspace' }}</span>
           </button>
@@ -61,7 +64,7 @@
       </div>
     </main>
 
-    <footer class="p-6 text-center text-xs text-gray-600 border-t border-gray-900 bg-slate-950/40">
+    <footer class="p-6 text-center text-xs text-zinc-400 border-t border-zinc-100">
       © 2026 Network Marketing Academia • Secured Portal
     </footer>
   </div>

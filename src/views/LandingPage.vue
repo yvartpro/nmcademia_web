@@ -1,12 +1,11 @@
 <template>
-  <div class="min-h-screen bg-surface-0 dark:bg-surface-0-dark text-zinc-900 dark:text-zinc-50 nma-gradient-mesh font-sans relative overflow-x-hidden">
+  <div class="min-h-screen bg-surface-0 text-zinc-900 nma-gradient-mesh font-sans relative overflow-x-hidden">
     
     <!-- Navbar -->
-    <nav class="sticky top-0 z-50 border-b border-zinc-200/80 dark:border-white/[0.06] bg-surface-1/90 dark:bg-surface-1-dark/90 backdrop-blur-xl">
+    <nav class="sticky top-0 z-50 border-b border-zinc-200/80 bg-surface-1/90 backdrop-blur-xl">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <AppLogo size="sm" />
         <div class="flex items-center gap-4">
-          <ThemeToggle />
           <a href="#journeys" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-900 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
             Start Journey
           </a>
@@ -25,11 +24,11 @@
         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-wider">
           <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span> Welcome Visionary
         </span>
-        <h1 class="text-4xl sm:text-6xl font-display font-extrabold tracking-tight leading-[1.1] text-zinc-950 dark:text-white">
+        <h1 class="text-4xl sm:text-6xl font-display font-extrabold tracking-tight leading-[1.1] text-zinc-950">
           Network Marketing Academia is not here to entertain you—
           <span class="bg-gradient-to-r from-accent via-accent-light to-accent-dark bg-clip-text text-transparent">it is here to confront you.</span>
         </h1>
-        <p class="text-base sm:text-xl text-zinc-550 dark:text-zinc-400 max-w-3xl mx-auto leading-relaxed pt-2">
+        <p class="text-base sm:text-xl text-zinc-550 max-w-3xl mx-auto leading-relaxed pt-2">
           The world you were prepared for is no longer the world you are living in. Jobs are shrinking, inflation is rising, and the promise that traditional education alone guarantees freedom is collapsing.
         </p>
       </div>
@@ -38,14 +37,14 @@
         <a href="#journeys" class="w-full sm:w-auto bg-gradient-to-r from-accent to-accent-dark hover:from-accent-light hover:to-accent text-slate-950 font-black px-8 py-4 rounded-xl text-sm uppercase tracking-wide transition-all shadow-glow hover:scale-[1.02] text-center">
           Start Your Journey
         </a>
-        <a href="#why-nm" class="w-full sm:w-auto bg-white/5 border border-zinc-350 dark:border-white/10 hover:bg-white/10 text-zinc-900 dark:text-white font-bold px-8 py-4 rounded-xl text-sm transition text-center">
+        <a href="#why-nm" class="w-full sm:w-auto bg-white/5 border border-zinc-350 hover:bg-white/10 text-zinc-900 font-bold px-8 py-4 rounded-xl text-sm transition text-center">
           Watch Introduction
         </a>
       </div>
     </header>
 
     <!-- Social Proof Section -->
-    <section class="border-y border-zinc-200/80 dark:border-white/[0.06] bg-zinc-50/50 dark:bg-white/[0.01] py-12">
+    <section class="border-y border-zinc-200/80 bg-zinc-50/50 py-12">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div v-for="stat in proofStats" :key="stat.label" class="text-center space-y-1">
@@ -66,10 +65,10 @@
       <div class="grid md:grid-cols-2 gap-10 items-center">
         <div class="space-y-6">
           <h3 class="text-xl font-bold text-accent">Power belongs to those who build networks.</h3>
-          <p class="text-zinc-650 dark:text-zinc-400 leading-relaxed">
+          <p class="text-zinc-650 leading-relaxed">
             Network Marketing Academia exists to educate a new generation of thinkers, leaders, and builders who understand that the future belongs to those who can create networks, influence people, and build communities in the digital age.
           </p>
-          <p class="text-zinc-650 dark:text-zinc-400 leading-relaxed">
+          <p class="text-zinc-650 leading-relaxed">
             This is more than selling products. It is the science of human connection, leadership multiplied through team duplication, and entrepreneurship powered by networks.
           </p>
         </div>
@@ -78,15 +77,15 @@
           <ul class="space-y-3">
             <li class="flex items-start gap-3">
               <span class="text-accent text-lg">✦</span>
-              <p class="text-sm text-zinc-700 dark:text-zinc-350"><strong>Leverage is power:</strong> Turn relationships into global economic ecosystems.</p>
+              <p class="text-sm text-zinc-700"><strong>Leverage is power:</strong> Turn relationships into global economic ecosystems.</p>
             </li>
             <li class="flex items-start gap-3">
               <span class="text-accent text-lg">✦</span>
-              <p class="text-sm text-zinc-700 dark:text-zinc-350"><strong>Mobile independence:</strong> Direct your global team from a single smartphone.</p>
+              <p class="text-sm text-zinc-700"><strong>Mobile independence:</strong> Direct your global team from a single smartphone.</p>
             </li>
             <li class="flex items-start gap-3">
               <span class="text-accent text-lg">✦</span>
-              <p class="text-sm text-zinc-700 dark:text-zinc-350"><strong>Pioneer advantage:</strong> Position yourself early in expanding markets.</p>
+              <p class="text-sm text-zinc-700"><strong>Pioneer advantage:</strong> Position yourself early in expanding markets.</p>
             </li>
           </ul>
         </div>
@@ -94,7 +93,7 @@
     </section>
 
     <!-- Why Network Marketing Section -->
-    <section id="why-nm" class="border-t border-zinc-200/80 dark:border-white/[0.06] bg-zinc-50/50 dark:bg-white/[0.01] py-20">
+    <section id="why-nm" class="border-t border-zinc-200/80 bg-zinc-50/50 py-20">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         <div class="text-center space-y-3">
           <UiSectionLabel>Understanding the Industry</UiSectionLabel>
@@ -129,13 +128,13 @@
           :key="test.name" 
           class="nma-card p-6 flex flex-col justify-between hover:shadow-glow transition-all duration-300"
         >
-          <p class="text-sm text-zinc-650 dark:text-zinc-400 italic font-light leading-relaxed">"{{ test.quote }}"</p>
-          <div class="flex items-center gap-4 pt-6 border-t border-zinc-200/50 dark:border-white/5 mt-6">
+          <p class="text-sm text-zinc-650 italic font-light leading-relaxed">"{{ test.quote }}"</p>
+          <div class="flex items-center gap-4 pt-6 border-t border-zinc-200/50 mt-6">
             <div class="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center text-accent font-bold">
               {{ test.name.split(' ').map(n=>n[0]).join('') }}
             </div>
             <div>
-              <h4 class="font-bold text-sm text-zinc-900 dark:text-white">{{ test.name }}</h4>
+              <h4 class="font-bold text-sm text-zinc-900">{{ test.name }}</h4>
               <span class="text-[10px] bg-accent/10 text-accent font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">{{ test.tag }}</span>
             </div>
           </div>
@@ -144,12 +143,12 @@
     </section>
 
     <!-- Funnel Journey Selection Section -->
-    <section id="journeys" class="border-t border-zinc-200/80 dark:border-white/[0.06] bg-gradient-to-b from-transparent to-zinc-950/20 py-24 scroll-mt-16">
+    <section id="journeys" class="border-t border-zinc-200/80 bg-gradient-to-b from-transparent to-zinc-950/20 py-24 scroll-mt-16">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         <div class="text-center space-y-4">
           <UiSectionLabel>Personalized Funnel</UiSectionLabel>
           <h2 class="text-3xl sm:text-5xl font-display font-black">Which Best Describes You?</h2>
-          <p class="text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto text-sm sm:text-base">
+          <p class="text-zinc-600 max-w-xl mx-auto text-sm sm:text-base">
             Your selection determines your entire user journey. We do not believe in one-size-fits-all presentation plans.
           </p>
         </div>
@@ -163,10 +162,10 @@
           >
             <div class="space-y-4">
               <span class="text-3xl block group-hover:scale-110 transition-transform duration-300">{{ j.icon }}</span>
-              <h3 class="text-lg font-bold text-zinc-950 dark:text-white font-display group-hover:text-accent transition-colors">
+              <h3 class="text-lg font-bold text-zinc-950 font-display group-hover:text-accent transition-colors">
                 {{ j.title }}
               </h3>
-              <p class="text-xs sm:text-sm text-zinc-550 dark:text-zinc-400 leading-relaxed">
+              <p class="text-xs sm:text-sm text-zinc-550 leading-relaxed">
                 {{ j.desc }}
               </p>
             </div>
@@ -181,7 +180,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="border-t border-zinc-200/80 dark:border-white/[0.06] bg-surface-1 dark:bg-surface-0-dark py-8 px-4 text-center">
+    <footer class="border-t border-zinc-200/80 bg-surface-1 py-8 px-4 text-center">
       <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
         <p>© 2026 Network Marketing Academia • All Rights Reserved</p>
         <p>Partner Company: Alliance In Motion Global</p>
@@ -194,7 +193,6 @@
 <script setup>
 // Vue reactivity APIs used in this file (none currently needed here)
 import AppLogo from '../components/ui/AppLogo.vue';
-import ThemeToggle from '../components/ui/ThemeToggle.vue';
 import UiSectionLabel from '../components/ui/UiSectionLabel.vue';
 
 const proofStats = [

@@ -1,14 +1,13 @@
 <template>
   <header
-    class="sticky top-0 z-50 border-b border-zinc-200/80 dark:border-white/[0.06] backdrop-blur-xl"
-    :class="transparent ? 'bg-transparent' : 'bg-surface-1/90 dark:bg-surface-1-dark/90'"
+    class="sticky top-0 z-50 border-b border-zinc-200/80 backdrop-blur-xl"
+    :class="transparent ? 'bg-transparent' : 'bg-surface-1/90'"
   >
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
       <router-link to="/" class="focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-xl">
         <AppLogo :logo-url="logoUrl" :show-tagline="showTagline" />
       </router-link>
       <div class="flex items-center gap-2">
-        <ThemeToggle />
         <UiButton
           v-if="showMemberLink && memberStore.isRegistered"
           variant="ghost"
@@ -20,7 +19,7 @@
         <router-link
           v-if="showAdmin"
           to="/admin/login"
-          class="text-xs font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 px-2 py-1"
+          class="text-xs font-medium text-zinc-500 hover:text-zinc-700 px-2 py-1"
         >
           Admin
         </router-link>
@@ -31,7 +30,6 @@
 
 <script setup>
 import AppLogo from '../components/ui/AppLogo.vue';
-import ThemeToggle from '../components/ui/ThemeToggle.vue';
 import UiButton from '../components/ui/UiButton.vue';
 import { useMemberStore } from '../stores/member';
 

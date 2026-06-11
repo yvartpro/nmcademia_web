@@ -16,7 +16,7 @@
       </div>
     </main>
 
-    <footer v-if="showFooter" class="border-t border-zinc-200/80 dark:border-white/[0.06] px-4 py-6 text-center">
+    <footer v-if="showFooter" class="border-t border-zinc-200/80 px-4 py-6 text-center">
       <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-500">
         <p>© 2026 Network Marketing Academia</p>
         <p>Official Partner: Alliance In Motion Global</p>

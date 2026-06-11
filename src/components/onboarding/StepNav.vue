@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-between pt-4 border-t border-zinc-200/80 dark:border-white/[0.06] gap-3">
+  <div class="flex items-center justify-between pt-4 border-t border-zinc-200/80 gap-3">
     <UiButton variant="ghost" size="sm" type="button" @click="$emit('back')">Back</UiButton>
     <UiButton
       variant="primary"

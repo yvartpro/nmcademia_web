@@ -8,67 +8,59 @@
   }
 
   body {
-    @apply bg-surface-0 text-zinc-900 dark:bg-surface-0-dark dark:text-zinc-50;
+    @apply bg-surface-1 text-primary;
   }
 
   ::selection {
-    @apply bg-accent-light/40 text-zinc-900;
-  }
-
-  .dark ::selection {
-    @apply bg-accent/30 text-white;
+    @apply bg-accent-light text-primary;
   }
 }
 
 @layer components {
   .nma-gradient-text {
-    @apply bg-gradient-to-r from-accent-dark via-accent to-accent-light bg-clip-text text-transparent;
+    @apply text-accent font-bold;
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+    -webkit-text-fill-color: initial;
   }
 
   .nma-gradient-gold {
-    @apply bg-gradient-to-r from-accent-dark via-accent to-accent-light;
+    @apply bg-accent;
   }
 
   .nma-gradient-mesh {
     background:
-      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(212, 175, 55, 0.08), transparent),
-      radial-gradient(ellipse 60% 50% at 100% 50%, rgba(37, 99, 235, 0.05), transparent),
-      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(212, 175, 55, 0.04), transparent);
-  }
-
-  .dark .nma-gradient-mesh {
-    background:
-      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(212, 175, 55, 0.12), transparent),
-      radial-gradient(ellipse 60% 50% at 100% 50%, rgba(37, 99, 235, 0.08), transparent),
-      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(212, 175, 55, 0.06), transparent),
-      #030712;
+      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0, 138, 32, 0.05), transparent),
+      radial-gradient(ellipse 60% 50% at 100% 50%, rgba(0, 138, 32, 0.03), transparent),
+      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(0, 138, 32, 0.02), transparent);
   }
 
   .nma-card {
-    @apply bg-surface-1 dark:bg-surface-1-dark border border-zinc-200/80 dark:border-white/[0.06] rounded-card shadow-card dark:shadow-card-dark transition-all duration-300;
+    @apply bg-surface-1 border border-zinc-200 rounded-card shadow-card transition-all duration-300;
   }
 
   .nma-card-glass {
-    @apply bg-white/60 dark:bg-white/[0.02] border border-zinc-200/50 dark:border-white/[0.05] rounded-card shadow-xl backdrop-blur-xl transition-all duration-300;
+    @apply bg-white/60 border border-zinc-200/50 rounded-card shadow-xl backdrop-blur-xl transition-all duration-300;
   }
 
   .nma-input {
-    @apply w-full bg-surface-1 dark:bg-surface-2-dark border border-zinc-300 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm
-           text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400
+    @apply w-full bg-surface-1 border border-zinc-300 rounded-xl px-4 py-3 text-sm
+           text-primary placeholder:text-zinc-400
            focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent
            transition-all duration-200;
   }
 
   .nma-input-glass {
-    @apply w-full bg-white/10 dark:bg-white/[0.03] border border-zinc-300 dark:border-white/[0.08] rounded-xl px-4 py-3 text-sm
-           text-zinc-950 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500
+    @apply w-full bg-white/10 border border-zinc-300 rounded-xl px-4 py-3 text-sm
+           text-primary placeholder:text-zinc-400
            focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent
            transition-all duration-200 backdrop-blur-md;
   }
 
   .nma-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: rgba(212, 175, 55, 0.3) transparent;
+    scrollbar-color: rgba(0, 138, 32, 0.2) transparent;
   }
 
   .nma-scrollbar::-webkit-scrollbar {
@@ -77,11 +69,11 @@
   }
 
   .nma-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-accent/30 rounded-full;
+    @apply bg-accent/20 rounded-full;
   }
 
   .nma-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-accent/50;
+    @apply bg-accent/40;
   }
 
   .nma-safe-bottom {

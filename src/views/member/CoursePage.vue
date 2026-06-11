@@ -6,7 +6,7 @@
     </div>
 
     <div v-else class="space-y-6 motion-safe:animate-fade-in">
-      <router-link to="/app/learn" class="inline-flex items-center gap-1 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300">
+      <router-link to="/app/learn" class="inline-flex items-center gap-1 text-sm text-zinc-500 hover:text-zinc-700">
         <ChevronLeft :size="16" /> Back to Learn
       </router-link>
 
@@ -36,12 +36,12 @@
       <!-- About -->
       <section class="nma-card p-5">
         <h2 class="font-display font-semibold mb-2">About This Journey</h2>
-        <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">{{ course.description }}</p>
+        <p class="text-sm text-zinc-600 leading-relaxed">{{ course.description }}</p>
       </section>
 
       <!-- Progress -->
       <div class="flex items-center gap-3">
-        <div class="flex-1 h-2 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+        <div class="flex-1 h-2 bg-zinc-200 rounded-full overflow-hidden">
           <div class="h-full nma-gradient-gold rounded-full transition-all" :style="{ width: `${progress}%` }" />
         </div>
         <span class="text-sm font-medium">{{ progress }}%</span>
@@ -50,12 +50,12 @@
       <!-- Lesson list -->
       <section>
         <h2 class="font-display font-semibold text-lg mb-3">Your Path</h2>
-        <div class="nma-card divide-y divide-zinc-200/80 dark:divide-white/[0.06]">
+        <div class="nma-card divide-y divide-zinc-200/80">
           <router-link
             v-for="(lesson, idx) in lessons"
             :key="lesson.id"
             :to="`/app/learn/${courseId}/${lesson.id}`"
-            class="flex items-center gap-4 p-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
+            class="flex items-center gap-4 p-4 hover:bg-zinc-50 transition-colors"
           >
             <div
               class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-sm font-bold"
@@ -63,7 +63,7 @@
                 ? 'bg-success text-white'
                 : idx === firstIncompleteIdx
                   ? 'nma-gradient-gold text-zinc-900'
-                  : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500'"
+                  : 'bg-zinc-100 text-zinc-500'"
             >
               <Check v-if="isComplete(lesson.id)" :size="16" />
               <span v-else>{{ idx + 1 }}</span>

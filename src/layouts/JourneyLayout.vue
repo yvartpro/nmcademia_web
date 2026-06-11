@@ -1,11 +1,11 @@
 <template>
-  <div v-if="journey" class="min-h-screen bg-surface-0 dark:bg-surface-0-dark pb-20 lg:pb-6">
+  <div v-if="journey" class="min-h-screen bg-surface-0 pb-20 lg:pb-6">
     <!-- Desktop sidebar (only when nav items exist) -->
     <aside
       v-if="navItems.length"
-      class="hidden lg:flex fixed left-0 top-0 bottom-0 w-56 flex-col border-r border-zinc-200/80 dark:border-white/[0.06] bg-surface-1 dark:bg-surface-1-dark z-40"
+      class="hidden lg:flex fixed left-0 top-0 bottom-0 w-56 flex-col border-r border-zinc-200/80 bg-surface-1 z-40"
     >
-      <div class="p-4 border-b border-zinc-200/80 dark:border-white/[0.06]">
+      <div class="p-4 border-b border-zinc-200/80">
         <router-link :to="journey.defaultRoute">
           <AppLogo :logo-url="logoUrl" size="sm" />
         </router-link>
@@ -18,21 +18,21 @@
           :to="item.to"
           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors"
           :class="isActive(item.to)
-            ? 'bg-accent/15 text-accent-dark dark:text-accent-light'
-            : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'"
+            ? 'bg-accent/15 text-accent-dark'
+            : 'text-zinc-600 hover:bg-zinc-100'"
         >
           <component :is="item.icon" :size="18" />
           {{ item.label }}
         </router-link>
       </nav>
-      <div class="p-4 border-t border-zinc-200/80 dark:border-white/[0.06] text-xs text-zinc-500">
+      <div class="p-4 border-t border-zinc-200/80 text-xs text-zinc-500">
         {{ memberStore.displayName }}
       </div>
     </aside>
 
     <div :class="navItems.length ? 'lg:pl-56' : ''">
       <header
-        class="sticky top-0 z-30 border-b border-zinc-200/80 dark:border-white/[0.06] bg-surface-1/90 dark:bg-surface-1-dark/90 backdrop-blur-xl px-4 py-3"
+        class="sticky top-0 z-30 border-b border-zinc-200/80 bg-surface-1/90 backdrop-blur-xl px-4 py-3"
       >
         <div class="max-w-4xl mx-auto flex items-center justify-between">
           <router-link :to="journey.defaultRoute">
@@ -46,7 +46,6 @@
               <Flame :size="14" />
               {{ memberStore.streak }}
             </span>
-            <ThemeToggle />
           </div>
         </div>
       </header>
@@ -59,7 +58,7 @@
   <!-- Mobile bottom nav -->
     <nav
       v-if="navItems.length"
-      class="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200/80 dark:border-white/[0.06] bg-surface-1/95 dark:bg-surface-1-dark/95 backdrop-blur-xl nma-safe-bottom"
+      class="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200/80 bg-surface-1/95 backdrop-blur-xl nma-safe-bottom"
     >
       <div class="flex justify-around px-2 pt-2 pb-1">
         <router-link
@@ -67,7 +66,7 @@
           :key="item.to"
           :to="item.to"
           class="flex flex-col items-center gap-0.5 px-3 py-2 min-w-[56px]"
-          :class="isActive(item.to) ? 'text-accent-dark dark:text-accent-light' : 'text-zinc-500'"
+          :class="isActive(item.to) ? 'text-accent-dark' : 'text-zinc-500'"
         >
           <component :is="item.icon" :size="22" />
           <span class="text-[10px] font-medium">{{ item.label }}</span>
@@ -82,7 +81,6 @@ import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { BookOpen, BarChart3, User, Flame, Presentation } from 'lucide-vue-next';
 import AppLogo from '../components/ui/AppLogo.vue';
-import ThemeToggle from '../components/ui/ThemeToggle.vue';
 import { useMemberStore } from '../stores/member';
 import { useSettingsStore } from '../stores/settings';
 import { getFullMediaUrl } from '../api';

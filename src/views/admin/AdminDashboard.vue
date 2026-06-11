@@ -1,16 +1,16 @@
 <template>
-  <div class="min-h-screen bg-[#0b0f19] text-white flex font-sans">
+  <div class="min-h-screen bg-white text-[#0A0F0D] flex font-sans">
     
     <!-- Sidebar Navigation -->
-    <aside class="w-64 bg-slate-950 border-r border-gray-900 flex flex-col justify-between shrink-0">
+    <aside class="w-64 bg-[#F4F6F5] border-r border-zinc-200 flex flex-col justify-between shrink-0">
       <div>
-        <div class="p-6 border-b border-gray-950 flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center font-bold text-slate-900 text-sm shadow">
+        <div class="p-6 border-b border-zinc-200 flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-[#008A20] flex items-center justify-center font-bold text-white text-sm shadow">
             NMA
           </div>
           <div>
-            <h1 class="font-display font-bold text-xs tracking-wide">NMA Workspace</h1>
-            <span class="text-[9px] text-amber-500 font-mono tracking-widest">ADMINISTRATOR</span>
+            <h1 class="font-display font-bold text-xs tracking-wide text-[#0A0F0D]">NMA Workspace</h1>
+            <span class="text-[9px] text-[#008A20] font-mono tracking-widest">ADMINISTRATOR</span>
           </div>
         </div>
 
@@ -20,8 +20,8 @@
             :class="[
               'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
               activeTab === 'leads' 
-                ? 'bg-amber-400 text-slate-950 shadow-md font-bold' 
-                : 'text-gray-400 hover:text-white hover:bg-slate-900/50'
+                ? 'bg-[#008A20]/10 text-[#008A20] border-l-4 border-[#008A20] font-bold' 
+                : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60'
             ]"
           >
             <span>👥</span>
@@ -33,8 +33,8 @@
             :class="[
               'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
               activeTab === 'chats' 
-                ? 'bg-amber-400 text-slate-950 shadow-md font-bold' 
-                : 'text-gray-400 hover:text-white hover:bg-slate-900/50'
+                ? 'bg-[#008A20]/10 text-[#008A20] border-l-4 border-[#008A20] font-bold' 
+                : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60'
             ]"
           >
             <span>💬</span>
@@ -46,8 +46,8 @@
             :class="[
               'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
               activeTab === 'settings' 
-                ? 'bg-amber-400 text-slate-950 shadow-md font-bold' 
-                : 'text-gray-400 hover:text-white hover:bg-slate-900/50'
+                ? 'bg-[#008A20]/10 text-[#008A20] border-l-4 border-[#008A20] font-bold' 
+                : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60'
             ]"
           >
             <span>⚙️</span>
@@ -55,14 +55,14 @@
           </button>
           
           <div class="pt-4 pb-2">
-            <span class="px-4 text-[10px] font-bold text-gray-600 uppercase tracking-widest">Content Management</span>
+            <span class="px-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Content Management</span>
           </div>
 
           <button 
             @click="activeTab = 'founders'"
             :class="[
               'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
-              activeTab === 'founders' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'text-gray-400 hover:text-white hover:bg-slate-900/50 border border-transparent'
+              activeTab === 'founders' ? 'bg-[#008A20]/10 text-[#008A20] border border-[#008A20]/20' : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60 border border-transparent'
             ]"
           >
             <span>👔</span>
@@ -73,7 +73,7 @@
             @click="activeTab = 'testimonials'"
             :class="[
               'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
-              activeTab === 'testimonials' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'text-gray-400 hover:text-white hover:bg-slate-900/50 border border-transparent'
+              activeTab === 'testimonials' ? 'bg-[#008A20]/10 text-[#008A20] border border-[#008A20]/20' : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60 border border-transparent'
             ]"
           >
             <span>⭐</span>
@@ -84,7 +84,7 @@
             @click="activeTab = 'partners'"
             :class="[
               'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
-              activeTab === 'partners' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'text-gray-400 hover:text-white hover:bg-slate-900/50 border border-transparent'
+              activeTab === 'partners' ? 'bg-[#008A20]/10 text-[#008A20] border border-[#008A20]/20' : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60 border border-transparent'
             ]"
           >
             <span>🏭</span>
@@ -126,10 +126,10 @@
         </nav>
       </div>
 
-      <div class="p-4 border-t border-gray-950">
+      <div class="p-4 border-t border-zinc-200">
         <button 
           @click="handleLogout"
-          class="w-full bg-slate-900 hover:bg-red-950/20 hover:text-red-400 hover:border-red-900/50 border border-gray-800 text-gray-400 text-xs font-bold py-2.5 rounded-lg transition"
+          class="w-full bg-white hover:bg-red-50 hover:text-red-600 hover:border-red-200 border border-zinc-200 text-zinc-500 text-xs font-bold py-2.5 rounded-lg transition"
         >
           Sign Out
         </button>
@@ -137,17 +137,17 @@
     </aside>
 
     <!-- Main Workspace -->
-    <main class="flex-grow flex flex-col bg-slate-950/20 overflow-y-auto">
+    <main class="flex-grow flex flex-col bg-[#F4F6F5]/40 overflow-y-auto">
       
       <!-- Top header bar -->
-      <header class="h-16 border-b border-gray-900 px-8 flex items-center justify-between shrink-0 bg-slate-950/40">
-        <h2 class="text-sm font-semibold tracking-wide uppercase text-gray-400">
+      <header class="h-16 border-b border-zinc-200 px-8 flex items-center justify-between shrink-0 bg-white">
+        <h2 class="text-sm font-bold tracking-wide uppercase text-[#0A0F0D]">
           {{ activeTabTitle }}
         </h2>
         <div class="flex items-center gap-4 text-xs">
-          <span class="text-gray-400">Database Status:</span>
-          <span class="flex items-center gap-1.5 font-semibold text-emerald-400">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Connected
+          <span class="text-zinc-500">Database Status:</span>
+          <span class="flex items-center gap-1.5 font-semibold text-[#008A20]">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#008A20]"></span> Connected
           </span>
         </div>
       </header>
@@ -160,31 +160,31 @@
           
           <!-- Summary statistics cards -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="p-5 bg-slate-900/40 border border-gray-850 rounded-xl">
-              <span class="text-xs text-gray-400 font-bold uppercase tracking-wider block">Total Captured</span>
-              <p class="text-2xl font-black text-white mt-1">{{ totalLeads }}</p>
+            <div class="p-5 bg-white border border-zinc-200 rounded-xl shadow-sm">
+              <span class="text-xs text-zinc-500 font-bold uppercase tracking-wider block">Total Captured</span>
+              <p class="text-2xl font-black text-[#0A0F0D] mt-1">{{ totalLeads }}</p>
             </div>
-            <div class="p-5 bg-slate-900/40 border border-gray-850 rounded-xl">
-              <span class="text-xs text-amber-500 font-bold uppercase tracking-wider block">Pending</span>
-              <p class="text-2xl font-black text-amber-500 mt-1">{{ pendingLeads }}</p>
+            <div class="p-5 bg-white border border-zinc-200 rounded-xl shadow-sm">
+              <span class="text-xs text-amber-600 font-bold uppercase tracking-wider block">Pending</span>
+              <p class="text-2xl font-black text-amber-600 mt-1">{{ pendingLeads }}</p>
             </div>
-            <div class="p-5 bg-slate-900/40 border border-gray-850 rounded-xl">
-              <span class="text-xs text-blue-400 font-bold uppercase tracking-wider block">Contacted</span>
-              <p class="text-2xl font-black text-blue-400 mt-1">{{ contactedLeads }}</p>
+            <div class="p-5 bg-white border border-zinc-200 rounded-xl shadow-sm">
+              <span class="text-xs text-blue-600 font-bold uppercase tracking-wider block">Contacted</span>
+              <p class="text-2xl font-black text-blue-600 mt-1">{{ contactedLeads }}</p>
             </div>
-            <div class="p-5 bg-slate-900/40 border border-gray-850 rounded-xl">
-              <span class="text-xs text-emerald-400 font-bold uppercase tracking-wider block">Joined Alliance</span>
-              <p class="text-2xl font-black text-emerald-400 mt-1">{{ joinedLeads }}</p>
+            <div class="p-5 bg-white border border-zinc-200 rounded-xl shadow-sm">
+              <span class="text-xs text-[#008A20] font-bold uppercase tracking-wider block">Joined Alliance</span>
+              <p class="text-2xl font-black text-[#008A20] mt-1">{{ joinedLeads }}</p>
             </div>
           </div>
 
           <!-- Filters area -->
-          <div class="bg-slate-900/30 border border-gray-900 rounded-xl p-4 flex flex-wrap gap-4 items-center justify-between">
+          <div class="bg-white border border-zinc-200 rounded-xl p-4 flex flex-wrap gap-4 items-center justify-between shadow-sm">
             <div class="flex flex-wrap gap-3">
               <select 
                 v-model="leadsFilter.country"
                 @change="loadLeads"
-                class="bg-slate-950 border border-gray-800 text-xs text-white rounded-lg px-3 py-2 focus:outline-none focus:border-amber-400"
+                class="bg-white border border-zinc-200 text-xs text-[#0A0F0D] rounded-lg px-3 py-2 focus:outline-none focus:border-[#008A20]"
               >
                 <option value="">All Countries</option>
                 <option v-for="c in catalogStore.countries" :key="c.code" :value="c.code">
@@ -195,7 +195,7 @@
               <select 
                 v-model="leadsFilter.status"
                 @change="loadLeads"
-                class="bg-slate-950 border border-gray-800 text-xs text-white rounded-lg px-3 py-2 focus:outline-none focus:border-amber-400"
+                class="bg-white border border-zinc-200 text-xs text-[#0A0F0D] rounded-lg px-3 py-2 focus:outline-none focus:border-[#008A20]"
               >
                 <option value="">All Statuses</option>
                 <option value="Pending">Pending</option>
@@ -205,17 +205,17 @@
               </select>
             </div>
             
-            <button @click="loadLeads" class="text-xs text-amber-400 hover:underline">
+            <button @click="loadLeads" class="text-xs text-[#008A20] hover:underline font-semibold">
               ⟳ Refresh Leads
             </button>
           </div>
 
           <!-- Leads Data Table -->
-          <div class="bg-slate-950 border border-gray-900 rounded-xl overflow-hidden shadow-2xl">
+          <div class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
             <div class="overflow-x-auto">
               <table class="w-full border-collapse text-left">
                 <thead>
-                  <tr class="bg-slate-900 text-[10px] text-gray-500 uppercase tracking-widest border-b border-gray-950">
+                  <tr class="bg-[#F4F6F5] text-[10px] text-[#0A0F0D] font-bold uppercase tracking-widest border-b border-zinc-200">
                     <th class="p-4">Name</th>
                     <th class="p-4">Email</th>
                     <th class="p-4">Country</th>
@@ -225,12 +225,12 @@
                     <th class="p-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-950 text-xs">
-                  <tr v-for="lead in leadsStore.leads" :key="lead.id" class="hover:bg-slate-900/30 transition">
-                    <td class="p-4 font-semibold text-gray-200">{{ lead.fullName }}</td>
-                    <td class="p-4 text-gray-400">{{ lead.email }}</td>
-                    <td class="p-4 text-amber-500 font-bold uppercase">{{ lead.country }}</td>
-                    <td class="p-4 text-gray-400 truncate max-w-[150px]">{{ lead.profileType }}</td>
+                <tbody class="divide-y divide-zinc-100 text-xs">
+                  <tr v-for="lead in leadsStore.leads" :key="lead.id" class="hover:bg-[#F4F6F5]/60 transition">
+                    <td class="p-4 font-semibold text-[#0A0F0D]">{{ lead.fullName }}</td>
+                    <td class="p-4 text-zinc-500">{{ lead.email }}</td>
+                    <td class="p-4 text-[#008A20] font-bold uppercase">{{ lead.country }}</td>
+                    <td class="p-4 text-zinc-500 truncate max-w-[150px]">{{ lead.profileType }}</td>
                     <td class="p-4">
                       <select 
                         :value="lead.status"
@@ -246,24 +246,24 @@
                         <option value="Closed">Closed</option>
                       </select>
                     </td>
-                    <td class="p-4 text-gray-500">{{ formatDate(lead.createdAt) }}</td>
+                    <td class="p-4 text-zinc-400">{{ formatDate(lead.createdAt) }}</td>
                     <td class="p-4 text-right space-x-2 shrink-0">
                       <button 
                         @click="showDetails(lead)"
-                        class="text-[10px] border border-gray-800 hover:border-amber-400 hover:text-amber-400 px-2 py-1 rounded transition"
+                        class="text-[10px] border border-zinc-200 hover:border-[#008A20] hover:text-[#008A20] px-2 py-1 rounded transition"
                       >
                         View Details
                       </button>
                       <button 
                         @click="deleteLead(lead.id)"
-                        class="text-[10px] border border-transparent hover:border-red-900 hover:text-red-400 px-2 py-1 rounded transition"
+                        class="text-[10px] border border-transparent hover:border-red-200 hover:text-red-500 px-2 py-1 rounded transition"
                       >
                         Delete
                       </button>
                     </td>
                   </tr>
                   <tr v-if="leadsStore.leads.length === 0">
-                    <td colspan="7" class="p-8 text-center text-gray-500 text-xs">
+                    <td colspan="7" class="p-8 text-center text-zinc-400 text-xs">
                       No leads captured matching filters.
                     </td>
                   </tr>
@@ -274,18 +274,18 @@
         </div>
 
         <!-- Tab 2: Live Chat Center (Split Pane) -->
-        <div v-else-if="activeTab === 'chats'" class="h-[calc(100vh-12rem)] min-h-[450px] border border-gray-900 rounded-xl overflow-hidden flex bg-slate-950/40 animate-fade-in">
+        <div v-else-if="activeTab === 'chats'" class="h-[calc(100vh-12rem)] min-h-[450px] border border-zinc-200 rounded-xl overflow-hidden flex bg-white animate-fade-in shadow-sm">
           
           <!-- Chats Sessions Left List -->
-          <div class="w-80 border-r border-gray-900 flex flex-col justify-between shrink-0 bg-slate-950/20">
-            <header class="p-4 border-b border-gray-950 bg-slate-900/40 flex items-center justify-between">
-              <span class="text-xs font-bold text-gray-300">Active Inquiries</span>
-              <button @click="chatStore.adminFetchSessions()" class="text-[10px] text-amber-500 hover:underline">
+          <div class="w-80 border-r border-zinc-200 flex flex-col justify-between shrink-0 bg-[#F4F6F5]/50">
+            <header class="p-4 border-b border-zinc-200 bg-white flex items-center justify-between">
+              <span class="text-xs font-bold text-[#0A0F0D]">Active Inquiries</span>
+              <button @click="chatStore.adminFetchSessions()" class="text-[10px] text-[#008A20] hover:underline font-semibold">
                 Refresh
               </button>
             </header>
 
-            <div class="flex-grow overflow-y-auto divide-y divide-gray-950 custom-scrollbar">
+            <div class="flex-grow overflow-y-auto divide-y divide-zinc-100 custom-scrollbar">
               <div 
                 v-for="session in chatStore.activeSessions" 
                 :key="session.id"
@@ -293,54 +293,54 @@
                 :class="[
                   'p-4 cursor-pointer transition-all duration-200 space-y-1 text-xs',
                   chatStore.selectedSessionId === session.id 
-                    ? 'bg-amber-500/10 border-l-4 border-amber-400' 
-                    : 'hover:bg-slate-900/30'
+                    ? 'bg-[#008A20]/5 border-l-4 border-[#008A20]' 
+                    : 'hover:bg-[#F4F6F5]'
                 ]"
               >
                 <div class="flex items-center justify-between">
-                  <h6 class="font-bold" :class="{'text-amber-400': chatStore.selectedSessionId === session.id}">
+                  <h6 class="font-bold" :class="{'text-[#008A20]': chatStore.selectedSessionId === session.id, 'text-[#0A0F0D]': chatStore.selectedSessionId !== session.id}">
                     {{ session.visitorName }}
                   </h6>
-                  <span class="text-[9px] text-gray-500">
+                  <span class="text-[9px] text-zinc-400">
                     {{ formatTime(session.lastMessageAt) }}
                   </span>
                 </div>
                 <div class="flex items-center justify-between">
-                  <p class="text-[11px] text-gray-400 truncate max-w-[140px] font-light">
+                  <p class="text-[11px] text-zinc-500 truncate max-w-[140px] font-light">
                     {{ session.email || 'No Email' }}
                   </p>
                   <span 
                     :class="[
                       'text-[8px] font-bold uppercase rounded px-1.5 py-0.5',
-                      session.status === 'active' ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' : 'bg-gray-800 text-gray-500'
+                      session.status === 'active' ? 'bg-[#008A20]/10 border border-[#008A20]/20 text-[#008A20]' : 'bg-zinc-100 text-zinc-400'
                     ]"
                   >
                     {{ session.status }}
                   </span>
                 </div>
               </div>
-              <div v-if="chatStore.activeSessions.length === 0" class="text-center text-gray-500 text-xs py-8">
+              <div v-if="chatStore.activeSessions.length === 0" class="text-center text-zinc-400 text-xs py-8">
                 No chat sessions found.
               </div>
             </div>
           </div>
 
           <!-- Chat Conversation Area -->
-          <div class="flex-grow flex flex-col justify-between bg-slate-950/10">
+          <div class="flex-grow flex flex-col justify-between bg-white">
             <!-- Header -->
-            <header v-if="chatStore.selectedSessionId" class="p-4 border-b border-gray-900 bg-slate-900/20 flex items-center justify-between">
+            <header v-if="chatStore.selectedSessionId" class="p-4 border-b border-zinc-200 bg-[#F4F6F5]/40 flex items-center justify-between">
               <div class="flex items-center gap-3 text-xs">
-                <span class="font-bold text-amber-400">
+                <span class="font-bold text-[#008A20]">
                   {{ activeChatSessionDetails?.visitorName }}
                 </span>
-                <span class="text-gray-500">•</span>
-                <span class="text-gray-400">
+                <span class="text-zinc-400">•</span>
+                <span class="text-zinc-500">
                   {{ activeChatSessionDetails?.phone || 'No phone' }}
                 </span>
               </div>
               <button 
                 @click="closeSession(chatStore.selectedSessionId)"
-                class="text-[10px] bg-red-950/20 hover:bg-red-950/50 border border-red-900/30 text-red-400 px-3 py-1 rounded transition"
+                class="text-[10px] bg-red-50 hover:bg-red-100 border border-red-200 text-red-500 px-3 py-1 rounded transition"
               >
                 Close Chat Session
               </button>
@@ -348,7 +348,7 @@
 
             <!-- Message Area -->
             <div class="flex-grow p-6 overflow-y-auto space-y-4 custom-scrollbar" ref="chatMessagesContainer">
-              <div v-if="!chatStore.selectedSessionId" class="h-full flex flex-col items-center justify-center text-gray-500 gap-2">
+              <div v-if="!chatStore.selectedSessionId" class="h-full flex flex-col items-center justify-center text-zinc-400 gap-2">
                 <span class="text-3xl">💬</span>
                 <span class="text-xs">Select an inquiry from the sidebar to open the conversation.</span>
               </div>
@@ -360,12 +360,12 @@
                   :class="[
                     'max-w-[70%] p-3.5 rounded-xl text-xs leading-relaxed break-words',
                     msg.sender === 'trainer'
-                      ? 'self-end ml-auto bg-amber-500/10 border border-amber-500/20 text-amber-100 rounded-br-none'
-                      : 'self-start mr-auto bg-slate-900 border border-gray-850 text-gray-250 rounded-bl-none'
+                      ? 'self-end ml-auto bg-[#008A20]/10 border border-[#008A20]/20 text-[#0A0F0D] rounded-br-none'
+                      : 'self-start mr-auto bg-[#F4F6F5] border border-zinc-200 text-[#0A0F0D] rounded-bl-none'
                   ]"
                 >
                   <p>{{ msg.message }}</p>
-                  <span class="text-[8px] text-gray-500 block text-right mt-1.5">
+                  <span class="text-[8px] text-zinc-400 block text-right mt-1.5">
                     {{ formatTime(msg.createdAt) }}
                   </span>
                 </div>
@@ -373,18 +373,18 @@
             </div>
 
             <!-- Footer Reply Controls -->
-            <footer v-if="chatStore.selectedSessionId" class="p-4 border-t border-gray-900 bg-slate-950 flex gap-2">
+            <footer v-if="chatStore.selectedSessionId" class="p-4 border-t border-zinc-200 bg-white flex gap-2">
               <input 
                 type="text" 
                 v-model="adminReplyText" 
                 @keyup.enter="sendAdminReply"
                 placeholder="Type your response..." 
-                class="flex-grow bg-slate-900 border border-gray-850 rounded-lg px-4 py-2.5 text-xs focus:outline-none focus:border-amber-400"
+                class="flex-grow bg-[#F4F6F5] border border-zinc-200 rounded-lg px-4 py-2.5 text-xs focus:outline-none focus:border-[#008A20] text-[#0A0F0D]"
               />
               <button 
                 @click="sendAdminReply"
                 :disabled="!adminReplyText.trim()"
-                class="bg-amber-400 hover:bg-amber-500 disabled:opacity-50 text-slate-950 font-bold px-6 py-2.5 rounded-lg text-xs transition"
+                class="bg-[#008A20] hover:bg-[#006616] disabled:opacity-50 text-white font-bold px-6 py-2.5 rounded-lg text-xs transition"
               >
                 Send Reply
               </button>
@@ -409,57 +409,57 @@
     </main>
 
     <!-- Details View Modal -->
-    <div v-if="detailsModal.isOpen" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div class="max-w-md w-full bg-slate-950 border border-gray-800 rounded-2xl p-6 md:p-8 space-y-6 shadow-2xl relative">
+    <div v-if="detailsModal.isOpen" class="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="max-w-md w-full bg-white border border-zinc-200 rounded-2xl p-6 md:p-8 space-y-6 shadow-xl relative">
         <button 
           @click="detailsModal.isOpen = false"
-          class="absolute top-4 right-4 text-gray-400 hover:text-white text-xs font-semibold px-2 py-1 hover:bg-slate-900 rounded"
+          class="absolute top-4 right-4 text-zinc-400 hover:text-[#0A0F0D] text-xs font-semibold px-2 py-1 hover:bg-zinc-100 rounded"
         >
           ✕ Close
         </button>
 
-        <h4 class="text-lg font-display font-extrabold text-amber-400 border-b border-gray-900 pb-3">
+        <h4 class="text-lg font-display font-extrabold text-[#008A20] border-b border-zinc-200 pb-3">
           Prospect Capture Detail
         </h4>
 
         <div class="space-y-4 text-xs">
           <div>
-            <span class="text-gray-500 font-bold uppercase tracking-wider block">Full Name:</span>
-            <p class="text-gray-200 text-sm mt-0.5">{{ detailsModal.lead.fullName }}</p>
+            <span class="text-zinc-400 font-bold uppercase tracking-wider block">Full Name:</span>
+            <p class="text-[#0A0F0D] text-sm mt-0.5">{{ detailsModal.lead.fullName }}</p>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <span class="text-gray-500 font-bold uppercase tracking-wider block">Email:</span>
-              <p class="text-gray-200 mt-0.5">{{ detailsModal.lead.email }}</p>
+              <span class="text-zinc-400 font-bold uppercase tracking-wider block">Email:</span>
+              <p class="text-[#0A0F0D] mt-0.5">{{ detailsModal.lead.email }}</p>
             </div>
             <div>
-              <span class="text-gray-500 font-bold uppercase tracking-wider block">Phone:</span>
-              <p class="text-gray-200 mt-0.5">{{ detailsModal.lead.phone || 'No phone' }}</p>
+              <span class="text-zinc-400 font-bold uppercase tracking-wider block">Phone:</span>
+              <p class="text-[#0A0F0D] mt-0.5">{{ detailsModal.lead.phone || 'No phone' }}</p>
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <span class="text-gray-500 font-bold uppercase tracking-wider block">Country:</span>
-              <p class="text-amber-500 font-extrabold uppercase mt-0.5">{{ detailsModal.lead.country }}</p>
+              <span class="text-zinc-400 font-bold uppercase tracking-wider block">Country:</span>
+              <p class="text-[#008A20] font-extrabold uppercase mt-0.5">{{ detailsModal.lead.country }}</p>
             </div>
             <div>
-              <span class="text-gray-500 font-bold uppercase tracking-wider block">Profile Type:</span>
-              <p class="text-gray-200 mt-0.5">{{ detailsModal.lead.profileType }}</p>
+              <span class="text-zinc-400 font-bold uppercase tracking-wider block">Profile Type:</span>
+              <p class="text-[#0A0F0D] mt-0.5">{{ detailsModal.lead.profileType }}</p>
             </div>
           </div>
 
           <div>
-            <span class="text-gray-500 font-bold uppercase tracking-wider block">Challenges / Selected Options:</span>
-            <div class="p-3 bg-slate-900/60 border border-gray-850 rounded-lg text-gray-300 leading-relaxed font-light mt-1 max-h-36 overflow-y-auto whitespace-pre-line custom-scrollbar">
+            <span class="text-zinc-400 font-bold uppercase tracking-wider block">Challenges / Selected Options:</span>
+            <div class="p-3 bg-[#F4F6F5] border border-zinc-200 rounded-lg text-[#0A0F0D] leading-relaxed font-light mt-1 max-h-36 overflow-y-auto whitespace-pre-line custom-scrollbar">
               {{ parseChallenges(detailsModal.lead.challenges) }}
             </div>
           </div>
 
-          <div class="flex items-center gap-2 pt-2 text-[10px] text-gray-500">
+          <div class="flex items-center gap-2 pt-2 text-[10px] text-zinc-400">
             <span>Registered Date:</span>
-            <span class="text-gray-400 font-medium">{{ formatDate(detailsModal.lead.createdAt) }}</span>
+            <span class="text-zinc-600 font-medium">{{ formatDate(detailsModal.lead.createdAt) }}</span>
           </div>
         </div>
       </div>
@@ -533,8 +533,8 @@ const activeTabTitle = computed(() => {
 const tabClass = (tab) => [
   'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
   activeTab.value === tab
-    ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-    : 'text-gray-400 hover:text-white hover:bg-slate-900/50 border border-transparent'
+    ? 'bg-[#008A20]/10 text-[#008A20] border border-[#008A20]/20'
+    : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60 border border-transparent'
 ];
 
 const activeChatSessionDetails = computed(() => {
@@ -616,10 +616,10 @@ const parseChallenges = (data) => {
 };
 
 const statusColorClasses = (status) => {
-  if (status === 'Pending') return 'border-amber-500/20 bg-amber-500/10 text-amber-400';
-  if (status === 'Contacted') return 'border-blue-500/20 bg-blue-500/10 text-blue-400';
-  if (status === 'Joined') return 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400';
-  return 'border-gray-800 bg-slate-900 text-gray-500';
+  if (status === 'Pending') return 'border-amber-300 bg-amber-50 text-amber-700';
+  if (status === 'Contacted') return 'border-blue-200 bg-blue-50 text-blue-700';
+  if (status === 'Joined') return 'border-[#008A20]/20 bg-[#008A20]/5 text-[#008A20]';
+  return 'border-zinc-200 bg-zinc-50 text-zinc-500';
 };
 
 const formatDate = (isoString) => {
@@ -682,14 +682,14 @@ watch(() => chatStore.messages.length, () => {
   width: 4px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.3);
+  background: #F4F6F5;
   border-radius: 4px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(251, 191, 36, 0.2);
+  background: #D1D5DB;
   border-radius: 4px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(251, 191, 36, 0.4);
+  background: #008A20;
 }
 </style>

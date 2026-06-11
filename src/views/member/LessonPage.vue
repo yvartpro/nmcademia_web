@@ -27,7 +27,7 @@
 
       <div class="px-4 sm:px-0">
         <!-- Tabs -->
-        <div class="flex gap-1 border-b border-zinc-200 dark:border-zinc-700 mb-4">
+        <div class="flex gap-1 border-b border-zinc-200 mb-4">
           <button
             v-for="tab in tabs"
             :key="tab.id"
@@ -35,7 +35,7 @@
             @click="activeTab = tab.id"
             class="px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px"
             :class="activeTab === tab.id
-              ? 'border-accent text-accent-dark dark:text-accent-light'
+              ? 'border-accent text-accent-dark'
               : 'border-transparent text-zinc-500'"
           >
             {{ tab.label }}
@@ -44,7 +44,7 @@
 
         <div v-if="activeTab === 'takeaway'" class="nma-card p-5">
           <UiSectionLabel>Key Takeaway</UiSectionLabel>
-          <p class="text-sm leading-relaxed mt-3 text-zinc-700 dark:text-zinc-300">
+          <p class="text-sm leading-relaxed mt-3 text-zinc-700">
             {{ takeaway }}
           </p>
         </div>

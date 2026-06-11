@@ -4,8 +4,8 @@
       <!-- Greeting + streak -->
       <div class="flex items-start justify-between gap-4">
         <div>
-          <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ greeting }}</p>
-          <h1 class="text-2xl sm:text-3xl font-display font-bold text-zinc-900 dark:text-white mt-1">
+          <p class="text-sm text-zinc-500">{{ greeting }}</p>
+          <h1 class="text-2xl sm:text-3xl font-display font-bold text-zinc-900 mt-1">
             {{ memberStore.displayName }}
           </h1>
           <p class="text-sm text-zinc-500 mt-1">
@@ -26,7 +26,7 @@
         <div class="flex items-center gap-4">
           <div class="relative w-16 h-16 shrink-0">
             <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
-              <circle cx="18" cy="18" r="15.5" fill="none" stroke="currentColor" class="text-zinc-200 dark:text-zinc-700" stroke-width="3" />
+              <circle cx="18" cy="18" r="15.5" fill="none" stroke="currentColor" class="text-zinc-200" stroke-width="3" />
               <circle
                 cx="18" cy="18" r="15.5" fill="none" stroke="url(#xpGrad)" stroke-width="3"
                 stroke-linecap="round"
@@ -70,9 +70,9 @@
             <BookOpen :size="28" class="text-white/90" />
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="font-semibold text-zinc-900 dark:text-white truncate">{{ continueCourse.title }}</h3>
+            <h3 class="font-semibold text-zinc-900 truncate">{{ continueCourse.title }}</h3>
             <p class="text-xs text-zinc-500 mt-0.5">{{ continueCourse.subtitle }}</p>
-            <div class="mt-3 h-1.5 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+            <div class="mt-3 h-1.5 bg-zinc-200 rounded-full overflow-hidden">
               <div class="h-full nma-gradient-gold rounded-full transition-all" :style="{ width: `${continueProgress}%` }" />
             </div>
             <p class="text-xs text-zinc-500 mt-1">{{ continueProgress }}% complete</p>
@@ -87,17 +87,17 @@
           <h2 class="font-display font-semibold text-lg">Today's Quest</h2>
           <span class="text-xs font-bold text-accent">+XP</span>
         </div>
-        <div class="nma-card divide-y divide-zinc-200/80 dark:divide-white/[0.06]">
+        <div class="nma-card divide-y divide-zinc-200/80">
           <button
             v-for="quest in memberStore.profile.quests"
             :key="quest.id"
             type="button"
             @click="toggleQuest(quest)"
-            class="w-full flex items-center gap-3 p-4 text-left hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
+            class="w-full flex items-center gap-3 p-4 text-left hover:bg-zinc-50 transition-colors"
           >
             <div
               class="w-6 h-6 rounded-lg border-2 flex items-center justify-center shrink-0 transition-colors"
-              :class="quest.done ? 'bg-success border-success text-white' : 'border-zinc-300 dark:border-zinc-600'"
+              :class="quest.done ? 'bg-success border-success text-white' : 'border-zinc-300'"
             >
               <Check v-if="quest.done" :size="14" />
             </div>

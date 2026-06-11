@@ -1,18 +1,17 @@
 <template>
-  <div class="min-h-screen bg-surface-0 dark:bg-surface-0-dark flex flex-col justify-between nma-gradient-mesh font-sans pb-10">
+  <div class="min-h-screen bg-surface-0 flex flex-col justify-between nma-gradient-mesh font-sans pb-10">
     <!-- Header -->
-    <header class="sticky top-0 z-50 border-b border-zinc-200/80 dark:border-white/[0.06] bg-surface-1/90 dark:bg-surface-1-dark/90 backdrop-blur-xl">
+    <header class="sticky top-0 z-50 border-b border-zinc-200/80 bg-surface-1/90 backdrop-blur-xl">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <router-link to="/">
           <AppLogo size="sm" />
         </router-link>
         <div class="flex items-center gap-4">
-          <ThemeToggle />
           <router-link to="/" class="text-xs text-zinc-500 hover:text-accent font-medium">✕ Exit Funnel</router-link>
         </div>
       </div>
       <div class="max-w-4xl mx-auto px-4 sm:px-6 pb-2">
-        <div class="h-1.5 w-full bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+        <div class="h-1.5 w-full bg-zinc-200 rounded-full overflow-hidden">
           <div 
             class="h-full bg-gradient-to-r from-accent via-accent-light to-accent-dark transition-all duration-300 rounded-full"
             :style="{ width: `${(currentStepIndex / totalSteps) * 100}%` }"
@@ -29,10 +28,10 @@
         <div v-if="funnelId === 'new-to-nm'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
             <UiSectionLabel>Introduction</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white leading-tight">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 leading-tight">
               A Global Multibillion-Dollar <span class="nma-gradient-text">Ecosystem</span>
             </h2>
-            <p class="text-sm sm:text-base leading-relaxed text-zinc-650 dark:text-zinc-400">
+            <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
               Welcome to Network Marketing Academia. You are entering a global industry where millions of people are building income, developing leadership, and transforming their financial future.
             </p>
             <div class="aspect-video bg-zinc-900 rounded-xl overflow-hidden shadow-glow">
@@ -52,7 +51,7 @@
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
             <UiSectionLabel>Onboarding</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Create Your <span class="nma-gradient-text">Account</span>
             </h2>
             <form @submit.prevent="submitLeadAndContinue" class="space-y-4">
@@ -70,11 +69,11 @@
               </div>
               <label class="flex items-start gap-3 cursor-pointer mt-4">
                 <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
-                <span class="text-xs sm:text-sm text-zinc-650 dark:text-zinc-400">
+                <span class="text-xs sm:text-sm text-zinc-650">
                   By signing up, I agree to receive learning materials, updates, and communications from Network Marketing Academia.
                 </span>
               </label>
-              <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50 dark:border-white/5">
+              <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50">
                 <UiButton variant="ghost" @click="prevStep">Back</UiButton>
                 <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">Continue →</UiButton>
               </div>
@@ -83,7 +82,7 @@
 
           <div v-else-if="currentStepIndex === 3" class="space-y-6">
             <UiSectionLabel>Location</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Select Your <span class="nma-gradient-text">Country</span>
             </h2>
             <p class="text-sm text-zinc-500">We tailor the product prices, currencies, and support mentors based on your location.</p>
@@ -94,7 +93,7 @@
                 </option>
               </select>
             </div>
-            <div class="flex justify-between pt-4 border-t border-zinc-200/50 dark:border-white/5">
+            <div class="flex justify-between pt-4 border-t border-zinc-200/50">
               <UiButton variant="ghost" @click="prevStep">Back</UiButton>
               <UiButton variant="primary" @click="saveCountryAndRedirect">Access Presentation →</UiButton>
             </div>
@@ -105,15 +104,15 @@
         <div v-else-if="funnelId === 'already-in-nm'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
             <UiSectionLabel>Distributor Path</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Accelerate Your <span class="nma-gradient-text">Leadership</span>
             </h2>
-            <p class="text-sm sm:text-base leading-relaxed text-zinc-650 dark:text-zinc-400">
+            <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
               Congratulations on building in the Network Marketing industry. You have stepped into a business that rewards courage, vision, and duplication.
             </p>
             <div class="p-5 bg-accent/5 border border-accent/20 rounded-xl space-y-2">
               <h4 class="font-bold text-accent text-sm">Why Professional Training Matters:</h4>
-              <p class="text-xs text-zinc-650 dark:text-zinc-400">
+              <p class="text-xs text-zinc-650">
                 Excitement alone isn't enough. Success in duplication requires modern lead generation systems, high-ticket mentoring, and team leadership.
               </p>
             </div>
@@ -124,7 +123,7 @@
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
             <UiSectionLabel>Assessment</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               What is <span class="nma-gradient-text">Holding You Back</span>?
             </h2>
             <p class="text-sm text-zinc-500">Select the challenges you are currently facing in your organization:</p>
@@ -133,7 +132,7 @@
                 v-for="ch in challengeOptions" 
                 :key="ch" 
                 class="flex items-center gap-3 p-4 bg-white/5 border rounded-xl cursor-pointer hover:border-accent transition"
-                :class="selectedChallenges.includes(ch) ? 'border-accent bg-accent/5' : 'border-zinc-200 dark:border-white/5'"
+                :class="selectedChallenges.includes(ch) ? 'border-accent bg-accent/5' : 'border-zinc-200'"
               >
                 <input 
                   type="checkbox" 
@@ -144,7 +143,7 @@
                 <span class="text-xs sm:text-sm font-semibold">{{ ch }}</span>
               </label>
             </div>
-            <div class="flex justify-between pt-4 border-t border-zinc-200/50 dark:border-white/5">
+            <div class="flex justify-between pt-4 border-t border-zinc-200/50">
               <UiButton variant="ghost" @click="prevStep">Back</UiButton>
               <UiButton variant="primary" :disabled="selectedChallenges.length === 0" @click="nextStep">Next Step →</UiButton>
             </div>
@@ -152,19 +151,19 @@
 
           <div v-else-if="currentStepIndex === 3" class="space-y-6">
             <UiSectionLabel>Coaching Solution</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Elite Academy <span class="nma-gradient-text">Coaching Track</span>
             </h2>
-            <p class="text-sm sm:text-base leading-relaxed text-zinc-650 dark:text-zinc-400">
+            <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
               We provide tailored mentorship modules to solve the exact bottlenecks you selected:
             </p>
             <div class="space-y-3">
               <div v-for="ch in selectedChallenges" :key="ch" class="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-center gap-3">
                 <span class="text-emerald-500 font-bold">✓</span>
-                <span class="text-xs text-zinc-800 dark:text-zinc-200 font-semibold">{{ getChallengeSolution(ch) }}</span>
+                <span class="text-xs text-zinc-800 font-semibold">{{ getChallengeSolution(ch) }}</span>
               </div>
             </div>
-            <div class="flex justify-between pt-4 border-t border-zinc-200/50 dark:border-white/5">
+            <div class="flex justify-between pt-4 border-t border-zinc-200/50">
               <UiButton variant="ghost" @click="prevStep">Back</UiButton>
               <UiButton variant="primary" @click="nextStep">Match with Mentor →</UiButton>
             </div>
@@ -172,7 +171,7 @@
 
           <div v-else-if="currentStepIndex === 4" class="space-y-6">
             <UiSectionLabel>Mentor Matching</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Your Assigned <span class="nma-gradient-text">Coach</span>
             </h2>
             
@@ -193,7 +192,7 @@
               </div>
               
               <div class="space-y-4">
-                <p class="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                <p class="text-sm leading-relaxed text-zinc-600">
                   Fill in your details below to schedule your consultation and connect with your coach.
                 </p>
                 <form @submit.prevent="submitLeadAndCompleteFlow" class="space-y-4">
@@ -211,11 +210,11 @@
                   </div>
                   <label class="flex items-start gap-3 cursor-pointer mt-4">
                     <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
-                    <span class="text-xs sm:text-sm text-zinc-650 dark:text-zinc-400">
+                    <span class="text-xs sm:text-sm text-zinc-650">
                       I agree to let NMA match me with an active coach and send me coaching updates.
                     </span>
                   </label>
-                  <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50 dark:border-white/5">
+                  <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50">
                     <UiButton variant="ghost" @click="prevStep">Back</UiButton>
                     <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">Confirm Coach & WhatsApp →</UiButton>
                   </div>
@@ -229,7 +228,7 @@
         <div v-else-if="funnelId === 'switch-companies'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
             <UiSectionLabel>Transition Assessment</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Company Switching <span class="nma-gradient-text">Evaluation</span>
             </h2>
             <div class="space-y-4">
@@ -246,7 +245,7 @@
                 <textarea v-model="assessment.reasons" rows="3" class="nma-input-glass resize-none" placeholder="E.g., High product cost, complex binary payout, poor team retention..."></textarea>
               </div>
             </div>
-            <div class="flex justify-between pt-4 border-t border-zinc-200/50 dark:border-white/5">
+            <div class="flex justify-between pt-4 border-t border-zinc-200/50">
               <UiButton variant="ghost" to="/">Cancel</UiButton>
               <UiButton variant="primary" :disabled="!assessment.currentCompany" @click="nextStep">Analyze Reasons →</UiButton>
             </div>
@@ -254,10 +253,10 @@
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
             <UiSectionLabel>Analysis</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Why Leaders <span class="nma-gradient-text">Switch Companies</span>
             </h2>
-            <div class="space-y-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+            <div class="space-y-4 text-sm leading-relaxed text-zinc-600">
               <p>Many professional network builders run into the same hurdles:</p>
               <ul class="space-y-2 pl-4 list-disc text-xs sm:text-sm">
                 <li><strong>Outdated Compensation Models:</strong> Heavy retail requirements instead of team leverage.</li>
@@ -270,7 +269,7 @@
                 </p>
               </div>
             </div>
-            <div class="flex justify-between pt-4 border-t border-zinc-200/50 dark:border-white/5">
+            <div class="flex justify-between pt-4 border-t border-zinc-200/50">
               <UiButton variant="ghost" @click="prevStep">Back</UiButton>
               <UiButton variant="primary" @click="nextStep">Consult Mentor →</UiButton>
             </div>
@@ -278,7 +277,7 @@
 
           <div v-else-if="currentStepIndex === 3" class="space-y-6">
             <UiSectionLabel>Consultation</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Schedule Your <span class="nma-gradient-text">Private Strategy Session</span>
             </h2>
             <p class="text-sm text-zinc-500">Provide your details to connect with a senior leader on transitioning your organization.</p>
@@ -297,11 +296,11 @@
               </div>
               <label class="flex items-start gap-3 cursor-pointer mt-4">
                 <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
-                <span class="text-xs sm:text-sm text-zinc-650 dark:text-zinc-400">
+                <span class="text-xs sm:text-sm text-zinc-650">
                   I consent to private leader-to-leader communication and scheduling options.
                 </span>
               </label>
-              <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50 dark:border-white/5">
+              <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50">
                 <UiButton variant="ghost" @click="prevStep">Back</UiButton>
                 <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">Request Transition Consult →</UiButton>
               </div>
@@ -313,7 +312,7 @@
         <div v-else-if="funnelId === 'exploring'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
             <UiSectionLabel>Qualification</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Qualification <span class="nma-gradient-text">Questions</span>
             </h2>
             <div class="space-y-4">
@@ -332,25 +331,25 @@
                     type="button" 
                     @click="exploreQs.coachable = 'yes'"
                     class="flex-1 py-3 px-4 border rounded-xl font-bold transition text-xs sm:text-sm"
-                    :class="exploreQs.coachable === 'yes' ? 'bg-accent/10 border-accent text-accent' : 'border-zinc-250 dark:border-white/5'"
+                    :class="exploreQs.coachable === 'yes' ? 'bg-accent/10 border-accent text-accent' : 'border-zinc-250'"
                   >Yes, 100%</button>
                   <button 
                     type="button" 
                     @click="exploreQs.coachable = 'no'"
                     class="flex-1 py-3 px-4 border rounded-xl font-bold transition text-xs sm:text-sm"
-                    :class="exploreQs.coachable === 'no' ? 'bg-zinc-800 border-zinc-700 text-zinc-400' : 'border-zinc-250 dark:border-white/5'"
+                    :class="exploreQs.coachable === 'no' ? 'bg-zinc-800 border-zinc-700 text-zinc-400' : 'border-zinc-250'"
                   >No, I prefer doing it alone</button>
                 </div>
               </div>
             </div>
-            <div class="flex justify-end pt-4 border-t border-zinc-200/50 dark:border-white/5">
+            <div class="flex justify-end pt-4 border-t border-zinc-200/50">
               <UiButton variant="primary" :disabled="!exploreQs.hours || !exploreQs.coachable" @click="nextStep">Next →</UiButton>
             </div>
           </div>
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
             <UiSectionLabel>Personal Info</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Your <span class="nma-gradient-text">Details</span>
             </h2>
             <form @submit.prevent="submitLeadAndContinue" class="space-y-4">
@@ -368,11 +367,11 @@
               </div>
               <label class="flex items-start gap-3 cursor-pointer mt-4">
                 <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
-                <span class="text-xs sm:text-sm text-zinc-650 dark:text-zinc-400">
+                <span class="text-xs sm:text-sm text-zinc-650">
                   I agree to receive materials to explore the business opportunity.
                 </span>
               </label>
-              <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50 dark:border-white/5">
+              <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50">
                 <UiButton variant="ghost" @click="prevStep">Back</UiButton>
                 <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">Continue →</UiButton>
               </div>
@@ -381,10 +380,10 @@
 
           <div v-else-if="currentStepIndex === 3" class="space-y-6">
             <UiSectionLabel>Overview</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Short Version <span class="nma-gradient-text">Presentation</span>
             </h2>
-            <div class="space-y-4 text-xs sm:text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+            <div class="space-y-4 text-xs sm:text-sm leading-relaxed text-zinc-600">
               <p>Here is a summary of the business ecosystem:</p>
               <div class="grid grid-cols-2 gap-3">
                 <div class="p-4 bg-white/5 rounded-xl border border-white/5">
@@ -405,7 +404,7 @@
                 </div>
               </div>
             </div>
-            <div class="flex justify-between pt-4 border-t border-zinc-200/50 dark:border-white/5">
+            <div class="flex justify-between pt-4 border-t border-zinc-200/50">
               <UiButton variant="ghost" @click="prevStep">Back</UiButton>
               <UiButton variant="primary" @click="saveCountryAndRedirect">Access Full Dashboard →</UiButton>
             </div>
@@ -416,10 +415,10 @@
         <div v-else-if="funnelId === 'income-diversification'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
             <UiSectionLabel>Income Security</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               The Vulnerability of a <span class="nma-gradient-text">Single Income</span>
             </h2>
-            <p class="text-sm sm:text-base leading-relaxed text-zinc-650 dark:text-zinc-400">
+            <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
               Depending on a single job salary in today's economy is highly risky. Inflation, company lay-offs, and rising expenses are quietly eroding financial freedom.
             </p>
             <div class="p-5 bg-zinc-900/60 border border-white/5 rounded-xl">
@@ -434,7 +433,7 @@
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
             <UiSectionLabel>Leverage</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Why Create a <span class="nma-gradient-text">Side Network</span>?
             </h2>
             <div class="grid sm:grid-cols-2 gap-3 text-xs sm:text-sm">
@@ -455,7 +454,7 @@
                 <p class="text-zinc-500 mt-1">AGG manages product shipping, logistics, and legal setups across 40+ countries.</p>
               </div>
             </div>
-            <div class="flex justify-between pt-4 border-t border-zinc-200/50 dark:border-white/5">
+            <div class="flex justify-between pt-4 border-t border-zinc-200/50">
               <UiButton variant="ghost" @click="prevStep">Back</UiButton>
               <UiButton variant="primary" @click="nextStep">Submit Details →</UiButton>
             </div>
@@ -463,7 +462,7 @@
 
           <div v-else-if="currentStepIndex === 3" class="space-y-6">
             <UiSectionLabel>Personal Info</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Unlock Your <span class="nma-gradient-text">Path</span>
             </h2>
             <form @submit.prevent="submitLeadAndContinue" class="space-y-4">
@@ -481,11 +480,11 @@
               </div>
               <label class="flex items-start gap-3 cursor-pointer mt-4">
                 <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
-                <span class="text-xs sm:text-sm text-zinc-650 dark:text-zinc-400">
+                <span class="text-xs sm:text-sm text-zinc-650">
                   I agree to receive training and side business presentation details.
                 </span>
               </label>
-              <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50 dark:border-white/5">
+              <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50">
                 <UiButton variant="ghost" @click="prevStep">Back</UiButton>
                 <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">Proceed to Presentation →</UiButton>
               </div>
@@ -497,15 +496,15 @@
         <div v-else-if="funnelId === 'jobless'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
             <UiSectionLabel>Hope & Opportunity</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Launch Your Own <span class="nma-gradient-text">Business Venture</span>
             </h2>
-            <p class="text-sm sm:text-base leading-relaxed text-zinc-650 dark:text-zinc-400">
+            <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
               When traditional jobs are scarce, building networks is the most accessible vehicle to start with limited capital. We focus on teaching digital marketing and leadership skills from scratch.
             </p>
             <div class="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
               <h4 class="text-xs font-bold text-emerald-500 uppercase tracking-wide mb-1">Zero prior experience needed</h4>
-              <p class="text-xs text-zinc-650 dark:text-zinc-400">
+              <p class="text-xs text-zinc-650">
                 Our curriculum teaches you communication, marketing systems, and team building from zero.
               </p>
             </div>
@@ -516,7 +515,7 @@
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
             <UiSectionLabel>Register</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Enter the <span class="nma-gradient-text">Academia</span>
             </h2>
             <form @submit.prevent="submitLeadAndContinue" class="space-y-4">
@@ -534,11 +533,11 @@
               </div>
               <label class="flex items-start gap-3 cursor-pointer mt-4">
                 <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
-                <span class="text-xs sm:text-sm text-zinc-650 dark:text-zinc-400">
+                <span class="text-xs sm:text-sm text-zinc-650">
                   I agree to join NMA to access free training modules and presentation.
                 </span>
               </label>
-              <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50 dark:border-white/5">
+              <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50">
                 <UiButton variant="ghost" @click="prevStep">Back</UiButton>
                 <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">Create Free Account →</UiButton>
               </div>
@@ -550,10 +549,10 @@
         <div v-else-if="funnelId === 'fast-track'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
             <UiSectionLabel>Fast Track</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Position Yourself as a <span class="nma-gradient-text">Pioneer Leader</span>
             </h2>
-            <p class="text-sm sm:text-base leading-relaxed text-zinc-650 dark:text-zinc-400">
+            <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
               For ambitious builders who want to skip the introductions and proceed directly to securing entry packages and team registration.
             </p>
             <div class="space-y-3">
@@ -565,14 +564,14 @@
                 <span class="font-bold text-accent text-sm sm:text-base">{{ pkg.price }}</span>
               </div>
             </div>
-            <div class="flex justify-end pt-4 border-t border-zinc-200/50 dark:border-white/5">
+            <div class="flex justify-end pt-4 border-t border-zinc-200/50">
               <UiButton variant="primary" @click="nextStep">Proceed to Registration Info →</UiButton>
             </div>
           </div>
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
             <UiSectionLabel>Registration Details</UiSectionLabel>
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Secure Your <span class="nma-gradient-text">Pioneer Slot</span>
             </h2>
             <p class="text-sm text-zinc-500">Provide your information to be directly assigned a senior coach for packaging registration and shipping assistance.</p>
@@ -591,11 +590,11 @@
               </div>
               <label class="flex items-start gap-3 cursor-pointer mt-4">
                 <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
-                <span class="text-xs sm:text-sm text-zinc-650 dark:text-zinc-400">
+                <span class="text-xs sm:text-sm text-zinc-650">
                   I agree to match with a pioneer coach and receive immediate package registration support on WhatsApp.
                 </span>
               </label>
-              <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50 dark:border-white/5">
+              <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50">
                 <UiButton variant="ghost" @click="prevStep">Back</UiButton>
                 <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">Direct Coach Assignment →</UiButton>
               </div>
@@ -617,7 +616,6 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppLogo from '../components/ui/AppLogo.vue';
-import ThemeToggle from '../components/ui/ThemeToggle.vue';
 import UiSectionLabel from '../components/ui/UiSectionLabel.vue';
 import UiButton from '../components/ui/UiButton.vue';
 import { useCatalogStore } from '../stores/catalog';

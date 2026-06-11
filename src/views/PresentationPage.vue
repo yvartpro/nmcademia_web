@@ -1,18 +1,17 @@
 <template>
-  <div class="min-h-screen bg-surface-0 dark:bg-surface-0-dark pb-28 nma-gradient-mesh font-sans">
+  <div class="min-h-screen bg-surface-0 pb-28 nma-gradient-mesh font-sans">
     
     <!-- Header -->
-    <header class="sticky top-0 z-50 border-b border-zinc-200/80 dark:border-white/[0.06] bg-surface-1/90 dark:bg-surface-1-dark/90 backdrop-blur-xl">
+    <header class="sticky top-0 z-50 border-b border-zinc-200/80 bg-surface-1/90 backdrop-blur-xl">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <AppLogo size="sm" />
         <div class="flex items-center gap-3">
-          <ThemeToggle />
-          <div class="flex items-center gap-2 bg-zinc-100 dark:bg-zinc-800 rounded-xl px-3 py-1.5 border border-zinc-200 dark:border-white/5">
+          <div class="flex items-center gap-2 bg-zinc-100 rounded-xl px-3 py-1.5 border border-zinc-200">
             <Globe :size="14" class="text-zinc-400" />
             <select
               v-model="selectedCountryCode"
               @change="changeCountry"
-              class="bg-transparent text-xs font-semibold text-zinc-700 dark:text-zinc-300 focus:outline-none cursor-pointer"
+              class="bg-transparent text-xs font-semibold text-zinc-700 focus:outline-none cursor-pointer"
             >
               <option v-for="c in catalogStore.countries" :key="c.code" :value="c.code">
                 {{ c.code }} ({{ c.currencySymbol }})
@@ -29,7 +28,7 @@
     <!-- Post-signup journey welcome -->
     <div v-if="memberStore.isRegistered" class="max-w-3xl mx-auto px-4 sm:px-6 pt-6 space-y-4">
       <div v-if="showPostSignupWelcome" class="p-4 bg-accent/10 border border-accent/20 rounded-xl">
-        <p class="text-sm font-semibold text-zinc-900 dark:text-white">
+        <p class="text-sm font-semibold text-zinc-900">
           Welcome back, leader. Review this business overview, and transition to your training curriculum when ready.
         </p>
       </div>
@@ -37,7 +36,7 @@
       <div class="nma-card-glass p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <span class="text-[9px] font-bold uppercase tracking-widest text-accent">Your Academy Route</span>
-          <h4 class="text-sm font-extrabold text-zinc-900 dark:text-white mt-0.5">{{ memberStore.journey.title }}</h4>
+          <h4 class="text-sm font-extrabold text-zinc-900 mt-0.5">{{ memberStore.journey.title }}</h4>
           <p class="text-xs text-zinc-500 mt-1">{{ memberStore.journey.welcomeLine }}</p>
         </div>
         <UiButton
@@ -59,13 +58,13 @@
       <div v-if="currentSlide === 1" class="motion-safe:animate-fade-in space-y-8">
         <UiSectionLabel>Slide 1: Partner Company</UiSectionLabel>
         <div class="space-y-4">
-          <h2 class="text-3xl sm:text-4xl font-display font-black leading-tight text-zinc-950 dark:text-white">
+          <h2 class="text-3xl sm:text-4xl font-display font-black leading-tight text-zinc-950">
             {{ settings['partner_company_name'] || 'Alliance In Motion Global Group of Companies' }}
           </h2>
           <p class="text-sm text-zinc-500 font-semibold tracking-wide">ESTABLISHED SINCE 2006 • OVER 40+ COUNTRIES</p>
         </div>
         
-        <div class="nma-card p-6 bg-gradient-to-br from-indigo-950/20 to-accent/5 leading-relaxed text-zinc-650 dark:text-zinc-400 whitespace-pre-line text-sm sm:text-base border-accent/20">
+        <div class="nma-card p-6 bg-gradient-to-br from-indigo-950/20 to-accent/5 leading-relaxed text-zinc-650 whitespace-pre-line text-sm sm:text-base border-accent/20">
           {{ settings['partner_company_intro'] }}
         </div>
       </div>
@@ -80,12 +79,12 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div v-for="founder in founders" :key="founder.id" class="nma-card p-5 space-y-4 hover:border-accent transition-all duration-300">
-            <div class="w-16 h-16 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center overflow-hidden border border-zinc-200 dark:border-white/5 shrink-0">
+            <div class="w-16 h-16 rounded-2xl bg-zinc-100 flex items-center justify-center overflow-hidden border border-zinc-200 shrink-0">
               <img v-if="founder.photo" :src="getFullMediaUrl(founder.photo)" :alt="founder.name" class="w-full h-full object-cover" />
               <span v-else class="text-zinc-500 font-bold text-lg">{{ founder.name.split(' ').map(n=>n[0]).join('') }}</span>
             </div>
             <div>
-              <h4 class="font-extrabold text-sm text-zinc-900 dark:text-white">{{ founder.name }}</h4>
+              <h4 class="font-extrabold text-sm text-zinc-900">{{ founder.name }}</h4>
               <p class="text-[10px] text-accent font-bold uppercase tracking-wider">{{ founder.role }}</p>
             </div>
             <p class="text-xs text-zinc-500 leading-relaxed font-light">{{ founder.bio }}</p>
@@ -131,10 +130,10 @@
 
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
           <div v-for="product in catalogStore.products" :key="product.id" class="nma-card p-5 flex flex-col items-center text-center hover:border-accent transition duration-300">
-            <div class="w-20 h-20 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl p-2 border border-zinc-250/20 mb-3 flex items-center justify-center">
+            <div class="w-20 h-20 bg-zinc-50 rounded-2xl p-2 border border-zinc-250/20 mb-3 flex items-center justify-center">
               <img v-if="product.image" :src="getFullMediaUrl(product.image)" :alt="product.name" class="w-full h-full object-contain" />
             </div>
-            <h4 class="font-extrabold text-sm text-zinc-900 dark:text-white">{{ product.name }}</h4>
+            <h4 class="font-extrabold text-sm text-zinc-900">{{ product.name }}</h4>
             <p class="text-xs text-zinc-500 line-clamp-2 mt-2 font-light">{{ product.description }}</p>
           </div>
         </div>
@@ -145,7 +144,7 @@
         <div class="space-y-4">
           <UiSectionLabel>Slide 4: Aspirational Vision</UiSectionLabel>
           <h2 class="text-2xl sm:text-3xl font-display font-black">What is Your Dream?</h2>
-          <p class="text-sm leading-relaxed text-zinc-650 dark:text-zinc-400 bg-accent/5 p-6 rounded-xl border border-accent/10">
+          <p class="text-sm leading-relaxed text-zinc-650 bg-accent/5 p-6 rounded-xl border border-accent/10">
             {{ settings['dream_section_text'] }}
           </p>
         </div>
@@ -158,7 +157,7 @@
                 {{ test.name.split(' ').map(n=>n[0]).join('') }}
               </div>
               <div class="space-y-2">
-                <p class="text-sm text-zinc-650 dark:text-zinc-400 italic">"{{ test.quote }}"</p>
+                <p class="text-sm text-zinc-650 italic">"{{ test.quote }}"</p>
                 <div class="flex items-center gap-2">
                   <h4 class="font-bold text-xs">{{ test.name }}</h4>
                   <span v-if="test.lifestyleTag" class="text-[9px] bg-white/5 px-2 py-0.5 border rounded-full text-zinc-400 font-semibold">{{ test.lifestyleTag }}</span>
@@ -178,7 +177,7 @@
         </div>
 
         <!-- Cashflow Quadrant Interactive Image/Fallback Diagram -->
-        <div class="relative w-full max-w-lg mx-auto aspect-square rounded-2xl overflow-hidden border border-zinc-200/80 dark:border-white/[0.08] bg-zinc-950/40 shadow-xl group">
+        <div class="relative w-full max-w-lg mx-auto aspect-square rounded-2xl overflow-hidden border border-zinc-200/80 bg-zinc-950/40 shadow-xl group">
           <!-- 1. Custom Image Mode -->
           <img
             v-if="settings?.['cashflow_quadrant_image']"
@@ -194,7 +193,7 @@
               class="relative rounded-2xl border transition-all duration-300 flex flex-col justify-between p-4"
               :class="activeQuadrant === 'E' ? 'bg-red-500/10 border-red-500/40 ring-1 ring-red-500/30' : 'bg-white/[0.02] border-white/[0.05]'"
             >
-              <span class="text-3xl font-black text-red-500/80 dark:text-red-400">E</span>
+              <span class="text-3xl font-black text-red-500/80">E</span>
               <div>
                 <h4 class="text-xs font-extrabold text-zinc-300">Employee</h4>
                 <p class="text-[9px] text-zinc-500 mt-0.5">Time for Money</p>
@@ -218,7 +217,7 @@
               class="relative rounded-2xl border transition-all duration-300 flex flex-col justify-between p-4"
               :class="activeQuadrant === 'S' ? 'bg-orange-500/10 border-orange-500/40 ring-1 ring-orange-500/30' : 'bg-white/[0.02] border-white/[0.05]'"
             >
-              <span class="text-3xl font-black text-orange-500/80 dark:text-orange-400">S</span>
+              <span class="text-3xl font-black text-orange-500/80">S</span>
               <div>
                 <h4 class="text-xs font-extrabold text-zinc-300">Self-Employed</h4>
                 <p class="text-[9px] text-zinc-500 mt-0.5">Own Your Job</p>
@@ -230,7 +229,7 @@
               class="relative rounded-2xl border transition-all duration-300 flex flex-col justify-between p-4"
               :class="activeQuadrant === 'I' ? 'bg-emerald-500/10 border-emerald-500/40 ring-1 ring-emerald-500/30' : 'bg-white/[0.02] border-white/[0.05]'"
             >
-              <span class="text-3xl font-black text-emerald-500/80 dark:text-emerald-400">I</span>
+              <span class="text-3xl font-black text-emerald-500/80">I</span>
               <div>
                 <h4 class="text-xs font-extrabold text-zinc-300">Investor</h4>
                 <p class="text-[9px] text-zinc-500 mt-0.5">Money Works for You</p>
@@ -304,10 +303,10 @@
 
         <div v-if="activeQuadrantInfo" class="nma-card p-6 border-accent/30 bg-gradient-to-br from-zinc-900 to-indigo-950/20 motion-safe:animate-fade-in">
           <h4 class="font-display font-extrabold text-lg text-accent mb-2">{{ activeQuadrantInfo.title }}</h4>
-          <p class="text-sm text-zinc-650 dark:text-zinc-400 mb-4 leading-relaxed">{{ activeQuadrantInfo.description }}</p>
-          <div class="flex items-center gap-2 text-xs border-t border-zinc-200/50 dark:border-white/5 pt-3">
+          <p class="text-sm text-zinc-650 mb-4 leading-relaxed">{{ activeQuadrantInfo.description }}</p>
+          <div class="flex items-center gap-2 text-xs border-t border-zinc-200/50 pt-3">
             <span class="text-zinc-500 font-bold uppercase tracking-wider">Leverage Factor:</span>
-            <span class="text-zinc-700 dark:text-zinc-350 font-semibold">{{ activeQuadrantInfo.leverage }}</span>
+            <span class="text-zinc-700 font-semibold">{{ activeQuadrantInfo.leverage }}</span>
           </div>
           <p v-if="activeQuadrant === 'B'" class="mt-4 text-xs font-bold text-accent uppercase tracking-wider">
             ★ Network Marketing = B Quadrant
@@ -321,31 +320,31 @@
         <h2 class="text-2xl sm:text-3xl font-display font-black">Matched Sales Binary Model</h2>
         
         <div class="p-5 bg-white/5 border border-white/5 rounded-xl space-y-4">
-          <p class="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed">
             A <strong>Binary Structure</strong> means you build only two sides: a <strong>Left Team</strong> and a <strong>Right Team</strong>. Every time you place a package referral on the Left and another on the Right, they pair to generate a <strong>Pairing Match Bonus (MSB)</strong>.
           </p>
           
           <!-- Genealogy illustration with Zoom & Pan Controls -->
           <div class="space-y-3">
             <!-- Controls Bar -->
-            <div class="flex items-center justify-between bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/50 dark:border-white/5 p-2 rounded-xl text-xs">
+            <div class="flex items-center justify-between bg-zinc-100 border border-zinc-200/50 p-2 rounded-xl text-xs">
               <span class="font-semibold text-zinc-500 uppercase tracking-wider pl-2">Genealogy Visualizer</span>
               <div class="flex items-center gap-1">
                 <button 
                   type="button" 
                   @click="zoomOutBinary" 
-                  class="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-lg transition text-zinc-600 dark:text-zinc-400"
+                  class="p-2 hover:bg-zinc-200 rounded-lg transition text-zinc-600"
                   title="Zoom Out"
                 >
                   <ZoomOut :size="16" />
                 </button>
-                <span class="w-12 text-center font-mono font-bold text-zinc-750 dark:text-zinc-250">
+                <span class="w-12 text-center font-mono font-bold text-zinc-750">
                   {{ Math.round(binaryZoom * 100) }}%
                 </span>
                 <button 
                   type="button" 
                   @click="zoomInBinary" 
-                  class="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-lg transition text-zinc-600 dark:text-zinc-400"
+                  class="p-2 hover:bg-zinc-200 rounded-lg transition text-zinc-600"
                   title="Zoom In"
                 >
                   <ZoomIn :size="16" />
@@ -353,16 +352,16 @@
                 <button 
                   type="button" 
                   @click="resetBinaryZoom" 
-                  class="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-lg transition text-zinc-600 dark:text-zinc-400"
+                  class="p-2 hover:bg-zinc-200 rounded-lg transition text-zinc-600"
                   title="Reset Zoom"
                 >
                   <RotateCcw :size="16" />
                 </button>
-                <div class="h-4 w-px bg-zinc-300 dark:bg-zinc-700 mx-1" />
+                <div class="h-4 w-px bg-zinc-300 mx-1" />
                 <button 
                   type="button" 
                   @click="toggleBinaryFullscreen" 
-                  class="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-lg transition text-zinc-600 dark:text-zinc-400"
+                  class="p-2 hover:bg-zinc-200 rounded-lg transition text-zinc-600"
                   title="Toggle Fullscreen"
                 >
                   <Maximize2 :size="16" />
@@ -566,7 +565,7 @@
                 <span class="text-2xl">{{ stream.icon || '💰' }}</span>
                 <div class="flex-grow">
                   <div class="flex justify-between items-center">
-                    <h4 class="font-extrabold text-sm" :class="focusedStreamId === stream.id ? 'text-accent' : 'text-zinc-900 dark:text-white'">
+                    <h4 class="font-extrabold text-sm" :class="focusedStreamId === stream.id ? 'text-accent' : 'text-zinc-900'">
                       {{ stream.title }}
                     </h4>
                     <span class="text-[10px] text-zinc-500 font-semibold">
@@ -574,7 +573,7 @@
                     </span>
                   </div>
                   <p class="text-xs text-zinc-500 leading-relaxed mt-1 font-light">{{ stream.shortDescription }}</p>
-                  <p v-if="stream.longDescription && focusedStreamId === stream.id" class="text-[10px] text-zinc-400 mt-2 border-t border-zinc-200/50 dark:border-white/5 pt-2 font-light">
+                  <p v-if="stream.longDescription && focusedStreamId === stream.id" class="text-[10px] text-zinc-400 mt-2 border-t border-zinc-200/50 pt-2 font-light">
                     {{ stream.longDescription }}
                   </p>
                 </div>
@@ -699,22 +698,22 @@
 
         <div class="grid gap-4">
           <div v-for="pkg in catalogStore.packages" :key="pkg.id" class="nma-card p-5 space-y-4 flex flex-col justify-between hover:border-accent transition">
-            <div class="flex justify-between items-start border-b border-zinc-200/50 dark:border-white/5 pb-3">
+            <div class="flex justify-between items-start border-b border-zinc-200/50 pb-3">
               <div>
-                <h3 class="font-extrabold text-lg text-zinc-900 dark:text-white">{{ pkg.name }}</h3>
+                <h3 class="font-extrabold text-lg text-zinc-900">{{ pkg.name }}</h3>
                 <p class="text-[10px] text-zinc-500 mt-0.5">Points value: {{ pkg.points }} pts</p>
               </div>
               <span class="font-black text-xl text-accent">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'price') }}</span>
             </div>
             
             <div class="grid grid-cols-2 gap-3 text-xs">
-              <div class="bg-zinc-100 dark:bg-zinc-900 p-3 rounded-xl border border-zinc-200/50 dark:border-white/5">
+              <div class="bg-zinc-100 p-3 rounded-xl border border-zinc-200/50">
                 <span class="block text-zinc-500 text-[10px] uppercase font-bold mb-0.5">Direct Bonus</span>
-                <strong class="text-zinc-800 dark:text-zinc-200 text-sm font-extrabold">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'referralBonus') }}</strong>
+                <strong class="text-zinc-800 text-sm font-extrabold">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'referralBonus') }}</strong>
               </div>
-              <div class="bg-zinc-100 dark:bg-zinc-900 p-3 rounded-xl border border-zinc-200/50 dark:border-white/5">
+              <div class="bg-zinc-100 p-3 rounded-xl border border-zinc-200/50">
                 <span class="block text-zinc-500 text-[10px] uppercase font-bold mb-0.5">Pairing Match</span>
-                <strong class="text-zinc-800 dark:text-zinc-200 text-sm font-extrabold">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'matchBonus') }}</strong>
+                <strong class="text-zinc-800 text-sm font-extrabold">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'matchBonus') }}</strong>
               </div>
             </div>
 
@@ -742,17 +741,17 @@
           class="nma-input-glass" 
         />
 
-        <div class="nma-card overflow-hidden divide-y divide-zinc-200/50 dark:divide-white/5">
+        <div class="nma-card overflow-hidden divide-y divide-zinc-200/50">
           <div v-for="faq in filteredFAQsList" :key="faq.id" class="transition-colors">
             <button
               type="button"
               @click="toggleFAQ(faq.id)"
               class="w-full text-left p-4 flex items-center justify-between hover:bg-white/5 transition"
             >
-              <span class="font-bold text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 pr-4">{{ faq.question }}</span>
+              <span class="font-bold text-xs sm:text-sm text-zinc-900 pr-4">{{ faq.question }}</span>
               <ChevronDown :size="16" class="text-zinc-400 shrink-0 transition-transform" :class="{ 'rotate-180': openFAQs.includes(faq.id) }" />
             </button>
-            <div v-if="openFAQs.includes(faq.id)" class="px-4 pb-4 text-xs sm:text-sm text-zinc-650 dark:text-zinc-400 leading-relaxed font-light whitespace-pre-line animate-fade-in">
+            <div v-if="openFAQs.includes(faq.id)" class="px-4 pb-4 text-xs sm:text-sm text-zinc-650 leading-relaxed font-light whitespace-pre-line animate-fade-in">
               {{ faq.answer }}
             </div>
           </div>
@@ -761,7 +760,7 @@
         <!-- Call to action card -->
         <div class="nma-card p-6 sm:p-8 text-center space-y-5 border-accent/30 bg-gradient-to-br from-indigo-950/20 to-accent/5">
           <h3 class="font-display font-extrabold text-xl text-accent">{{ finishTitle }}</h3>
-          <p class="text-xs sm:text-sm text-zinc-650 dark:text-zinc-400 max-w-lg mx-auto">{{ finishMessage }}</p>
+          <p class="text-xs sm:text-sm text-zinc-650 max-w-lg mx-auto">{{ finishMessage }}</p>
           
           <div v-if="memberStore.isRegistered && memberStore.canFeature('ownerMentor')" class="text-left pt-2">
             <OwnerMentorCard cta-label="Contact Coordinator Coach" />
@@ -781,7 +780,7 @@
     </main>
 
     <!-- Navigation Footer Bar -->
-    <div class="fixed bottom-0 left-0 right-0 border-t border-zinc-200/80 dark:border-white/[0.06] bg-surface-1/95 dark:bg-surface-1-dark/95 backdrop-blur-xl p-4 z-50 nma-safe-bottom shadow-lg">
+    <div class="fixed bottom-0 left-0 right-0 border-t border-zinc-200/80 bg-surface-1/95 backdrop-blur-xl p-4 z-50 nma-safe-bottom shadow-lg">
       <div class="max-w-3xl mx-auto flex items-center justify-between">
         <UiButton variant="ghost" size="sm" :disabled="currentSlide === 1" @click="prevSlide">Previous Slide</UiButton>
         <span class="text-xs text-zinc-500 font-mono font-bold">{{ currentSlide }} / {{ totalSlides }}</span>
@@ -800,7 +799,6 @@ import { useRouter } from 'vue-router';
 import { JOURNEY_IDS } from '../data/learnerJourneys';
 import { Globe, ChevronDown, ZoomIn, ZoomOut, Maximize2, RotateCcw } from 'lucide-vue-next';
 import AppLogo from '../components/ui/AppLogo.vue';
-import ThemeToggle from '../components/ui/ThemeToggle.vue';
 import UiSectionLabel from '../components/ui/UiSectionLabel.vue';
 import UiProgress from '../components/ui/UiProgress.vue';
 import UiButton from '../components/ui/UiButton.vue';
@@ -1035,10 +1033,6 @@ const toggleFAQ = (id) => {
 select option {
   background-color: #fff;
   color: #000;
-}
-.dark select option {
-  background-color: #0b1329;
-  color: #fff;
 }
 .animate-fade-in {
   animation: fadeIn 0.35s ease-out forwards;
