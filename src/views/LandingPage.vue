@@ -30,8 +30,24 @@
         </p>
       </div>
 
+      <div class="max-w-4xl mx-auto grid gap-6 lg:grid-cols-[108px_minmax(0,1fr)] items-center bg-white/90 border border-zinc-200/80 shadow-[0_25px_80px_-50px_rgba(15,23,42,0.35)] rounded-[2rem] p-6 sm:p-8">
+        <img
+          src="https://resiliencemasters.bi/uploads/media/image-1778139041842-252169724.jpg"
+          alt="Dieudonné Greatman BIGIRIMANA"
+          class="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover ring-2 ring-accent/25 shadow-lg mx-auto lg:mx-0"
+        />
+        <div class="space-y-4 text-center lg:text-left">
+          <h2 class="text-xl sm:text-2xl font-semibold text-zinc-950">Dieudonné Greatman BIGIRIMANA</h2>
+          <p class="text-sm sm:text-base text-zinc-600 leading-relaxed">
+            Dieudonné Greatman BIGIRIMANA is a published author and professional network marketer with a Master’s degree in International Relations and Diplomacy.
+            He began his career in traditional employment before shifting toward entrepreneurship, where he discovered network marketing as a path to personal growth, leadership, and financial opportunity.
+            Today, he focuses on coaching and mentoring others to build strong networks, develop leadership skills, and create income-generating opportunities that lead to greater independence and growth.
+          </p>
+        </div>
+      </div>
+
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <a href="#journeys" class="w-full sm:w-auto bg-gradient-to-r from-accent to-accent-dark hover:from-accent-light hover:to-accent text-slate-950 font-black px-8 py-4 rounded-xl text-sm uppercase tracking-wide transition-all shadow-glow hover:scale-[1.02] text-center">
+        <a href="#journeys" class="w-full sm:w-auto text-white bg-gradient-to-r from-accent to-accent-dark hover:text-zinc-900 hover:from-accent-light hover:to-accent text-slate-950 font-black px-8 py-4 rounded-xl text-sm uppercase tracking-wide transition-all shadow-glow hover:scale-[1.02] text-center">
           Start Your Journey
         </a>
         <a href="#why-nm" class="w-full sm:w-auto bg-white/5 border border-zinc-350 hover:bg-white/10 text-zinc-900 font-bold px-8 py-4 rounded-xl text-sm transition text-center">
@@ -161,7 +177,6 @@
 <script setup>
 // Vue reactivity APIs used in this file (none currently needed here)
 import AppLogo from '../components/ui/AppLogo.vue';
-import UiSectionLabel from '../components/ui/UiSectionLabel.vue';
 
 const proofStats = [
   { value: '50,000+', label: 'Active Learners' },
