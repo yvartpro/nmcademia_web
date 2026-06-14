@@ -16,16 +16,37 @@ const getBaseUrl = () => {
   return '/api';
 };
 
-/** Collapse duplicate slashes in a path (not after `://`). */
+/** Collapse duplicate slashes and repair compound/broken URLs without forcing HTTPS on HTTP. */
 export const normalizeMediaPath = (path) => {
   if (!path) return '';
-  if (/^(https?:\/\/|https?:\/[^/])/i.test(path)) {
+
+  // Handle comma-separated URLs returned from backend fields
+  if (path.includes(',')) {
+    const parts = path.split(',');
+    path = parts[parts.length - 1].trim();
+  }
+
+  // FIX: Detect if the incoming path intended to use http or https
+  const isHttp = /^http[s]?/i.test(path);
+  const isExplicitHttps = /^https/i.test(path);
+  const correctProtocol = isHttp ? (isExplicitHttps ? 'https://' : 'http://') : '';
+
+  // Repair broken compound protocols (e.g., "https, https:/") using the detected correct protocol
+  if (correctProtocol) {
+    path = path.replace(/^https?,\s*https?:\/+/i, correctProtocol);
+    path = path.replace(/^https?:\/+(?!\/)/i, correctProtocol);
+  }
+
+  if (/^(https?:\/\/)/i.test(path)) {
     const fixed = path.replace(/^(https?:)\/+/, '$1//');
     let normalized = fixed.replace(/([^:]\/)\/+/, '$1');
-    normalized = normalized.replace(/^(https?:\/\/[^/]+)\/(?:https?:\/\/[^/]+)(\/.*)$/i, '$1$2');
-    normalized = normalized.replace(/^(https?:\/\/[^/]+)\/(?:https?:\/[^/]+)(\/.*)$/i, '$1$2');
+    
+    // Robustly strip nested domains out of the path string
+    normalized = normalized.replace(/(https?:\/\/[^/]+)\/(?:https?:\/\/[^/]+)(\/.*)$/i, '$1$2');
+    normalized = normalized.replace(/(https?:\/\/[^/]+)\/(?:https?:\/[^/]+)(\/.*)$/i, '$1$2');
     return normalized;
   }
+  
   const withLeading = path.startsWith('/') ? path : `/${path}`;
   return withLeading.replace(/\/+/g, '/');
 };
@@ -44,6 +65,9 @@ export const getFullMediaUrl = (filePathOrAsset) => {
   
   if (!value) return '';
 
+  // Clean the incoming value before analyzing it (now keeps http as http)
+  value = normalizeMediaPath(value);
+
   const origin = getBackendOrigin().replace(/\/+$/, '');
   const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
   const remoteHostPattern = /^https?:\/+(?:www\.)?nmacademia\.com/i;
@@ -54,17 +78,18 @@ export const getFullMediaUrl = (filePathOrAsset) => {
     return `${origin}${normalizeMediaPath(path)}`;
   }
 
-  // Normalize localhost:5000 urls to use current backend origin
-  if (value.startsWith('http://localhost:5000') || value.startsWith('https://localhost:5000')) {
-    const path = value.replace(/^https?:\/\/localhost:5000/, '');
+  // Matches both http://localhost:5000 AND https://localhost:5000 (or any localhost port)
+  const localhostPattern = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i;
+  if (localhostPattern.test(value)) {
+    const path = value.replace(localhostPattern, '');
     return normalizeMediaPath(`${origin}${path}`);
   }
-  if (/^(https?:\/\/|https?:\/[^/])/i.test(value)) {
-    return normalizeMediaPath(value);
+
+  if (/^(https?:\/\/)/i.test(value)) {
+    return value; 
   }
   
-  const path = normalizeMediaPath(value);
-  return `${origin}${path}`;
+  return `${origin}${value}`;
 };
 
 const api = axios.create({

@@ -32,7 +32,7 @@
 
       <div class="max-w-4xl mx-auto grid gap-6 lg:grid-cols-[108px_minmax(0,1fr)] items-center bg-white/90 border border-zinc-200/80 shadow-[0_25px_80px_-50px_rgba(15,23,42,0.35)] rounded-[2rem] p-6 sm:p-8">
         <img
-          src="https://resiliencemasters.bi/uploads/media/image-1778139041842-252169724.jpg"
+          src="https://nmacademia.com/uploads/images/image-1781433594193-907066391.webp"
           alt="Dieudonné Greatman BIGIRIMANA"
           class="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover ring-2 ring-accent/25 shadow-lg mx-auto lg:mx-0"
         />
