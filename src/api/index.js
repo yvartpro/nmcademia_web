@@ -2,6 +2,12 @@ import axios from 'axios';
 
 const getBackendOrigin = () => {
   const envOrigin = import.meta.env.VITE_BACKEND_ORIGIN;
+  const localHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
+  if (localHost) {
+    return window.location.origin;
+  }
+
   if (envOrigin) return envOrigin.replace(/\/$/, '');
   return window.location.origin;
 };
@@ -38,9 +44,18 @@ export const getFullMediaUrl = (filePathOrAsset) => {
   
   if (!value) return '';
 
+  const origin = getBackendOrigin().replace(/\/+$/, '');
+  const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  const remoteHostPattern = /^https?:\/+(?:www\.)?nmacademia\.com/i;
+
+  if (isLocalHost && remoteHostPattern.test(value)) {
+    let path = value.replace(remoteHostPattern, '');
+    path = path.replace(/^\/https?:\/+(?:www\.)?nmacademia\.com/i, '');
+    return `${origin}${normalizeMediaPath(path)}`;
+  }
+
   // Normalize localhost:5000 urls to use current backend origin
   if (value.startsWith('http://localhost:5000') || value.startsWith('https://localhost:5000')) {
-    const origin = getBackendOrigin().replace(/\/+$/, '');
     const path = value.replace(/^https?:\/\/localhost:5000/, '');
     return normalizeMediaPath(`${origin}${path}`);
   }
@@ -48,7 +63,6 @@ export const getFullMediaUrl = (filePathOrAsset) => {
     return normalizeMediaPath(value);
   }
   
-  const origin = getBackendOrigin().replace(/\/+$/, '');
   const path = normalizeMediaPath(value);
   return `${origin}${path}`;
 };
