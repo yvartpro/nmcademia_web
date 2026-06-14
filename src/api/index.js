@@ -13,8 +13,12 @@ const getBaseUrl = () => {
 /** Collapse duplicate slashes in a path (not after `://`). */
 export const normalizeMediaPath = (path) => {
   if (!path) return '';
-  if (path.startsWith('http://') || path.startsWith('https://')) {
-    return path.replace(/([^:]\/)\/+/g, '$1');
+  if (/^(https?:\/\/|https?:\/[^/])/i.test(path)) {
+    const fixed = path.replace(/^(https?:)\/+/, '$1//');
+    let normalized = fixed.replace(/([^:]\/)\/+/, '$1');
+    normalized = normalized.replace(/^(https?:\/\/[^/]+)\/(?:https?:\/\/[^/]+)(\/.*)$/i, '$1$2');
+    normalized = normalized.replace(/^(https?:\/\/[^/]+)\/(?:https?:\/[^/]+)(\/.*)$/i, '$1$2');
+    return normalized;
   }
   const withLeading = path.startsWith('/') ? path : `/${path}`;
   return withLeading.replace(/\/+/g, '/');
@@ -40,8 +44,7 @@ export const getFullMediaUrl = (filePathOrAsset) => {
     const path = value.replace(/^https?:\/\/localhost:5000/, '');
     return normalizeMediaPath(`${origin}${path}`);
   }
-  
-  if (value.startsWith('http://') || value.startsWith('https://')) {
+  if (/^(https?:\/\/|https?:\/[^/])/i.test(value)) {
     return normalizeMediaPath(value);
   }
   
