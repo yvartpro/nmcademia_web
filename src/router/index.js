@@ -50,39 +50,39 @@ const router = createRouter({
   },
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   const token = localStorage.getItem('admin_token');
 
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!token) return next({ name: 'admin-login' });
-    return next();
+    if (!token) return { name: 'admin-login' };
+    return true;
   }
 
   if (to.name === 'admin-login' && token) {
-    return next({ name: 'admin-dashboard' });
+    return { name: 'admin-dashboard' };
   }
 
   const memberStore = useMemberStore();
 
   if (to.meta.requiresLearner) {
     if (!memberStore.isRegistered) {
-      return next({ name: 'landing' });
+      return { name: 'landing' };
     }
     const journeyId = memberStore.journeyId;
     if (!isRouteAllowed(journeyId, to.path)) {
       const journey = getJourney(journeyId);
-      return next(journey.defaultRoute);
+      return journey.defaultRoute;
     }
   }
 
   if (memberStore.isRegistered && to.path.startsWith('/app')) {
     const journeyId = memberStore.journeyId;
     if (!isRouteAllowed(journeyId, to.path)) {
-      return next(getJourney(journeyId).defaultRoute);
+      return getJourney(journeyId).defaultRoute;
     }
   }
 
-  next();
+  return true;
 });
 
 export default router;
