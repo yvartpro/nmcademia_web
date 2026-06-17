@@ -35,7 +35,6 @@
       
       <div class="nma-card-glass p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <span class="text-[9px] font-bold uppercase tracking-widest text-accent">Your Academy Route</span>
           <h4 class="text-sm font-extrabold text-zinc-900 mt-0.5">{{ memberStore.journey.title }}</h4>
           <p class="text-xs text-zinc-500 mt-1">{{ memberStore.journey.welcomeLine }}</p>
         </div>
@@ -56,7 +55,6 @@
       
       <!-- Slide 1: Company Profile -->
       <div v-if="currentSlide === 1" class="motion-safe:animate-fade-in space-y-8">
-        <UiSectionLabel>Slide 1: Partner Company</UiSectionLabel>
         <div class="space-y-4">
           <h2 class="text-3xl sm:text-4xl font-display font-black leading-tight text-zinc-950">
             {{ settings['partner_company_name'] || 'Alliance In Motion Global Group of Companies' }}
@@ -72,7 +70,6 @@
       <!-- Slide 2: Founders & Partners -->
       <div v-if="currentSlide === 2" class="motion-safe:animate-fade-in space-y-10">
         <div class="space-y-2">
-          <UiSectionLabel>Slide 2: Company Leadership</UiSectionLabel>
           <h2 class="text-2xl sm:text-3xl font-display font-black">Visionary Founders</h2>
           <p class="text-xs text-zinc-500 whitespace-pre-line">{{ settings['partner_company_profile'] }}</p>
         </div>
@@ -110,7 +107,6 @@
 
       <!-- Slide 3: Products Catalog -->
       <div v-if="currentSlide === 3" class="motion-safe:animate-fade-in space-y-8">
-        <UiSectionLabel>Slide 3: Product Ecosystem</UiSectionLabel>
         <h2 class="text-2xl sm:text-3xl font-display font-black">World-Class Health & Wellness</h2>
         
         <div class="aspect-video bg-zinc-900 rounded-2xl overflow-hidden shadow-glow">
@@ -142,7 +138,6 @@
       <!-- Slide 4: Success Stories & Dream -->
       <div v-if="currentSlide === 4" class="motion-safe:animate-fade-in space-y-8">
         <div class="space-y-4">
-          <UiSectionLabel>Slide 4: Aspirational Vision</UiSectionLabel>
           <h2 class="text-2xl sm:text-3xl font-display font-black">What is Your Dream?</h2>
           <p class="text-sm leading-relaxed text-zinc-650 bg-accent/5 p-6 rounded-xl border border-accent/10">
             {{ settings['dream_section_text'] }}
@@ -171,7 +166,6 @@
       <!-- Slide 5: Cashflow Quadrant -->
       <div v-if="currentSlide === 5" class="motion-safe:animate-fade-in space-y-8">
         <div class="space-y-2">
-          <UiSectionLabel>Slide 5: Financial Intelligence</UiSectionLabel>
           <h2 class="text-2xl sm:text-3xl font-display font-black">The Cashflow Quadrant</h2>
           <p class="text-xs text-zinc-500 leading-relaxed">{{ settings['cashflow_quadrant_explanation'] }}</p>
         </div>
@@ -316,7 +310,6 @@
 
       <!-- Slide 6: Compensation Genealogy Binary -->
       <div v-if="currentSlide === 6" class="motion-safe:animate-fade-in space-y-8">
-        <UiSectionLabel>Slide 6: Duplication Power</UiSectionLabel>
         <h2 class="text-2xl sm:text-3xl font-display font-black">Matched Sales Binary Model</h2>
         
         <div class="p-5 bg-white/5 border border-white/5 rounded-xl space-y-4">
@@ -692,7 +685,6 @@
 
       <!-- Slide 7: Entry Packages Selection -->
       <div v-if="currentSlide === 7" class="motion-safe:animate-fade-in space-y-6">
-        <UiSectionLabel>Slide 7: Packaging & Entry</UiSectionLabel>
         <h2 class="text-2xl sm:text-3xl font-display font-black">Choose Your Entry Level ({{ selectedCountryCode }})</h2>
         <p class="text-xs text-zinc-500">Prices are automatically adjusted for country packaging and conversion rates.</p>
 
