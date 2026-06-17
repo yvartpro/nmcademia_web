@@ -6,7 +6,7 @@
       <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <AppLogo size="sm" />
         <div class="flex items-center gap-3">
-          <div class="flex items-center gap-2 bg-zinc-100 rounded-xl px-3 py-1.5 border border-zinc-200">
+          <div class="flex items-center gap-2 bg-white rounded-xl px-3 py-1.5 border border-zinc-200">
             <Globe :size="14" class="text-zinc-400" />
             <select
               v-model="selectedCountryCode"
@@ -76,7 +76,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div v-for="founder in founders" :key="founder.id" class="nma-card p-5 space-y-4 hover:border-accent transition-all duration-300">
-            <div class="w-16 h-16 rounded-2xl bg-zinc-100 flex items-center justify-center overflow-hidden border border-zinc-200 shrink-0">
+            <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center overflow-hidden border border-zinc-200 shrink-0">
               <img v-if="founder.photo" :src="getFullMediaUrl(founder.photo)" :alt="founder.name" class="w-full h-full object-cover" />
               <span v-else class="text-zinc-500 font-bold text-lg">{{ founder.name.split(' ').map(n=>n[0]).join('') }}</span>
             </div>
@@ -91,7 +91,7 @@
         <div class="space-y-4">
           <h3 class="text-lg font-bold font-display">Global Manufacturing Partners</h3>
           <div class="grid grid-cols-2 gap-4">
-            <div v-for="partner in partners" :key="partner.id" class="p-5 bg-white/5 border border-white/5 hover:border-accent rounded-xl flex items-center gap-4 transition">
+            <div v-for="partner in partners" :key="partner.id" class="p-5 bg-white border border-zinc-200 hover:border-accent rounded-xl flex items-center gap-4 transition">
               <div class="w-12 h-12 bg-white rounded-lg p-1.5 flex items-center justify-center border border-zinc-200 shrink-0">
                 <img v-if="partner.logo" :src="getFullMediaUrl(partner.logo)" :alt="partner.name" class="w-full h-full object-contain" />
                 <span v-else class="text-slate-800 font-bold text-xs">{{ partner.name.substring(0, 3) }}</span>
@@ -109,7 +109,7 @@
       <div v-if="currentSlide === 3" class="motion-safe:animate-fade-in space-y-8">
         <h2 class="text-2xl sm:text-3xl font-display font-black">World-Class Health & Wellness</h2>
         
-        <div class="aspect-video bg-zinc-900 rounded-2xl overflow-hidden shadow-glow">
+        <div class="aspect-video bg-white rounded-2xl overflow-hidden shadow-glow border border-zinc-200">
           <iframe
             v-if="settings['video_url']"
             :src="settings['video_url']"
@@ -155,7 +155,7 @@
                 <p class="text-sm text-zinc-650 italic">"{{ test.quote }}"</p>
                 <div class="flex items-center gap-2">
                   <h4 class="font-bold text-xs">{{ test.name }}</h4>
-                  <span v-if="test.lifestyleTag" class="text-[9px] bg-white/5 px-2 py-0.5 border rounded-full text-zinc-400 font-semibold">{{ test.lifestyleTag }}</span>
+                  <span v-if="test.lifestyleTag" class="text-[9px] bg-white px-2 py-0.5 border border-zinc-200 rounded-full text-zinc-400 font-semibold">{{ test.lifestyleTag }}</span>
                 </div>
               </div>
             </div>
@@ -171,7 +171,7 @@
         </div>
 
         <!-- Cashflow Quadrant Interactive Image/Fallback Diagram -->
-        <div class="relative w-full max-w-lg mx-auto aspect-square rounded-2xl overflow-hidden border border-zinc-200/80 bg-zinc-950/40 shadow-xl group">
+        <div class="relative w-full max-w-lg mx-auto aspect-square rounded-2xl overflow-hidden border border-zinc-200/80 bg-white shadow-xl group">
           <!-- 1. Custom Image Mode -->
           <img
             v-if="settings?.['cashflow_quadrant_image']"
@@ -295,7 +295,7 @@
           </div>
         </div>
 
-        <div v-if="activeQuadrantInfo" class="nma-card p-6 border-accent/30 bg-gradient-to-br from-zinc-900 to-indigo-950/20 motion-safe:animate-fade-in">
+        <div v-if="activeQuadrantInfo" class="nma-card p-6 border-accent/30 motion-safe:animate-fade-in">
           <h4 class="font-display font-extrabold text-lg text-accent mb-2">{{ activeQuadrantInfo.title }}</h4>
           <p class="text-sm text-zinc-650 mb-4 leading-relaxed">{{ activeQuadrantInfo.description }}</p>
           <div class="flex items-center gap-2 text-xs border-t border-zinc-200/50 pt-3">
@@ -312,7 +312,7 @@
       <div v-if="currentSlide === 6" class="motion-safe:animate-fade-in space-y-8">
         <h2 class="text-2xl sm:text-3xl font-display font-black">Matched Sales Binary Model</h2>
         
-        <div class="p-5 bg-white/5 border border-white/5 rounded-xl space-y-4">
+        <div class="p-5 bg-white border border-zinc-200 rounded-xl space-y-4">
           <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed">
             A <strong>Binary Structure</strong> means you build only two sides: a <strong>Left Team</strong> and a <strong>Right Team</strong>. Every time you place a package referral on the Left and another on the Right, they pair to generate a <strong>Pairing Match Bonus (MSB)</strong>.
           </p>
@@ -320,7 +320,7 @@
           <!-- Genealogy illustration with Zoom & Pan Controls -->
           <div class="space-y-3">
             <!-- Controls Bar -->
-            <div class="flex items-center justify-between bg-zinc-100 border border-zinc-200/50 p-2 rounded-xl text-xs">
+            <div class="flex items-center justify-between bg-white border border-zinc-200/50 p-2 rounded-xl text-xs">
               <span class="font-semibold text-zinc-500 uppercase tracking-wider pl-2">Genealogy Visualizer</span>
               <div class="flex items-center gap-1">
                 <button 
@@ -363,7 +363,7 @@
             </div>
 
             <!-- Viewport Container -->
-            <div class="relative w-full max-h-[400px] overflow-auto border border-zinc-250/20 rounded-xl bg-slate-950/40 select-none py-10">
+            <div class="relative w-full max-h-[400px] overflow-auto border border-zinc-250/20 rounded-xl bg-white select-none py-10">
               <div 
                 class="flex justify-center transition-transform duration-150 ease-out origin-top min-w-max px-8"
                 :style="{ transform: `scale(${binaryZoom})` }"
@@ -402,8 +402,8 @@
                         <div class="h-4 w-0.5 bg-zinc-700"></div>
                       </div>
                       <div class="w-32 flex justify-between text-[10px] font-semibold text-zinc-400">
-                        <span class="px-2 py-1 bg-white/5 rounded border border-white/5">Bryan</span>
-                        <span class="px-2 py-1 bg-white/5 rounded border border-white/5">Chris</span>
+                        <span class="px-2 py-1 bg-white rounded border border-zinc-200/50">Bryan</span>
+                        <span class="px-2 py-1 bg-white rounded border border-zinc-200/50">Chris</span>
                       </div>
                     </div>
 
@@ -423,8 +423,8 @@
                         <div class="h-4 w-0.5 bg-zinc-700"></div>
                       </div>
                       <div class="w-32 flex justify-between text-[10px] font-semibold text-zinc-400">
-                        <span class="px-2 py-1 bg-white/5 rounded border border-white/5">Daniela</span>
-                        <span class="px-2 py-1 bg-white/5 rounded border border-white/5">Ella</span>
+                        <span class="px-2 py-1 bg-white rounded border border-zinc-200/50">Daniela</span>
+                        <span class="px-2 py-1 bg-white rounded border border-zinc-200/50">Ella</span>
                       </div>
                     </div>
                   </div>
@@ -436,33 +436,33 @@
             <!-- Lightbox / Fullscreen Modal -->
             <div 
               v-if="isBinaryFullscreen" 
-              class="fixed inset-0 z-[100] bg-zinc-950/95 backdrop-blur-xl flex flex-col motion-safe:animate-fade-in"
+              class="fixed inset-0 z-[100] bg-white/95 backdrop-blur-xl flex flex-col motion-safe:animate-fade-in"
             >
               <!-- Fullscreen Header -->
-              <div class="flex items-center justify-between border-b border-white/10 p-4 bg-zinc-900/80">
-                <span class="text-sm font-bold text-zinc-200">Genealogy Diagram (Fullscreen)</span>
+              <div class="flex items-center justify-between border-b border-zinc-200/30 p-4 bg-white/80">
+                <span class="text-sm font-bold text-zinc-900">Genealogy Diagram (Fullscreen)</span>
                 <div class="flex items-center gap-2">
                   <button 
                     type="button" 
                     @click="zoomOutBinary" 
-                    class="p-2.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white"
+                    class="p-2.5 hover:bg-zinc-200 rounded-lg text-zinc-700 hover:text-zinc-900"
                   >
                     <ZoomOut :size="18" />
                   </button>
-                  <span class="w-12 text-center font-mono font-bold text-zinc-300">
+                  <span class="w-12 text-center font-mono font-bold text-zinc-500">
                     {{ Math.round(binaryZoom * 100) }}%
                   </span>
                   <button 
                     type="button" 
                     @click="zoomInBinary" 
-                    class="p-2.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white"
+                    class="p-2.5 hover:bg-zinc-200 rounded-lg text-zinc-700 hover:text-zinc-900"
                   >
                     <ZoomIn :size="18" />
                   </button>
                   <button 
                     type="button" 
                     @click="resetBinaryZoom" 
-                    class="p-2.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white"
+                    class="p-2.5 hover:bg-zinc-200 rounded-lg text-zinc-700 hover:text-zinc-900"
                   >
                     <RotateCcw :size="18" />
                   </button>
@@ -510,8 +510,8 @@
                           <div class="h-6 w-0.5 bg-zinc-700"></div>
                         </div>
                         <div class="w-40 flex justify-between text-xs font-semibold text-zinc-400">
-                          <span class="px-3 py-1.5 bg-white/5 rounded border border-white/5">Bryan</span>
-                          <span class="px-3 py-1.5 bg-white/5 rounded border border-white/5">Chris</span>
+                          <span class="px-3 py-1.5 bg-white rounded border border-zinc-200/50">Bryan</span>
+                          <span class="px-3 py-1.5 bg-white rounded border border-zinc-200/50">Chris</span>
                         </div>
                       </div>
 
@@ -527,8 +527,8 @@
                           <div class="h-6 w-0.5 bg-zinc-700"></div>
                         </div>
                         <div class="w-40 flex justify-between text-xs font-semibold text-zinc-400">
-                          <span class="px-3 py-1.5 bg-white/5 rounded border border-white/5">Daniela</span>
-                          <span class="px-3 py-1.5 bg-white/5 rounded border border-white/5">Ella</span>
+                          <span class="px-3 py-1.5 bg-white rounded border border-zinc-200/50">Daniela</span>
+                          <span class="px-3 py-1.5 bg-white rounded border border-zinc-200/50">Ella</span>
                         </div>
                       </div>
                     </div>
@@ -552,7 +552,7 @@
               :key="stream.id" 
               @click="toggleFocusStream(stream.id)"
               class="nma-card p-5 flex flex-col gap-4 hover:border-accent transition duration-300 cursor-pointer"
-              :class="{ 'border-accent ring-1 ring-accent bg-zinc-950/20': focusedStreamId === stream.id }"
+              :class="{ 'border-accent ring-1 ring-accent bg-white/95': focusedStreamId === stream.id }"
             >
               <div class="flex gap-4">
                 <span class="text-2xl">{{ stream.icon || '💰' }}</span>
@@ -580,7 +580,7 @@
                   <div class="space-y-3">
                     <div>
                       <label class="block text-[10px] text-zinc-400 uppercase font-bold mb-1">Select referral package level:</label>
-                      <select v-model="drbSimPkgId" class="w-full bg-slate-900 border border-gray-800 rounded p-2 text-xs text-white">
+                      <select v-model="drbSimPkgId" class="w-full bg-white border border-zinc-200 rounded p-2 text-xs text-zinc-900">
                         <option v-for="p in catalogStore.packages" :key="p.id" :value="p.id">
                           {{ p.name }} (Referral bonus: {{ currencySymbol }}{{ getPriceForCountry(p, 'referralBonus') }})
                         </option>
@@ -608,7 +608,7 @@
                   <div class="space-y-3">
                     <div>
                       <label class="block text-[10px] text-zinc-400 uppercase font-bold mb-1">Select structural package level:</label>
-                      <select v-model="msbSimPkgId" class="w-full bg-slate-900 border border-gray-800 rounded p-2 text-xs text-white">
+                      <select v-model="msbSimPkgId" class="w-full bg-white border border-zinc-200 rounded p-2 text-xs text-zinc-900">
                         <option v-for="p in catalogStore.packages" :key="p.id" :value="p.id">
                           {{ p.name }} (Pair bonus: {{ currencySymbol }}{{ getPriceForCountry(p, 'matchBonus') }})
                         </option>
@@ -657,15 +657,15 @@
                 <div v-else-if="stream.slug === 'stairstep'" class="space-y-4 animate-fade-in">
                   <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Stairstep Rank Promotions Matrix</h5>
                   <div class="space-y-2 text-[10px]">
-                    <div class="flex justify-between items-center p-2 bg-white/5 rounded border border-white/5">
+                    <div class="flex justify-between items-center p-2 bg-white rounded border border-zinc-200/50">
                       <span class="font-bold text-zinc-300">Silver Executive</span>
                       <span class="text-accent font-black">10 Points Required (Get +10% rebate)</span>
                     </div>
-                    <div class="flex justify-between items-center p-2 bg-white/5 rounded border border-white/5">
+                    <div class="flex justify-between items-center p-2 bg-white rounded border border-zinc-200/50">
                       <span class="font-bold text-zinc-300">Gold Executive</span>
                       <span class="text-accent font-black">100 Points Required (Get +20% rebate)</span>
                     </div>
-                    <div class="flex justify-between items-center p-2 bg-white/5 rounded border border-white/5">
+                    <div class="flex justify-between items-center p-2 bg-white rounded border border-zinc-200/50">
                       <span class="font-bold text-zinc-300">Global Ambassador</span>
                       <span class="text-accent font-black">1,000 Points Required (Get +30% rebate)</span>
                     </div>
@@ -699,11 +699,11 @@
             </div>
             
             <div class="grid grid-cols-2 gap-3 text-xs">
-              <div class="bg-zinc-100 p-3 rounded-xl border border-zinc-200/50">
+              <div class="bg-white p-3 rounded-xl border border-zinc-200/50">
                 <span class="block text-zinc-500 text-[10px] uppercase font-bold mb-0.5">Direct Bonus</span>
                 <strong class="text-zinc-800 text-sm font-extrabold">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'referralBonus') }}</strong>
               </div>
-              <div class="bg-zinc-100 p-3 rounded-xl border border-zinc-200/50">
+              <div class="bg-white p-3 rounded-xl border border-zinc-200/50">
                 <span class="block text-zinc-500 text-[10px] uppercase font-bold mb-0.5">Pairing Match</span>
                 <strong class="text-zinc-800 text-sm font-extrabold">{{ currencySymbol }}{{ getPriceForCountry(pkg, 'matchBonus') }}</strong>
               </div>
@@ -738,7 +738,7 @@
             <button
               type="button"
               @click="toggleFAQ(faq.id)"
-              class="w-full text-left p-4 flex items-center justify-between hover:bg-white/5 transition"
+              class="w-full text-left p-4 flex items-center justify-between hover:bg-zinc-100 transition"
             >
               <span class="font-bold text-xs sm:text-sm text-zinc-900 pr-4">{{ faq.question }}</span>
               <ChevronDown :size="16" class="text-zinc-400 shrink-0 transition-transform" :class="{ 'rotate-180': openFAQs.includes(faq.id) }" />
