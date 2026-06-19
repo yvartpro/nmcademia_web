@@ -681,51 +681,84 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Slide 7: Ways of Earning -->
-      <div v-if="currentSlide === 7" class="motion-safe:animate-fade-in space-y-8">
-        <div class="space-y-3">
-          <span class="text-xs font-bold uppercase tracking-widest text-accent">Compensation Plan</span>
-          <h2 class="text-2xl sm:text-3xl font-display font-black">Ways of Earning</h2>
-          <p class="text-sm text-zinc-500 leading-relaxed max-w-3xl">
-            These are the main routes through which members earn in the system. Each way can be updated by your administrator with the latest package values, bonuses, and business rules.
-          </p>
-        </div>
+        <div class="space-y-8">
+          <div class="space-y-3">
+            <span class="text-xs font-bold uppercase tracking-widest text-accent">Compensation Plan</span>
+            <h3 class="text-xl font-display font-black">Ways of Earning</h3>
+            <p class="text-sm text-zinc-500 leading-relaxed max-w-3xl">
+              These are the main routes through which members earn in the system. Each way should clearly explain the earning mechanism, the role it plays, and the expected result.
+            </p>
+          </div>
 
-        <div class="space-y-4">
           <div v-if="ways.length === 0" class="nma-card p-6 text-zinc-500">
             There are no configured ways of earning yet. Please add them in the admin panel so the presentation reflects the latest compensation plan.
           </div>
 
-          <div v-for="way in ways" :key="way.id" class="bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm overflow-hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-[180px_minmax(0,1fr)] gap-5 items-start">
-              <div v-if="way.image" class="w-full h-40 rounded-3xl overflow-hidden border border-zinc-200 bg-zinc-100">
-                <img :src="getFullMediaUrl(way.image)" alt="{{ way.title }}" class="w-full h-full object-cover" />
-              </div>
-              <div>
-                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                  <div>
-                    <h3 class="text-lg font-display font-black text-zinc-950">{{ way.title }}</h3>
-                    <p v-if="way.subtitle" class="text-xs text-zinc-500 uppercase tracking-[0.24em] mt-2">{{ way.subtitle }}</p>
-                  </div>
-                  <span class="text-[10px] uppercase tracking-widest text-zinc-400">Order {{ way.order ?? 0 }}</span>
+          <div v-else class="grid gap-4 lg:grid-cols-2">
+            <article v-for="way in ways" :key="way.id" class="bg-white border border-zinc-200 rounded-3xl shadow-sm overflow-hidden">
+              <div class="relative overflow-hidden bg-zinc-950/5">
+                <div v-if="way.mediaType === 'video' && getVideoEmbedUrl(way.mediaUrl || way.image)" class="aspect-video bg-black">
+                  <iframe
+                    :src="getVideoEmbedUrl(way.mediaUrl || way.image)"
+                    :title="`${way.title} video`"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    class="w-full h-full"
+                  ></iframe>
                 </div>
-                <p v-if="way.body?.description" class="text-sm text-zinc-600 leading-relaxed mt-4">{{ way.body.description }}</p>
-                <ul v-if="way.body?.bullets?.length" class="mt-4 space-y-3 text-sm text-zinc-600 list-none">
-                  <li v-for="(bullet, index) in way.body.bullets" :key="index" class="flex gap-3">
-                    <span class="mt-1 h-2.5 w-2.5 rounded-full bg-accent"></span>
-                    <span>{{ bullet }}</span>
-                  </li>
-                </ul>
+                <div v-else-if="way.mediaType === 'video' && (way.mediaUrl || way.image)" class="aspect-video bg-black">
+                  <video muted autoplay loop playsinline class="w-full h-full object-cover">
+                    <source :src="getFullMediaUrl(way.mediaUrl || way.image)" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+                <div v-else-if="(way.mediaType === 'image' && (way.mediaUrl || way.image)) || (!way.mediaType && way.image)" class="aspect-video overflow-hidden bg-zinc-100">
+                  <img :src="getFullMediaUrl(way.mediaType === 'image' ? (way.mediaUrl || way.image) : way.image)" :alt="way.title" class="w-full h-full object-cover" />
+                </div>
+                <div v-else class="aspect-video bg-accent/10 flex items-center justify-center text-accent text-4xl font-black">
+                  <span class="inline-flex flex-col items-center gap-2">
+                    <span>💼</span>
+                    <span class="text-xs uppercase tracking-[0.3em]">Way of Earning</span>
+                  </span>
+                </div>
               </div>
-            </div>
+
+              <div class="p-6 space-y-5">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div class="space-y-3">
+                    <p class="text-[11px] uppercase tracking-[0.28em] font-semibold text-zinc-400">{{ way.subtitle || 'Earning Way' }}</p>
+                    <h4 class="text-2xl sm:text-3xl font-display font-black text-zinc-950 leading-tight">{{ way.title }}</h4>
+                  </div>
+                  <span class="inline-flex items-center justify-center rounded-full bg-accent/10 text-accent px-4 py-2 text-[10px] font-bold uppercase tracking-[0.24em]">
+                    {{ way.order ? `#${way.order}` : 'Order' }}
+                  </span>
+                </div>
+
+                <div class="space-y-4">
+                  <p v-if="way.body?.description" class="text-sm leading-relaxed text-zinc-600 whitespace-pre-line">
+                    {{ way.body.description }}
+                  </p>
+
+                  <div v-if="way.body?.bullets?.length" class="rounded-3xl bg-zinc-50 p-4 border border-zinc-200">
+                    <p class="text-[11px] uppercase tracking-[0.24em] text-zinc-400 font-semibold mb-3">Highlights</p>
+                    <ul class="space-y-2">
+                      <li v-for="(bullet, index) in way.body.bullets" :key="index" class="flex gap-3 text-sm text-zinc-600 leading-relaxed">
+                        <span class="mt-1 h-2.5 w-2.5 rounded-full bg-accent"></span>
+                        <span>{{ bullet }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </article>
           </div>
         </div>
       </div>
 
-      <!-- Slide 8: Entry Packages Selection -->
-      <div v-if="currentSlide === 8" class="motion-safe:animate-fade-in space-y-6">
+      <!-- Slide 7: Entry Packages Selection -->
+      <div v-if="currentSlide === 7" class="motion-safe:animate-fade-in space-y-6">
         <h2 class="text-2xl sm:text-3xl font-display font-black">Choose Your Entry Level ({{ selectedCountryCode }})</h2>
         <p class="text-xs text-zinc-500">Prices are automatically adjusted for country packaging and conversion rates.</p>
 
@@ -762,8 +795,8 @@
         </div>
       </div>
 
-      <!-- Slide 9: FAQs & Finish -->
-      <div v-if="currentSlide === 9" class="motion-safe:animate-fade-in space-y-8">
+      <!-- Slide 8: FAQs & Finish -->
+      <div v-if="currentSlide === 8" class="motion-safe:animate-fade-in space-y-8">
         <UiSectionLabel>Slide 8: Frequently Asked Questions</UiSectionLabel>
         <h2 class="text-2xl sm:text-3xl font-display font-black">Answers to Common Questions</h2>
         
@@ -849,7 +882,7 @@ const settingsStore = useSettingsStore();
 const contentStore = useContentStore();
 
 const currentSlide = ref(1);
-const totalSlides = 9;
+const totalSlides = 8;
 
 const focusedStreamId = ref(null);
 
@@ -1018,6 +1051,28 @@ const finishMessage = computed(() => {
 
 const changeCountry = () => {
   catalogStore.selectCountry(selectedCountryCode.value);
+};
+
+const getVideoEmbedUrl = (url) => {
+  if (!url) return null;
+  try {
+    const resolvedUrl = new URL(url, window.location.origin);
+    const hostname = resolvedUrl.hostname.toLowerCase();
+    if (hostname.includes('youtube.com')) {
+      const params = new URLSearchParams(resolvedUrl.search);
+      const videoId = params.get('v');
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+    }
+    if (hostname.includes('youtu.be')) {
+      return `https://www.youtube.com/embed/${resolvedUrl.pathname.slice(1)}`;
+    }
+    if (hostname.includes('vimeo.com')) {
+      return `https://player.vimeo.com/video/${resolvedUrl.pathname.split('/').pop()}`;
+    }
+  } catch (err) {
+    return null;
+  }
+  return null;
 };
 
 const getPriceForCountry = (pkg, field) => {

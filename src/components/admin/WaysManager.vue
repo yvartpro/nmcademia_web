@@ -13,6 +13,7 @@
           <tr>
             <th class="p-4">Image</th>
             <th class="p-4">Title</th>
+            <th class="p-4">Type</th>
             <th class="p-4">Subtitle</th>
             <th class="p-4 text-center">Order</th>
             <th class="p-4 text-center">Active</th>
@@ -26,6 +27,7 @@
               <span v-else class="text-zinc-400">No image</span>
             </td>
             <td class="p-4 font-bold text-[#0A0F0D]">{{ item.title }}</td>
+            <td class="p-4 text-zinc-500 uppercase tracking-[0.12em] font-semibold text-[10px]">{{ item.mediaType || 'text' }}</td>
             <td class="p-4 text-zinc-500">{{ item.subtitle || '—' }}</td>
             <td class="p-4 text-center font-mono text-[#008A20] font-bold">{{ item.order }}</td>
             <td class="p-4 text-center">
@@ -61,8 +63,22 @@
             <input v-model="form.subtitle" class="adm-input" />
           </div>
           <div class="adm-field">
+            <label class="adm-label">Display type</label>
+            <select v-model="form.mediaType" class="adm-input">
+              <option value="text">Text only</option>
+              <option value="image">Image</option>
+              <option value="video">Video</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="adm-field">
             <label class="adm-label">Image path</label>
             <input v-model="form.image" placeholder="uploads/images/example.jpg" class="adm-input" />
+          </div>
+          <div class="adm-field">
+            <label class="adm-label">Media URL</label>
+            <input v-model="form.mediaUrl" placeholder="https://youtu.be/... or /uploads/videos/..." class="adm-input" />
           </div>
         </div>
         <div class="adm-field">
@@ -118,6 +134,8 @@ const form = ref({
   slug: '',
   subtitle: '',
   image: '',
+  mediaType: 'text',
+  mediaUrl: '',
   bodyDescription: '',
   bodyBullets: '',
   order: 1,
@@ -145,6 +163,8 @@ const openModal = (item = null) => {
       slug: item.slug,
       subtitle: item.subtitle || '',
       image: item.image || '',
+      mediaType: item.mediaType || 'text',
+      mediaUrl: item.mediaUrl || '',
       bodyDescription: item.body?.description || '',
       bodyBullets: (item.body?.bullets || []).join('\n'),
       order: item.order ?? 1,
@@ -160,50 +180,44 @@ const openModal = (item = null) => {
       slug: '',
       subtitle: '',
       image: '',
-      bodyDescription: '',
-      bodyBullets: '',
-      order: nextOrder,
-      active: true
-    };
-  }
-  isModalOpen.value = true;
-};
-
-const saveItem = async () => {
-  const payload = {
-    title: form.value.title,
-    slug: form.value.slug,
-    subtitle: form.value.subtitle,
-    image: form.value.image || null,
-    body: {
-      description: form.value.bodyDescription,
-      bullets: form.value.bodyBullets
-        .split('\n')
-        .map(line => line.trim())
-        .filter(Boolean)
-    },
-    order: form.value.order,
-    active: form.value.active
+        mediaType: 'text',
+        mediaUrl: '',
+        bodyDescription: '',
+        bodyBullets: '',
+        order: nextOrder,
+        active: true
+      };
+    }
+    isModalOpen.value = true;
   };
 
-  if (editingId.value) {
-    await contentStore.adminUpdateWay(editingId.value, payload);
-  } else {
-    await contentStore.adminCreateWay(payload);
-  }
-  await contentStore.fetchWaysAdmin();
-  isModalOpen.value = false;
-};
+  const saveItem = async () => {
+    const payload = {
+      title: form.value.title,
+      slug: form.value.slug,
+      subtitle: form.value.subtitle,
+      image: form.value.image || null,
+      mediaType: form.value.mediaType,
+      mediaUrl: form.value.mediaUrl || null,
+      body: {
+        description: form.value.bodyDescription,
+        bullets: form.value.bodyBullets
+          .split('\n')
+          .map(line => line.trim())
+          .filter(Boolean)
+      },
+      order: form.value.order,
+      active: form.value.active
+    };
 
-const requestDelete = (id) => {
-  pendingDeleteId.value = id;
-  confirmOpen.value = true;
-};
-
-const executeDelete = async () => {
-  if (pendingDeleteId.value) await contentStore.adminDeleteWay(pendingDeleteId.value);
-  pendingDeleteId.value = null;
-};
+    if (editingId.value) {
+      await contentStore.adminUpdateWay(editingId.value, payload);
+    } else {
+      await contentStore.adminCreateWay(payload);
+    }
+    await contentStore.fetchWaysAdmin();
+    isModalOpen.value = false;
+  };
 </script>
 
 <style scoped>
