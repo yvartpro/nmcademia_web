@@ -544,7 +544,7 @@
           <div class="flex justify-between items-end">
             <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-500">Earning Streams Breakdown</h3>
           </div>
-          <p class="text-xs text-zinc-400">Click on any earning stream to show detailed explanations, dynamic calculators, and simulations.</p>
+          <p class="text-xs text-zinc-400">Click on any earning stream to show detailed explanations and dynamic calculators.</p>
           <div class="space-y-3">
             <div 
               v-for="stream in earningStreams" 
@@ -561,7 +561,7 @@
                       {{ stream.title }}
                     </h4>
                     <span class="text-[10px] text-zinc-500 font-semibold">
-                      {{ focusedStreamId === stream.id ? 'Hide Details' : 'Show Details & Simulator' }}
+                      {{ focusedStreamId === stream.id ? 'Hide Details' : 'Show Details' }}
                     </span>
                   </div>
                   <p class="text-xs text-zinc-500 leading-relaxed mt-1 font-light">{{ stream.shortDescription }}</p>
@@ -575,7 +575,7 @@
               <div v-if="focusedStreamId === stream.id" @click.stop class="border-t border-white/5 pt-4 mt-2">
                 <!-- 1. DRB Simulator -->
                 <div v-if="stream.slug === 'drb'" class="space-y-4 animate-fade-in">
-                  <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Direct Referral Income Simulator</h5>
+                  <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Direct Referral Income</h5>
                   <div class="space-y-3">
                     <div>
                       <label class="block text-[10px] text-zinc-400 uppercase font-bold mb-1">Select referral package level:</label>
@@ -585,15 +585,8 @@
                         </option>
                       </select>
                     </div>
-                    <div>
-                      <label class="flex justify-between text-[10px] text-zinc-400 uppercase font-bold mb-1">
-                        <span>Number of personal referrals:</span>
-                        <span class="text-amber-500 font-mono font-bold">{{ drbSimCount }}</span>
-                      </label>
-                      <input type="range" min="1" max="50" v-model.number="drbSimCount" class="w-full accent-amber-500" />
-                    </div>
                     <div class="border-t border-white/5 pt-3 flex justify-between items-center text-xs">
-                      <span class="font-bold text-zinc-350">Total Simulated DRB Earnings:</span>
+                      <span class="font-bold text-zinc-350">Total DRB Earnings:</span>
                       <span class="font-mono text-base font-black text-amber-400">
                         {{ currencySymbol }}{{ formatNumber(simulatedDRBEarnings) }}
                       </span>
@@ -603,7 +596,7 @@
 
                 <!-- 2. MSB Simulator -->
                 <div v-else-if="stream.slug === 'msb'" class="space-y-4 animate-fade-in">
-                  <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Matched Sales (Pairing) Income Simulator</h5>
+                  <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Matched Sales (Pairing) Income</h5>
                   <div class="space-y-3">
                     <div>
                       <label class="block text-[10px] text-zinc-400 uppercase font-bold mb-1">Select structural package level:</label>
@@ -613,15 +606,8 @@
                         </option>
                       </select>
                     </div>
-                    <div>
-                      <label class="flex justify-between text-[10px] text-zinc-400 uppercase font-bold mb-1">
-                        <span>Number of matched pairs (Left & Right):</span>
-                        <span class="text-amber-500 font-mono font-bold">{{ msbSimCount }}</span>
-                      </label>
-                      <input type="range" min="1" max="50" v-model.number="msbSimCount" class="w-full accent-amber-500" />
-                    </div>
                     <div class="border-t border-white/5 pt-3 flex justify-between items-center text-xs">
-                      <span class="font-bold text-zinc-350">Total Simulated MSB Earnings:</span>
+                      <span class="font-bold text-zinc-350">Total MSB Earnings:</span>
                       <span class="font-mono text-base font-black text-amber-400">
                         {{ currencySymbol }}{{ formatNumber(simulatedMSBEarnings) }}
                       </span>
@@ -629,30 +615,7 @@
                   </div>
                 </div>
 
-                <!-- 3. Unilevel Simulator -->
-                <div v-else-if="stream.slug === 'unilevel'" class="space-y-4 animate-fade-in">
-                  <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Unilevel Passive Income Simulator</h5>
-                  <p class="text-[10px] text-zinc-400 leading-relaxed">
-                    Simulate active downline members ordering just 1 product package (e.g. C24/7 at 5% = $1.35) monthly.
-                  </p>
-                  <div class="space-y-3">
-                    <div>
-                      <label class="flex justify-between text-[10px] text-zinc-400 uppercase font-bold mb-1">
-                        <span>Active Team Size (Downlines):</span>
-                        <span class="text-amber-500 font-mono font-bold">{{ unilevelSimCount }}</span>
-                      </label>
-                      <input type="range" min="5" max="1000" step="5" v-model.number="unilevelSimCount" class="w-full accent-amber-500" />
-                    </div>
-                    <div class="border-t border-white/5 pt-3 flex justify-between items-center text-xs">
-                      <span class="font-bold text-zinc-350">Estimated Monthly Passive Income:</span>
-                      <span class="font-mono text-base font-black text-amber-400">
-                        {{ currencySymbol }}{{ formatNumber(unilevelSimCount * 1.35 * conversionRate) }}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 4. Stairstep Matrix -->
+                <!-- 3. Stairstep Matrix -->
                 <div v-else-if="stream.slug === 'stairstep'" class="space-y-4 animate-fade-in">
                   <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Stairstep Rank Promotions Matrix</h5>
                   <div class="space-y-2 text-[10px]">
@@ -678,84 +641,6 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        <div class="space-y-8">
-          <div class="space-y-3">
-            <span class="text-xs font-bold uppercase tracking-widest text-accent">Compensation Plan</span>
-            <h3 class="text-xl font-display font-black">Ways of Earning</h3>
-            <p class="text-sm text-zinc-500 leading-relaxed max-w-3xl">
-              These are the main routes through which members earn in the system. Each way should clearly explain the earning mechanism, the role it plays, and the expected result.
-            </p>
-          </div>
-
-          <div v-if="ways.length === 0" class="nma-card p-6 text-zinc-500">
-            There are no configured ways of earning yet. Please add them in the admin panel so the presentation reflects the latest compensation plan.
-          </div>
-
-          <div v-else class="grid gap-4 lg:grid-cols-2">
-            <article v-for="way in ways" :key="way.id" class="bg-white border border-zinc-200 rounded-3xl shadow-sm overflow-hidden">
-              <div class="relative overflow-hidden bg-zinc-950/5">
-                <div v-if="way.mediaType === 'video' && getVideoEmbedUrl(way.mediaUrl || way.image)" class="aspect-video bg-black">
-                  <iframe
-                    :src="getVideoEmbedUrl(way.mediaUrl || way.image)"
-                    :title="`${way.title} video`"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                    class="w-full h-full"
-                  ></iframe>
-                </div>
-                <div v-else-if="way.mediaType === 'video' && (way.mediaUrl || way.image)" class="aspect-video bg-black">
-                  <video muted autoplay loop playsinline class="w-full h-full object-cover">
-                    <source :src="getFullMediaUrl(way.mediaUrl || way.image)" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <div v-else-if="(way.mediaType === 'image' && (way.mediaUrl || way.image)) || (!way.mediaType && way.image)" class="aspect-video overflow-hidden bg-zinc-100">
-                  <img :src="getFullMediaUrl(way.mediaType === 'image' ? (way.mediaUrl || way.image) : way.image)" :alt="way.title" class="w-full h-full object-cover" />
-                </div>
-                <div v-else class="aspect-video bg-accent/10 flex items-center justify-center text-accent text-4xl font-black">
-                  <span class="inline-flex flex-col items-center gap-2">
-                    <span>💼</span>
-                    <span class="text-xs uppercase tracking-[0.3em]">Way of Earning</span>
-                  </span>
-                </div>
-              </div>
-
-              <div class="p-6 space-y-5">
-                <div class="space-y-3">
-                  <h4 class="text-2xl sm:text-3xl font-display font-black text-zinc-950 leading-tight">{{ way.title }}</h4>
-                  <p v-if="!isWayExpanded(way.id)" class="text-sm leading-relaxed text-zinc-600">
-                    {{ way.subtitle || 'This way explains the earning mechanism in a concise preview.' }}
-                  </p>
-                  <p v-else-if="way.body?.description" class="text-sm leading-relaxed text-zinc-600 whitespace-pre-line">
-                    {{ way.body.description }}
-                  </p>
-                </div>
-
-                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <button
-                    type="button"
-                    @click="toggleWayDetails(way.id)"
-                    class="inline-flex items-center justify-center rounded-full border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-accent transition hover:border-accent/80"
-                  >
-                    {{ isWayExpanded(way.id) ? 'Hide details' : 'View details' }}
-                  </button>
-                </div>
-
-                <div v-if="isWayExpanded(way.id) && way.body?.bullets?.length" class="rounded-3xl bg-zinc-50 p-4 border border-zinc-200">
-                  <p class="text-[11px] uppercase tracking-[0.24em] text-zinc-400 font-semibold mb-3">Highlights</p>
-                  <ul class="space-y-2">
-                    <li v-for="(bullet, index) in way.body.bullets" :key="index" class="flex gap-3 text-sm text-zinc-600 leading-relaxed">
-                      <span class="mt-1 h-2.5 w-2.5 rounded-full bg-accent"></span>
-                      <span>{{ bullet }}</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </article>
           </div>
         </div>
       </div>
