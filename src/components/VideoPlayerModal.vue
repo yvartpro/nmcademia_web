@@ -78,15 +78,6 @@
         <div class="text-xs text-green-300 font-mono">
           {{ Math.floor(progress) }} / {{ Math.floor(duration) }} sec
         </div>
-
-        <!-- Exit -->
-        <button
-          @click="close"
-          class="bg-green-600 hover:bg-green-500 px-3 py-1 rounded-lg font-semibold text-white transition"
-        >
-          Exit
-        </button>
-
       </div>
     </div>
 
@@ -159,10 +150,12 @@ const updateVolume = (e) => {
 };
 
 const seek = (e) => {
-  const time = Number(e.target.value);
-  if (videoRef.value) videoRef.value.currentTime = time;
+  const video = videoRef.value;
+  if (!video) return;
 
-  triggerControls();
+  const time = Number(e.target.value);
+  video.currentTime = time;
+  progress.value = time;
 };
 
 // sync
@@ -179,6 +172,7 @@ const onLoaded = () => {
   if (!video) return;
 
   duration.value = video.duration || 0;
+  progress.value = video.currentTime || 0;
 };
 
 // lifecycle
@@ -188,6 +182,15 @@ onMounted(() => {
 
   video.addEventListener('timeupdate', onTimeUpdate);
   video.addEventListener('loadedmetadata', onLoaded);
+
+  // 🔥 FORCE SYNC ON LOAD (important fix)
+  video.addEventListener('play', () => {
+    isPlaying.value = true;
+  });
+
+  video.addEventListener('pause', () => {
+    isPlaying.value = false;
+  });
 });
 
 onUnmounted(() => {
@@ -198,10 +201,18 @@ onUnmounted(() => {
 const close = () => store.close();
 
 // reset on close
-watch(() => store.visible, (v) => {
-  if (!v && videoRef.value) {
-    videoRef.value.pause();
-    videoRef.value.currentTime = 0;
-  }
+watch(src, async () => {
+  await nextTick();
+
+  const video = videoRef.value;
+  if (!video) return;
+
+  video.load();
+
+  video.play().then(() => {
+    isPlaying.value = true;
+  }).catch(() => {
+    isPlaying.value = false;
+  });
 });
 </script>
