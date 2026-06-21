@@ -85,7 +85,7 @@
         >
           <div v-if="stream.media && focusedStreamId === stream.id" class="mt-3">
             <img v-if="stream.mediaType === 'image'" :src="mediaPreview(stream.media.filePath)" :alt="stream.media.alt" class="w-full h-full object-cover rounded" />
-            <a v-else-if="stream.mediaType === 'video'" :href="stream.media.url" target="_blank" class="text-blue-500 hover:underline">Play Video</a>
+            <a v-else-if="stream.mediaType === 'video'" @click.stop="openVideo(stream)" class="text-blue-500 hover:underline">Play Video</a>
           </div>
 
           <div class="flex gap-4">
@@ -181,6 +181,16 @@ import { ref, computed } from 'vue';
 import { ZoomIn, ZoomOut, Maximize2, RotateCcw } from 'lucide-vue-next';
 import { getFullMediaUrl } from '../../api';
 import BinaryTree from './BinaryTree.vue';
+import { useVideoPlayerStore } from '@/stores/videoPlayer';
+
+const videoStore = useVideoPlayerStore();
+
+const openVideo = (stream) => {
+  videoStore.open({
+    src: stream.media.filePath,
+    title: stream.title,
+  });
+};
 
 const props = defineProps({
   settings: { type: Object, required: true },

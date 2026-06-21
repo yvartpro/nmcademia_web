@@ -2,6 +2,7 @@
   <div class="bg-surface-0 min-h-screen text-zinc-900 font-sans transition-colors duration-300">
     <router-view />
 
+    <VideoPlayerModal />
     <ChatWidget v-if="showChatWidget" />
   </div>
 </template>
@@ -11,6 +12,7 @@ import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useThemeStore } from './stores/theme';
 import ChatWidget from './components/ChatWidget.vue';
+import VideoPlayerModal from '@/components/VideoPlayerModal.vue';
 
 const route = useRoute();
 const themeStore = useThemeStore();
