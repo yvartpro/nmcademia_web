@@ -62,7 +62,7 @@
           <p class="text-sm text-zinc-500 font-semibold tracking-wide">ESTABLISHED SINCE 2006 • OVER 40+ COUNTRIES</p>
         </div>
         
-        <div class="nma-card p-6 bg-gradient-to-br from-indigo-950/20 to-accent/5 leading-relaxed text-zinc-650 whitespace-pre-line text-sm sm:text-base border-accent/20">
+        <div class="nma-card p-6 leading-relaxed text-zinc-650 whitespace-pre-line text-sm sm:text-base border-accent/20">
           {{ settings['partner_company_intro'] }}
         </div>
       </div>
@@ -155,7 +155,6 @@
                 <p class="text-sm text-zinc-650 italic">"{{ test.quote }}"</p>
                 <div class="flex items-center gap-2">
                   <h4 class="font-bold text-xs">{{ test.name }}</h4>
-                  <span v-if="test.lifestyleTag" class="text-[9px] bg-white px-2 py-0.5 border border-zinc-200 rounded-full text-zinc-400 font-semibold">{{ test.lifestyleTag }}</span>
                 </div>
               </div>
             </div>
@@ -726,30 +725,34 @@
               </div>
 
               <div class="p-6 space-y-5">
-                <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                  <div class="space-y-3">
-                    <p class="text-[11px] uppercase tracking-[0.28em] font-semibold text-zinc-400">{{ way.subtitle || 'Earning Way' }}</p>
-                    <h4 class="text-2xl sm:text-3xl font-display font-black text-zinc-950 leading-tight">{{ way.title }}</h4>
-                  </div>
-                  <span class="inline-flex items-center justify-center rounded-full bg-accent/10 text-accent px-4 py-2 text-[10px] font-bold uppercase tracking-[0.24em]">
-                    {{ way.order ? `#${way.order}` : 'Order' }}
-                  </span>
-                </div>
-
-                <div class="space-y-4">
-                  <p v-if="way.body?.description" class="text-sm leading-relaxed text-zinc-600 whitespace-pre-line">
+                <div class="space-y-3">
+                  <h4 class="text-2xl sm:text-3xl font-display font-black text-zinc-950 leading-tight">{{ way.title }}</h4>
+                  <p v-if="!isWayExpanded(way.id)" class="text-sm leading-relaxed text-zinc-600">
+                    {{ way.subtitle || 'This way explains the earning mechanism in a concise preview.' }}
+                  </p>
+                  <p v-else-if="way.body?.description" class="text-sm leading-relaxed text-zinc-600 whitespace-pre-line">
                     {{ way.body.description }}
                   </p>
+                </div>
 
-                  <div v-if="way.body?.bullets?.length" class="rounded-3xl bg-zinc-50 p-4 border border-zinc-200">
-                    <p class="text-[11px] uppercase tracking-[0.24em] text-zinc-400 font-semibold mb-3">Highlights</p>
-                    <ul class="space-y-2">
-                      <li v-for="(bullet, index) in way.body.bullets" :key="index" class="flex gap-3 text-sm text-zinc-600 leading-relaxed">
-                        <span class="mt-1 h-2.5 w-2.5 rounded-full bg-accent"></span>
-                        <span>{{ bullet }}</span>
-                      </li>
-                    </ul>
-                  </div>
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <button
+                    type="button"
+                    @click="toggleWayDetails(way.id)"
+                    class="inline-flex items-center justify-center rounded-full border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-accent transition hover:border-accent/80"
+                  >
+                    {{ isWayExpanded(way.id) ? 'Hide details' : 'View details' }}
+                  </button>
+                </div>
+
+                <div v-if="isWayExpanded(way.id) && way.body?.bullets?.length" class="rounded-3xl bg-zinc-50 p-4 border border-zinc-200">
+                  <p class="text-[11px] uppercase tracking-[0.24em] text-zinc-400 font-semibold mb-3">Highlights</p>
+                  <ul class="space-y-2">
+                    <li v-for="(bullet, index) in way.body.bullets" :key="index" class="flex gap-3 text-sm text-zinc-600 leading-relaxed">
+                      <span class="mt-1 h-2.5 w-2.5 rounded-full bg-accent"></span>
+                      <span>{{ bullet }}</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </article>
@@ -918,6 +921,16 @@ const goToDetails = (slug) => {
   router.push(`/package-details/${slug}`);
 };
 const showPostSignupWelcome = ref(false);
+const expandedWayIds = ref([]);
+
+const isWayExpanded = (id) => expandedWayIds.value.includes(id);
+const toggleWayDetails = (id) => {
+  if (expandedWayIds.value.includes(id)) {
+    expandedWayIds.value = expandedWayIds.value.filter((itemId) => itemId !== id);
+  } else {
+    expandedWayIds.value = [...expandedWayIds.value, id];
+  }
+};
 
 const nextSlide = () => {
   if (currentSlide.value < totalSlides) currentSlide.value++;
