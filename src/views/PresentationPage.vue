@@ -553,6 +553,13 @@
               class="nma-card p-5 flex flex-col gap-4 hover:border-accent transition duration-300 cursor-pointer"
               :class="{ 'border-accent ring-1 ring-accent bg-white/95': focusedStreamId === stream.id }"
             >
+            <!-- if stream has media, display it if it is stream.mediaType=='image' and add a link to play video if stream.mediaType='video' -->
+            <div v-if="stream.media && focusedStreamId === stream.id" class="mt-3">
+              <img v-if="stream.mediaType === 'image'" :src="mediaPreview(stream.media.filePath)" :alt="stream.media.alt" class="w-full h-full object-cover rounded">
+              <a v-else-if="stream.mediaType === 'video'" :href="stream.media.url" target="_blank" class="text-blue-500 hover:underline">
+                Play Video
+              </a>
+            </div>
               <div class="flex gap-4">
                 <span class="text-2xl">{{ stream.icon || '💰' }}</span>
                 <div class="flex-grow">
@@ -762,13 +769,17 @@ import { useContentStore } from '../stores/content';
 import { useMemberStore } from '../stores/member';
 import OwnerMentorCard from '../components/journey/OwnerMentorCard.vue';
 import api, { getFullMediaUrl } from '../api';
+import { useMediaStore } from '../stores/media';
+
 
 const router = useRouter();
+const mediaStore = useMediaStore();
 const memberStore = useMemberStore();
 const catalogStore = useCatalogStore();
 const settingsStore = useSettingsStore();
 const contentStore = useContentStore();
 
+const mediaPreview = (asset) => mediaStore.resolveUrl(asset)
 const currentSlide = ref(1);
 const totalSlides = 8;
 
