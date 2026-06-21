@@ -69,7 +69,7 @@
             <span class="text-xs">Featured on presentation</span>
           </label>
         </div>
-        <MediaPicker v-model="form.mediaAssetId" label="Product image" />
+        <MediaPicker v-model="form.mediaAssetId" assetType="image" label="Product image" />
       </form>
       <template #footer>
         <button type="button" class="adm-btn-ghost" @click="isModalOpen = false">Cancel</button>

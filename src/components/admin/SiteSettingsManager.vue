@@ -33,6 +33,7 @@
           <MediaPicker
             v-else-if="field.type === 'image'"
             v-model="form[field.key]"
+            assetType="image"
             :is-url-mode="true"
             :label="''"
             class="mt-1"

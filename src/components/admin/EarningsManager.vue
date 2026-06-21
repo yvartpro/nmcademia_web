@@ -72,7 +72,7 @@
             </select>
           </div>
           <div class="adm-field">
-            <MediaPicker v-model="form.mediaId" label="Image" /> 
+            <MediaPicker v-model="form.mediaId" assetType="all" label="Media" /> 
           </div>
         </div>
         <div class="adm-field">

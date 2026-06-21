@@ -49,7 +49,7 @@
           <label class="adm-label">Quote</label>
           <textarea v-model="form.quote" rows="3" required class="adm-input"></textarea>
         </div>
-        <MediaPicker v-model="form.mediaAssetId" label="Profile photo" />
+        <MediaPicker v-model="form.mediaAssetId" assetType="image" label="Profile photo" />
       </form>
       <template #footer>
         <button type="button" class="adm-btn-ghost" @click="isModalOpen = false">Cancel</button>

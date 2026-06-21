@@ -49,7 +49,7 @@
           <label class="adm-label">Bio</label>
           <textarea v-model="form.bio" rows="3" class="adm-input"></textarea>
         </div>
-        <MediaPicker v-model="form.mediaAssetId" label="Founder photo" />
+        <MediaPicker v-model="form.mediaAssetId" assetType="image" label="Founder photo" />
       </form>
       <template #footer>
         <button type="button" class="adm-btn-ghost" @click="isModalOpen = false">Cancel</button>

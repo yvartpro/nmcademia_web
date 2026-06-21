@@ -49,7 +49,7 @@
           <label class="adm-label">Description</label>
           <textarea v-model="form.description" rows="3" required class="adm-input"></textarea>
         </div>
-        <MediaPicker v-model="form.mediaAssetId" label="Partner logo" />
+        <MediaPicker v-model="form.mediaAssetId" assetType="image" label="Partner logo" />
       </form>
       <template #footer>
         <button type="button" class="adm-btn-ghost" @click="isModalOpen = false">Cancel</button>
