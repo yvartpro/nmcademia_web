@@ -45,32 +45,32 @@
 
     <!-- Slide Viewport -->
     <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-      <Slide1CompanyProfile
+      <CompanyProfile
         v-if="currentSlide === 1"
         :settings="settings"
       />
-      <Slide2FoundersPartners
+      <FoundersPartners
         v-else-if="currentSlide === 2"
         :settings="settings"
         :founders="founders"
         :partners="partners"
       />
-      <Slide3ProductsCatalog
+      <ProductsCatalog
         v-else-if="currentSlide === 3"
         :settings="settings"
         :products="catalogStore.products"
       />
-      <Slide4DreamTestimonials
+      <DreamTestimonials
         v-else-if="currentSlide === 4"
         :settings="settings"
         :testimonials="testimonials"
       />
-      <Slide5CashflowQuadrant
+      <CashflowQuadrant
         v-else-if="currentSlide === 5"
         :settings="settings"
         v-model:activeQuadrant="activeQuadrant"
       />
-      <Slide6BinaryCompensation
+      <BinaryCompensation
         v-else-if="currentSlide === 6"
         :settings="settings"
         :earning-streams="earningStreams"
@@ -81,7 +81,7 @@
         :get-price-for-country="getPriceForCountry"
         :format-number="formatNumber"
       />
-      <Slide7EntryPackages
+      <EntryPackages
         v-else-if="currentSlide === 7"
         :packages="catalogStore.packages"
         :selected-country-code="selectedCountryCode"
@@ -90,7 +90,7 @@
         @consult="consultTrainerPackage"
         @details="goToDetails"
       />
-      <Slide8FAQsFinish
+      <FAQsFinish
         v-else-if="currentSlide === 8"
         :faqs="rawFAQs"
         :finish-title="finishTitle"
@@ -133,14 +133,14 @@ import { useMediaStore } from '../stores/media';
 import api, { getFullMediaUrl } from '../api';
 
 // Slide components
-import Slide1CompanyProfile from './slides/Slide1CompanyProfile.vue';
-import Slide2FoundersPartners from './slides/Slide2FoundersPartners.vue';
-import Slide3ProductsCatalog from './slides/Slide3ProductsCatalog.vue';
-import Slide4DreamTestimonials from './slides/Slide4DreamTestimonials.vue';
-import Slide5CashflowQuadrant from './slides/Slide5CashflowQuadrant.vue';
-import Slide6BinaryCompensation from './slides/Slide6BinaryCompensation.vue';
-import Slide7EntryPackages from './slides/Slide7EntryPackages.vue';
-import Slide8FAQsFinish from './slides/Slide8FAQsFinish.vue';
+import CompanyProfile from './slides/CompanyProfile.vue';
+import FoundersPartners from './slides/FoundersPartners.vue';
+import ProductsCatalog from './slides/ProductsCatalog.vue';
+import DreamTestimonials from './slides/DreamTestimonials.vue';
+import CashflowQuadrant from './slides/CashflowQuadrant.vue';
+import BinaryCompensation from './slides/BinaryCompensation.vue';
+import EntryPackages from './slides/EntryPackages.vue';
+import FAQsFinish from './slides/FAQsFinish.vue';
 
 // ── Stores ──────────────────────────────────────────────────────────────────
 const router = useRouter();
