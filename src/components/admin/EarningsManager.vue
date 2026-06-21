@@ -63,6 +63,18 @@
             <input v-model.number="form.order" type="number" required class="adm-input" />
           </div>
         </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="adm-field">
+            <label class="adm-label">Media Type</label>
+            <select v-model="form.mediaType" class="adm-input">
+              <option value="image">Image</option>
+              <option value="video">Video</option>
+            </select>
+          </div>
+          <div class="adm-field">
+            <MediaPicker v-model="form.mediaId" label="Image" /> 
+          </div>
+        </div>
         <div class="adm-field">
           <label class="adm-label">Short Description</label>
           <input v-model="form.shortDescription" required class="adm-input" />
@@ -100,6 +112,7 @@ import { ref, onMounted } from 'vue';
 import { useContentStore } from '../../stores/content';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
+import MediaPicker from './MediaPicker.vue';
 
 const contentStore = useContentStore();
 
@@ -110,6 +123,8 @@ const form = ref({
   slug: '',
   shortDescription: '',
   longDescription: '',
+  mediaType: 'image',
+  mediaId: null,
   icon: '💰',
   order: 1,
   active: true
@@ -137,6 +152,8 @@ const openModal = (item = null) => {
       slug: item.slug,
       shortDescription: item.shortDescription || '',
       longDescription: item.longDescription || '',
+      mediaType: item.mediaType || 'image',
+      mediaId: item.mediaId || null,
       icon: item.icon || '💰',
       order: item.order ?? 1,
       active: item.active !== false
@@ -151,6 +168,8 @@ const openModal = (item = null) => {
       slug: '',
       shortDescription: '',
       longDescription: '',
+      mediaType: 'image',
+      mediaId: null,
       icon: '💰',
       order: nextOrder,
       active: true

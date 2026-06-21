@@ -571,7 +571,7 @@
                 </div>
               </div>
               
-              <!-- Simulators for Focused Earning Streams -->
+              <!-- Focused Earning Streams -->
               <div v-if="focusedStreamId === stream.id" @click.stop class="border-t border-white/5 pt-4 mt-2">
                 <!-- 1. DRB Simulator -->
                 <div v-if="stream.slug === 'drb'" class="space-y-4 animate-fade-in">
