@@ -2,19 +2,18 @@
   <div class="motion-safe:animate-fade-in space-y-8">
     <h2 class="text-2xl sm:text-3xl font-display font-black">World-Class Health & Wellness</h2>
 
-    <div class="aspect-video bg-white rounded-2xl overflow-hidden shadow-glow border border-zinc-200">
-      <iframe
-        v-if="settings['video_url']"
-        :src="settings['video_url']"
-        title="Presentation Video"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-        class="w-full h-full"
-      />
-      <div v-else class="w-full h-full flex flex-col items-center justify-center text-zinc-500 text-sm">
-        Video presentation goes here
+    <div
+      v-if="settings['video_url']"
+      @click="openVideo"
+      class="aspect-video bg-white rounded-2xl overflow-hidden shadow-glow border border-zinc-200 relative cursor-pointer group flex items-center justify-center"
+    >
+      <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556761175-5973dc0f32d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-20 group-hover:opacity-30 transition duration-500"></div>
+      <div class="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center z-10 shadow-lg group-hover:scale-110 group-hover:bg-accent transition-all duration-300">
+        <Play :size="28" class="text-white ml-1" />
       </div>
+    </div>
+    <div v-else class="aspect-video bg-white rounded-2xl overflow-hidden shadow-glow border border-zinc-200 flex flex-col items-center justify-center text-zinc-500 text-sm">
+      Video presentation goes here
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -40,9 +39,19 @@
 
 <script setup>
 import { getFullMediaUrl } from '../../api';
+import { Play } from 'lucide-vue-next';
+import { useVideoPlayerStore } from '@/stores/videoPlayer';
 
-defineProps({
+const props = defineProps({
   settings: { type: Object, required: true },
   products: { type: Array, default: () => [] },
 });
+
+const videoStore = useVideoPlayerStore();
+
+const openVideo = () => {
+  if (props.settings['video_url']) {
+    videoStore.open({ src: props.settings['video_url'], title: 'Product Catalog Presentation' });
+  }
+};
 </script>

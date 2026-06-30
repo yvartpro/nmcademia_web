@@ -6,13 +6,24 @@
     @touchstart="triggerControls"
   >
 
-    <!-- VIDEO -->
+    <!-- NATIVE VIDEO -->
     <video
+      v-if="!isIframe"
       ref="videoRef"
       class="max-w-full max-h-full w-auto h-auto bg-black rounded-xl shadow-2xl"
       playsinline
       :src="src"
       @contextmenu.prevent
+    />
+
+    <!-- IFRAME (YouTube / External) -->
+    <iframe
+      v-else
+      class="w-[90vw] h-[90vh] md:w-[80vw] md:h-[80vh] bg-black rounded-xl shadow-2xl"
+      :src="src"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
     />
 
     <!-- TOP BAR -->
@@ -32,8 +43,9 @@
       </button>
     </div>
 
-    <!-- CONTROLS -->
+    <!-- CONTROLS (Only for Native Video) -->
     <div
+      v-if="!isIframe"
       class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-3xl z-20 bg-black/60 backdrop-blur-xl rounded-2xl p-3 text-white transition-opacity duration-300"
       :class="showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'"
     >
@@ -96,6 +108,13 @@ const store = useVideoPlayerStore();
 
 const src = computed(() => store.src);
 const title = computed(() => store.title);
+
+const isIframe = computed(() => {
+  if (!src.value) return false;
+  return src.value.includes('youtube.com') || 
+         src.value.includes('youtu.be') || 
+         src.value.includes('vimeo.com');
+});
 
 const videoRef = ref(null);
 

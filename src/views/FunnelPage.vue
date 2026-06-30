@@ -34,15 +34,14 @@
             <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
               Welcome to Network Marketing Academia. You are entering a global industry where millions of people are building income, developing leadership, and transforming their financial future.
             </p>
-            <div class="aspect-video bg-zinc-900 rounded-xl overflow-hidden shadow-glow">
-              <iframe
-                src="https://www.youtube.com/embed/j-j72H2rJqA"
-                title="What is Network Marketing"
-                class="w-full h-full"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-              />
+            <div 
+              @click="openVideo('https://www.youtube.com/embed/j-j72H2rJqA', 'What is Network Marketing')"
+              class="aspect-video bg-zinc-900 rounded-xl overflow-hidden shadow-glow relative cursor-pointer group flex items-center justify-center"
+            >
+              <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556761175-5973dc0f32d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-40 group-hover:opacity-50 transition duration-500"></div>
+              <div class="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center z-10 shadow-lg group-hover:scale-110 group-hover:bg-accent transition-all duration-300">
+                <Play :size="28" class="text-white ml-1" />
+              </div>
             </div>
             <div class="flex justify-end">
               <UiButton variant="primary" @click="nextStep">Get Started →</UiButton>
@@ -615,6 +614,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { Play } from 'lucide-vue-next';
 import AppLogo from '../components/ui/AppLogo.vue';
 import UiSectionLabel from '../components/ui/UiSectionLabel.vue';
 import UiButton from '../components/ui/UiButton.vue';
@@ -622,9 +622,16 @@ import { useCatalogStore } from '../stores/catalog';
 import { useLeadsStore } from '../stores/leads';
 import { useChatStore } from '../stores/chat';
 import { useMemberStore } from '../stores/member';
+import { useVideoPlayerStore } from '../stores/videoPlayer';
 
 const route = useRoute();
 const router = useRouter();
+
+const videoStore = useVideoPlayerStore();
+
+const openVideo = (src, title) => {
+  videoStore.open({ src, title });
+};
 
 const catalogStore = useCatalogStore();
 const leadsStore = useLeadsStore();

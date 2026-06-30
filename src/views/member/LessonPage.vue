@@ -12,12 +12,15 @@
       </div>
 
       <!-- Video area -->
-      <div class="aspect-video bg-zinc-900 relative sm:rounded-xl overflow-hidden">
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-white/80">
-          <div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur flex items-center justify-center mb-3">
+      <div 
+        @click="openVideo"
+        class="aspect-video bg-zinc-900 relative sm:rounded-xl overflow-hidden cursor-pointer group"
+      >
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-white/80 group-hover:bg-black/20 transition-colors">
+          <div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-accent transition-all duration-300">
             <Play :size="32" class="ml-1" />
           </div>
-          <p class="text-sm">Lesson video player</p>
+          <p class="text-sm">{{ lesson.title }}</p>
           <p class="text-xs text-white/50 mt-1">{{ lesson.duration }} min</p>
         </div>
         <div class="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
@@ -95,10 +98,12 @@ import JourneyLayout from '../../layouts/JourneyLayout.vue';
 import UiButton from '../../components/ui/UiButton.vue';
 import UiSectionLabel from '../../components/ui/UiSectionLabel.vue';
 import { useMemberStore } from '../../stores/member';
+import { useVideoPlayerStore } from '../../stores/videoPlayer';
 import { LESSONS } from '../../data/learning';
 
 const route = useRoute();
 const memberStore = useMemberStore();
+const videoStore = useVideoPlayerStore();
 
 const courseId = computed(() => route.params.courseId);
 const lessonId = computed(() => route.params.lessonId);
@@ -149,5 +154,11 @@ function markComplete() {
   if (memberStore.canFeature('gamification')) {
     memberStore.completeQuest('lesson');
   }
+}
+
+function openVideo() {
+  // If lesson doesn't have an actual video URL in the mock data, provide a fallback.
+  const src = lesson.value.videoUrl || 'https://www.youtube.com/embed/j-j72H2rJqA';
+  videoStore.open({ src, title: lesson.value.title });
 }
 </script>
