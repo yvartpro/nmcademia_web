@@ -1,29 +1,90 @@
 import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
 import { getFullMediaUrl } from '../api';
 
+const STORAGE_KEY = 'nma_video_positions';
 
-export const useVideoPlayerStore = defineStore('videoPlayer', {
-  state: () => ({
-    visible: false,
-    src: null,
-    title: '',
-  }),
+function loadPositions() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
 
-  actions: {
-    resolveUrl(assetOrPath) {
-      return getFullMediaUrl(assetOrPath);
-    },
+function savePositions(positions) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(positions));
+  } catch {}
+}
 
-    open({ src, title = '' }) {
-      this.src = src;
-      this.title = title;
-      this.visible = true;
-    },
+export const useVideoPlayerStore = defineStore('videoPlayer', () => {
+  const visible = ref(false);
+  const src = ref(null);
+  const title = ref('');
 
-    close() {
-      this.visible = false;
-      this.src = null;
-      this.title = '';
-    },
-  },
+  // Per-video resume positions: { [srcKey]: seconds }
+  const positions = ref(loadPositions());
+
+  const resolveUrl = (assetOrPath) => getFullMediaUrl(assetOrPath);
+
+  /** The saved resume position for the currently open video */
+  const resumeAt = computed(() => {
+    if (!src.value) return 0;
+    return positions.value[src.value] || 0;
+  });
+
+  function open({ src: videoSrc, title: videoTitle = '' }) {
+    src.value = videoSrc;
+    title.value = videoTitle;
+    visible.value = true;
+  }
+
+  /**
+   * Called by the player as the video plays.
+   * Saves the current position so it can be restored later.
+   * Does NOT save when the video is essentially finished (last 3 seconds).
+   */
+  function savePosition(seconds, totalDuration) {
+    if (!src.value) return;
+    const isFinished = totalDuration > 0 && seconds >= totalDuration - 3;
+    if (isFinished) {
+      // Clear resume point — video was completed
+      const next = { ...positions.value };
+      delete next[src.value];
+      positions.value = next;
+    } else {
+      positions.value = { ...positions.value, [src.value]: seconds };
+    }
+    savePositions(positions.value);
+  }
+
+  /**
+   * Called when user manually closes the player.
+   * Saves the current position passed in from the component.
+   */
+  function closeAt(seconds, totalDuration) {
+    savePosition(seconds, totalDuration);
+    visible.value = false;
+    src.value = null;
+    title.value = '';
+  }
+
+  function close() {
+    visible.value = false;
+    src.value = null;
+    title.value = '';
+  }
+
+  return {
+    visible,
+    src,
+    title,
+    resumeAt,
+    resolveUrl,
+    open,
+    close,
+    closeAt,
+    savePosition,
+  };
 });

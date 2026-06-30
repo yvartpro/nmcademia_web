@@ -10,7 +10,6 @@
     <video
       ref="videoRef"
       class="max-w-full max-h-full w-auto h-auto bg-black rounded-xl shadow-2xl"
-      autoplay
       playsinline
       :src="src"
       @contextmenu.prevent
@@ -26,7 +25,7 @@
       </span>
 
       <button
-        @click="close"
+        @click="closePlayer"
         class="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition"
       >
         ✕
@@ -39,7 +38,7 @@
       :class="showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'"
     >
 
-      <!-- Progress -->
+      <!-- Progress bar -->
       <input
         type="range"
         class="w-full accent-green-500"
@@ -53,7 +52,7 @@
       <!-- Controls row -->
       <div class="flex items-center justify-between mt-2">
 
-        <!-- Play -->
+        <!-- Play/Pause -->
         <button @click="togglePlay" class="text-green-400 hover:text-green-300 font-semibold">
           {{ isPlaying ? 'Pause' : 'Play' }}
         </button>
@@ -74,9 +73,14 @@
           class="w-24 accent-green-500"
         />
 
-        <!-- Time -->
+        <!-- Time display -->
         <div class="text-xs text-green-300 font-mono">
-          {{ Math.floor(progress) }} / {{ Math.floor(duration) }} sec
+          {{ formatTime(progress) }} / {{ formatTime(duration) }}
+        </div>
+
+        <!-- Resume badge -->
+        <div v-if="showResumeBadge" class="text-[10px] bg-green-500/20 border border-green-500/30 text-green-300 px-2 py-0.5 rounded-full">
+          Resumed
         </div>
       </div>
     </div>
@@ -85,7 +89,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
+import { computed, ref, watch, nextTick } from 'vue';
 import { useVideoPlayerStore } from '@/stores/videoPlayer';
 
 const store = useVideoPlayerStore();
@@ -95,49 +99,54 @@ const title = computed(() => store.title);
 
 const videoRef = ref(null);
 
-// state
+// State
 const isPlaying = ref(false);
 const isMuted = ref(false);
 const volume = ref(1);
 const progress = ref(0);
 const duration = ref(0);
+const showResumeBadge = ref(false);
 
-// controls visibility (auto-hide system)
+// Controls visibility (auto-hide)
 const showControls = ref(true);
 let hideTimer = null;
+let saveTimer = null;
 
 const triggerControls = () => {
   showControls.value = true;
-
   clearTimeout(hideTimer);
   hideTimer = setTimeout(() => {
     showControls.value = false;
   }, 2500);
 };
 
-// core controls
+// Format seconds as mm:ss
+const formatTime = (secs) => {
+  const s = Math.floor(secs || 0);
+  const m = Math.floor(s / 60);
+  const remaining = s % 60;
+  return `${m}:${remaining.toString().padStart(2, '0')}`;
+};
+
+// Core controls
 const togglePlay = () => {
   const video = videoRef.value;
   if (!video) return;
-
   if (video.paused) {
     video.play();
-    isPlaying.value = true;
   } else {
     video.pause();
-    isPlaying.value = false;
+    // Save position on manual pause
+    store.savePosition(video.currentTime, video.duration);
   }
-
   triggerControls();
 };
 
 const toggleMute = () => {
   const video = videoRef.value;
   if (!video) return;
-
   video.muted = !video.muted;
   isMuted.value = video.muted;
-
   triggerControls();
 };
 
@@ -145,74 +154,106 @@ const updateVolume = (e) => {
   const v = Number(e.target.value);
   volume.value = v;
   if (videoRef.value) videoRef.value.volume = v;
-
   triggerControls();
 };
 
 const seek = (e) => {
   const video = videoRef.value;
   if (!video) return;
-
   const time = Number(e.target.value);
   video.currentTime = time;
   progress.value = time;
+  store.savePosition(time, video.duration);
 };
 
-// sync
+// Sync progress from video element
 const onTimeUpdate = () => {
   const video = videoRef.value;
   if (!video) return;
-
   progress.value = video.currentTime;
   duration.value = video.duration || 0;
 };
 
-const onLoaded = () => {
+const onLoaded = async () => {
   const video = videoRef.value;
   if (!video) return;
-
   duration.value = video.duration || 0;
-  progress.value = video.currentTime || 0;
-};
 
-// lifecycle
-onMounted(() => {
-  const video = videoRef.value;
-  if (!video) return;
+  // Restore saved position
+  const resumeAt = store.resumeAt;
+  if (resumeAt > 0) {
+    video.currentTime = resumeAt;
+    progress.value = resumeAt;
+    showResumeBadge.value = true;
+    setTimeout(() => { showResumeBadge.value = false; }, 3000);
+  }
 
-  video.addEventListener('timeupdate', onTimeUpdate);
-  video.addEventListener('loadedmetadata', onLoaded);
-
-  // 🔥 FORCE SYNC ON LOAD (important fix)
-  video.addEventListener('play', () => {
-    isPlaying.value = true;
-  });
-
-  video.addEventListener('pause', () => {
-    isPlaying.value = false;
-  });
-});
-
-onUnmounted(() => {
-  clearTimeout(hideTimer);
-});
-
-// store close
-const close = () => store.close();
-
-// reset on close
-watch(src, async () => {
-  await nextTick();
-
-  const video = videoRef.value;
-  if (!video) return;
-
-  video.load();
-
+  // Start playing after seek
   video.play().then(() => {
     isPlaying.value = true;
   }).catch(() => {
     isPlaying.value = false;
   });
-});
+};
+
+const onEnded = () => {
+  isPlaying.value = false;
+  // Clear resume point — video completed
+  store.savePosition(duration.value, duration.value);
+};
+
+// Close: save position first
+const closePlayer = () => {
+  const video = videoRef.value;
+  if (video) {
+    store.closeAt(video.currentTime, video.duration);
+  } else {
+    store.close();
+  }
+};
+
+// Periodic position save while playing (every 5 seconds)
+const startSaveTimer = () => {
+  clearInterval(saveTimer);
+  saveTimer = setInterval(() => {
+    const video = videoRef.value;
+    if (video && !video.paused && !video.ended) {
+      store.savePosition(video.currentTime, video.duration);
+    }
+  }, 5000);
+};
+
+const stopSaveTimer = () => clearInterval(saveTimer);
+
+// Watch src changes to re-initialize player
+watch(src, async (newSrc) => {
+  if (!newSrc) return;
+  stopSaveTimer();
+  await nextTick();
+
+  const video = videoRef.value;
+  if (!video) return;
+
+  // Reset state
+  progress.value = 0;
+  duration.value = 0;
+  isPlaying.value = false;
+  showResumeBadge.value = false;
+
+  video.load();
+  // onLoaded will handle resume + autoplay
+
+  // Attach event listeners
+  video.addEventListener('timeupdate', onTimeUpdate);
+  video.addEventListener('loadedmetadata', onLoaded);
+  video.addEventListener('ended', onEnded);
+  video.addEventListener('play', () => {
+    isPlaying.value = true;
+    startSaveTimer();
+  });
+  video.addEventListener('pause', () => {
+    isPlaying.value = false;
+    stopSaveTimer();
+  });
+}, { immediate: true });
 </script>
