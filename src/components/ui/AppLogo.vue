@@ -1,8 +1,8 @@
 <template>
   <div class="flex items-center gap-3">
     <img
-      v-if="logoUrl"
-      :src="logoUrl"
+      v-if="resolvedLogoUrl"
+      :src="resolvedLogoUrl"
       alt="Network Marketing Academia"
       class="object-contain transition-all"
       :class="size === 'sm' ? 'h-8 md:h-9 w-auto max-w-[150px]' : 'h-10 md:h-12 w-auto max-w-[200px]'"
@@ -26,10 +26,27 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue';
+import { useSettingsStore } from '../../stores/settings';
+import { getFullMediaUrl } from '../../api';
+
+const props = defineProps({
   logoUrl: { type: String, default: '' },
   showText: { type: Boolean, default: true },
   showTagline: { type: Boolean, default: false },
   size: { type: String, default: 'md' },
+});
+
+const settingsStore = useSettingsStore();
+
+// Load settings if not already present
+if (!settingsStore.settings || !Object.keys(settingsStore.settings).length) {
+  settingsStore.fetchSettings();
+}
+
+const resolvedLogoUrl = computed(() => {
+  if (props.logoUrl) return props.logoUrl;
+  const url = settingsStore.settings?.logo_url;
+  return url ? getFullMediaUrl(url) : '';
 });
 </script>

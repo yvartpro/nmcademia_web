@@ -5,9 +5,7 @@
     <aside class="w-64 bg-[#F4F6F5] border-r border-zinc-200 flex flex-col justify-between shrink-0">
       <div>
         <div class="p-6 border-b border-zinc-200 flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-[#008A20] flex items-center justify-center font-bold text-white text-sm shadow">
-            NMA
-          </div>
+          <AppLogo size="sm" :show-text="false" />
           <div>
             <h1 class="font-display font-bold text-xs tracking-wide text-[#0A0F0D]">NMA Workspace</h1>
             <span class="text-[9px] text-[#008A20] font-mono tracking-widest">ADMINISTRATOR</span>
@@ -497,6 +495,7 @@ import PackagesManager from '../../components/admin/PackagesManager.vue';
 import CountriesManager from '../../components/admin/CountriesManager.vue';
 import MediaLibrary from '../../components/admin/MediaLibrary.vue';
 import SiteSettingsManager from '../../components/admin/SiteSettingsManager.vue';
+import AppLogo from '../../components/ui/AppLogo.vue';
 import { useMediaStore } from '../../stores/media';
 
 const router = useRouter();
