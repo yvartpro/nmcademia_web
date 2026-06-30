@@ -111,7 +111,7 @@
           <h2 class="text-3xl sm:text-4xl font-display font-black">What Is Network Marketing ?</h2>
           <p class="text-sm text-zinc-500 max-w-xl mx-auto">A network marketing company is a business that sells its products or services through a network of independent distributors rather than through traditional retail stores. These companies outsource their entire sales and marketing function to individual representatives who earn commissions on personal sales and on the sales of their recruited teams. Network marketing companies operate across many industries: health supplements, skincare, nutrition, financial services, travel, and technology.</p>
           <h3 class="text-xl font-bold text-accent">How a Network Marketing Company Operates</h3>
-          <p class="">The company handles product development, manufacturing, shipping, and commission payments. Distributors handle customer acquisition, product promotion, and team recruitment.</p>
+          <p class="max-w-xl mx-auto">The company handles product development, manufacturing, shipping, and commission payments. Distributors handle customer acquisition, product promotion, and team recruitment.</p>
         </div>
 
         <div class="max-w-3xl mx-auto aspect-video bg-zinc-900 rounded-2xl overflow-hidden shadow-glow">
