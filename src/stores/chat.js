@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { io } from 'socket.io-client';
 import api from '../api';
 
 const STORAGE = {
@@ -17,6 +18,86 @@ export const useChatStore = defineStore('chat', () => {
   const activeSessions = ref([]);
   const selectedSessionId = ref(null);
   const pollingInterval = ref(null);
+
+  let socket = null;
+  const socketConnected = ref(false);
+
+  const connectSocket = () => {
+    if (socket) return;
+
+    socket = io({
+      transports: ['websocket']
+    });
+
+    socket.on('connect', () => {
+      socketConnected.value = true;
+      console.log('Connected to socket.io server');
+      
+      if (sessionId.value) {
+        socket.emit('join_session', sessionId.value);
+      }
+      
+      if (selectedSessionId.value) {
+        socket.emit('join_session', selectedSessionId.value);
+      }
+    });
+
+    socket.on('disconnect', () => {
+      socketConnected.value = false;
+      console.log('Disconnected from socket.io server');
+    });
+
+    socket.on('message_received', (msg) => {
+      if (!messages.value.some(m => m.id === msg.id)) {
+        messages.value.push(msg);
+      }
+      const session = activeSessions.value.find(s => s.id === msg.chatSessionId);
+      if (session) {
+        session.lastMessageAt = msg.createdAt;
+      }
+    });
+
+    socket.on('session_updated', (session) => {
+      const idx = activeSessions.value.findIndex(s => s.id === session.id);
+      if (idx !== -1) {
+        activeSessions.value[idx] = session;
+        activeSessions.value.sort((a, b) => new Date(b.lastMessageAt) - new Date(a.lastMessageAt));
+      } else {
+        activeSessions.value.unshift(session);
+      }
+    });
+
+    socket.on('session_closed', ({ chatSessionId }) => {
+      if (sessionId.value === chatSessionId) {
+        clearGuestSession();
+      }
+      if (selectedSessionId.value === chatSessionId) {
+        selectedSessionId.value = null;
+        messages.value = [];
+      }
+      activeSessions.value = activeSessions.value.filter(s => s.id !== chatSessionId);
+    });
+  };
+
+  const disconnectSocket = () => {
+    if (socket) {
+      socket.disconnect();
+      socket = null;
+      socketConnected.value = false;
+    }
+  };
+
+  const joinSessionRoom = (sessionUuid) => {
+    if (socket && socketConnected.value) {
+      socket.emit('join_session', sessionUuid);
+    }
+  };
+
+  const joinAdminRoom = () => {
+    if (socket && socketConnected.value) {
+      socket.emit('join_admin');
+    }
+  };
 
   const persistVisitor = (name, email, phone) => {
     if (name) {
@@ -63,6 +144,8 @@ export const useChatStore = defineStore('chat', () => {
     if (sessionId.value) {
       try {
         await api.get(`/chat/messages/${sessionId.value}`);
+        connectSocket();
+        joinSessionRoom(sessionId.value);
         return sessionId.value;
       } catch {
         clearGuestSession();
@@ -82,6 +165,8 @@ export const useChatStore = defineStore('chat', () => {
       if (email?.trim() && name?.trim()) {
         markLeadRegistered();
       }
+      connectSocket();
+      joinSessionRoom(response.data.id);
       return response.data.id;
     } catch (err) {
       console.error('Failed to initialize chat session:', err);
@@ -93,9 +178,11 @@ export const useChatStore = defineStore('chat', () => {
    * Open chat for someone who already completed signup — no registration form.
    */
   const ensureGuestSession = async () => {
+    connectSocket();
     if (sessionId.value) {
       try {
         await fetchGuestMessages();
+        joinSessionRoom(sessionId.value);
         return sessionId.value;
       } catch {
         clearGuestSession();
@@ -109,6 +196,7 @@ export const useChatStore = defineStore('chat', () => {
     const { name, email, phone } = getStoredVisitor();
     await initGuestSession(name, email, phone);
     await fetchGuestMessages();
+    joinSessionRoom(sessionId.value);
     return sessionId.value;
   };
 
@@ -141,28 +229,23 @@ export const useChatStore = defineStore('chat', () => {
   };
 
   const startGuestPolling = () => {
-    if (pollingInterval.value) return;
+    connectSocket();
     if (sessionId.value) {
       fetchGuestMessages().catch(() => clearGuestSession());
+      joinSessionRoom(sessionId.value);
     }
-    pollingInterval.value = setInterval(() => {
-      if (sessionId.value) {
-        fetchGuestMessages().catch(() => {});
-      }
-    }, 4000);
   };
 
   const stopPolling = () => {
-    if (pollingInterval.value) {
-      clearInterval(pollingInterval.value);
-      pollingInterval.value = null;
-    }
+    // Keep socket alive to deliver updates
   };
 
   const adminFetchSessions = async () => {
     try {
       const response = await api.get('/admin/chat/sessions');
       activeSessions.value = response.data;
+      connectSocket();
+      joinAdminRoom();
     } catch (err) {
       console.error('Admin fetch sessions failed:', err);
     }
@@ -173,6 +256,8 @@ export const useChatStore = defineStore('chat', () => {
       const response = await api.get(`/admin/chat/sessions/${sessionUuid}`);
       messages.value = response.data;
       selectedSessionId.value = sessionUuid;
+      connectSocket();
+      joinSessionRoom(sessionUuid);
     } catch (err) {
       console.error('Admin fetch session messages failed:', err);
     }
@@ -223,6 +308,10 @@ export const useChatStore = defineStore('chat', () => {
     adminFetchSessionMessages,
     adminSendReply,
     adminCloseSession,
-    initGuestSession
+    initGuestSession,
+    connectSocket,
+    disconnectSocket,
+    joinSessionRoom,
+    joinAdminRoom
   };
 });

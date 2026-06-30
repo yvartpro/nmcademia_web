@@ -516,7 +516,6 @@ const activeTab = ref('leads');
 const leadsFilter = ref({ country: '', status: '' });
 const adminReplyText = ref('');
 const chatMessagesContainer = ref(null);
-const chatPollingInterval = ref(null);
 
 // Details Modal state
 const detailsModal = ref({
@@ -570,22 +569,12 @@ onMounted(async () => {
   // Load leads
   loadLeads();
 
-  // Load chat sessions
+  // Load chat sessions (also connects to WebSockets)
   chatStore.adminFetchSessions();
-
-  // Start general admin chat session polling (every 4 seconds)
-  chatPollingInterval.value = setInterval(() => {
-    chatStore.adminFetchSessions();
-    if (chatStore.selectedSessionId) {
-      chatStore.adminFetchSessionMessages(chatStore.selectedSessionId);
-    }
-  }, 4000);
 });
 
 onUnmounted(() => {
-  if (chatPollingInterval.value) {
-    clearInterval(chatPollingInterval.value);
-  }
+  chatStore.disconnectSocket();
 });
 
 const handleLogout = () => {
