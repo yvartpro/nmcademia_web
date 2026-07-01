@@ -6,7 +6,7 @@
       <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <AppLogo size="sm" />
         <div class="flex items-center gap-4">
-          <a href="#journeys" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-900 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
+          <a href="#journeys" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-50 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
             Start Journey
           </a>
         </div>
@@ -30,19 +30,18 @@
         </p>
       </div>
 
-      <div class="max-w-4xl mx-auto grid gap-6 lg:grid-cols-[108px_minmax(0,1fr)] items-center bg-white/90 border border-zinc-200/80 shadow-[0_25px_80px_-50px_rgba(15,23,42,0.35)] rounded-[2rem] p-6 sm:p-8">
-        <img
-          src="https://nmacademia.com/uploads/images/image-1781433594193-907066391.webp"
-          alt="Dieudonné Greatman BIGIRIMANA"
-          class="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover ring-2 ring-accent/25 shadow-lg mx-auto lg:mx-0"
-        />
+      <div class="max-w-4xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+        <div class="w-48 h-48 sm:w-64 sm:h-64 lg:w-96 lg:h-96 shrink-0 relative">
+          <div class="absolute inset-0 bg-accent rounded-full opacity-20 blur-2xl"></div>
+          <img 
+            :src="ownerStore.photoUrl || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'" 
+            :alt="ownerStore.name" 
+            class="w-full h-full object-cover rounded-full border-4 border-white shadow-xl relative z-10"
+          />
+        </div>
         <div class="space-y-4 text-center lg:text-left">
-          <h2 class="text-xl sm:text-2xl font-semibold text-zinc-950">Dieudonné Greatman BIGIRIMANA</h2>
-          <p class="text-sm sm:text-base text-zinc-600 leading-relaxed">
-            Dieudonné Greatman BIGIRIMANA is a published author and professional network marketer with a Master’s degree in International Relations and Diplomacy.
-            He began his career in traditional employment before shifting toward entrepreneurship, where he discovered network marketing as a path to personal growth, leadership, and financial opportunity.
-            Today, he focuses on coaching and mentoring others to build strong networks, develop leadership skills, and create income-generating opportunities that lead to greater independence and growth.
-          </p>
+          <h2 class="text-xl sm:text-2xl font-semibold text-zinc-950">{{ ownerStore.name }}</h2>
+          <p class="text-sm sm:text-base text-zinc-600 leading-relaxed whitespace-pre-wrap">{{ ownerStore.bio }}</p>
         </div>
       </div>
 
@@ -174,8 +173,10 @@
 </template>
 
 <script setup>
-// Vue reactivity APIs used in this file (none currently needed here)
+import { useOwnerStore } from '../stores/owner';
 import AppLogo from '../components/ui/AppLogo.vue';
+
+const ownerStore = useOwnerStore();
 
 const proofStats = [
   { value: '50,000+', label: 'Active Learners' },

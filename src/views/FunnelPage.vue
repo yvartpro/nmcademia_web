@@ -624,8 +624,12 @@ import { useChatStore } from '../stores/chat';
 import { useMemberStore } from '../stores/member';
 import { useVideoPlayerStore } from '../stores/videoPlayer';
 
+import { useOwnerStore } from '../stores/owner';
+
 const route = useRoute();
 const router = useRouter();
+
+const ownerStore = useOwnerStore();
 
 const videoStore = useVideoPlayerStore();
 
@@ -812,8 +816,9 @@ const submitLeadAndCompleteFlow = async () => {
     });
     
     // Redirect to direct WhatsApp contact of the mentor
-    const whatsappNum = catalogStore.selectedCountry?.whatsappNumber || '+2348030001111';
-    const text = encodeURIComponent(`Hello Coach, I just completed my onboarding on Network Marketing Academia under path [${segmentLabel}]. Please guide me on my customized leadership track.`);
+    const whatsappNum = ownerStore.whatsappNumber || catalogStore.selectedCountry?.whatsappNumber || '+2348030001111';
+    const coachName = ownerStore.name || 'Coach';
+    const text = encodeURIComponent(`Hello ${coachName}, I just completed my onboarding on Network Marketing Academia under path [${segmentLabel}]. Please guide me on my customized leadership track.`);
     window.open(`https://wa.me/${whatsappNum.replace(/\+/g, '')}?text=${text}`, '_blank');
     
     router.push(journey.afterSignupRoute);

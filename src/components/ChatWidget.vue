@@ -17,7 +17,7 @@
       
       <!-- Hover Tooltip -->
       <span class="absolute right-16 bg-zinc-900 border border-zinc-700 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap shadow-xl">
-        Consult Team Trainer
+        Consult {{ ownerStore.name || 'Team Trainer' }}
       </span>
     </button>
 
@@ -30,11 +30,14 @@
       <!-- Card Header -->
       <header class="bg-accent border-b border-accent-dark p-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xs shrink-0">
-            TR
+          <img v-if="ownerStore.photoUrl" :src="ownerStore.photoUrl" class="w-8 h-8 rounded-full object-cover shrink-0 border border-white/20" />
+          <div v-else class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xs shrink-0">
+            {{ ownerInitials }}
           </div>
           <div>
-            <h5 class="font-bold text-xs md:text-sm text-white">Consult Team Trainer</h5>
+            <h5 class="font-bold text-xs md:text-sm text-white truncate max-w-[150px]">
+              {{ ownerStore.name || 'Team Trainer' }}
+            </h5>
             <div class="flex items-center gap-1.5 mt-0.5">
               <span class="w-2 h-2 rounded-full bg-white/70 animate-pulse"></span>
               <span class="text-[10px] text-white/80">Online &amp; Active</span>
@@ -153,12 +156,21 @@
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useChatStore } from '../stores/chat';
+import { useOwnerStore } from '../stores/owner';
 
 const route = useRoute();
 const chatStore = useChatStore();
+const ownerStore = useOwnerStore();
 
 /** Sit above the presentation slide footer (Previous / Next bar). */
 const isPresentationRoute = computed(() => route.path === '/presentation');
+
+const ownerInitials = computed(() => {
+  if (!ownerStore.name) return 'TR';
+  const parts = ownerStore.name.trim().split(/\s+/);
+  if (parts.length >= 2) return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+  return ownerStore.name.slice(0, 2).toUpperCase();
+});
 
 const isOpen = ref(false);
 const messageText = ref('');

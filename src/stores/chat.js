@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { io } from 'socket.io-client';
 import api from '../api';
+import { useAuthStore } from './auth';
 
 const STORAGE = {
   sessionId: 'chat_session_id',
@@ -95,7 +96,13 @@ export const useChatStore = defineStore('chat', () => {
 
   const joinAdminRoom = () => {
     if (socket && socketConnected.value) {
-      socket.emit('join_admin');
+      const authStore = useAuthStore();
+      const ownerId = authStore.user?.ownerId;
+      if (ownerId) {
+        socket.emit('join_admin', ownerId);
+      } else {
+        socket.emit('join_admin');
+      }
     }
   };
 

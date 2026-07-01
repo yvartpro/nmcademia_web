@@ -14,6 +14,19 @@
 
         <nav class="p-4 space-y-1 max-h-[calc(100vh-10rem)] overflow-y-auto custom-scrollbar">
           <button 
+            @click="activeTab = 'profile'"
+            :class="[
+              'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+              activeTab === 'profile' 
+                ? 'bg-[#008A20]/10 text-[#008A20] border-l-4 border-[#008A20] font-bold' 
+                : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60'
+            ]"
+          >
+            <span>👤</span>
+            <span>My Profile</span>
+          </button>
+
+          <button 
             @click="activeTab = 'leads'"
             :class="[
               'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
@@ -160,6 +173,7 @@
 
       <!-- Content viewport -->
       <div class="flex-grow p-8">
+        <OwnerProfileManager v-if="activeTab === 'profile'" />
         
         <!-- Tab 1: Leads Dashboard -->
         <div v-if="activeTab === 'leads'" class="space-y-6 animate-fade-in">
@@ -495,12 +509,14 @@ import PackagesManager from '../../components/admin/PackagesManager.vue';
 import CountriesManager from '../../components/admin/CountriesManager.vue';
 import MediaLibrary from '../../components/admin/MediaLibrary.vue';
 import SiteSettingsManager from '../../components/admin/SiteSettingsManager.vue';
+import OwnerProfileManager from '../../components/admin/OwnerProfileManager.vue';
 import AppLogo from '../../components/ui/AppLogo.vue';
 import { useMediaStore } from '../../stores/media';
 
 const router = useRouter();
 const authStore = useAuthStore();
 const leadsStore = useLeadsStore();
+const activeTab = ref('profile');
 const chatStore = useChatStore();
 const catalogStore = useCatalogStore();
 const contentStore = useContentStore();
@@ -511,7 +527,6 @@ const pendingLeads = computed(() => leadsStore.leads.filter(l => l.status === 'P
 const contactedLeads = computed(() => leadsStore.leads.filter(l => l.status === 'Contacted').length);
 const joinedLeads = computed(() => leadsStore.leads.filter(l => l.status === 'Joined').length);
 
-const activeTab = ref('leads');
 const leadsFilter = ref({ country: '', status: '' });
 const adminReplyText = ref('');
 const chatMessagesContainer = ref(null);
@@ -523,6 +538,7 @@ const detailsModal = ref({
 });
 
 const activeTabTitle = computed(() => {
+  if (activeTab.value === 'profile') return 'My Profile & Domain Mapping';
   if (activeTab.value === 'leads') return 'Captured Leads (Distributor Signups)';
   if (activeTab.value === 'chats') return 'Live Chat Support Center';
   if (activeTab.value === 'settings') return 'System Configurations Dashboard';

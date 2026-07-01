@@ -11,14 +11,17 @@
 import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useThemeStore } from './stores/theme';
+import { useOwnerStore } from './stores/owner';
 import ChatWidget from './components/ChatWidget.vue';
 import VideoPlayerModal from '@/components/VideoPlayerModal.vue';
 
 const route = useRoute();
 const themeStore = useThemeStore();
+const ownerStore = useOwnerStore();
 
 onMounted(() => {
   themeStore.initTheme();
+  ownerStore.fetchProfile();
 });
 
 const showChatWidget = computed(() => {
