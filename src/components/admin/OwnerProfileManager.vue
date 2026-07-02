@@ -41,6 +41,12 @@
           <textarea v-model="form.bio" rows="4" class="nma-input" required placeholder="Tell visitors about your journey..."></textarea>
         </div>
 
+        <!-- Intro (short) -->
+        <div>
+          <label class="block text-sm font-semibold text-zinc-700 mb-1">Short Intro (used on funnel coach card)</label>
+          <textarea v-model="form.intro" rows="2" class="nma-input" placeholder="One-line intro shown on funnel coach card"></textarea>
+        </div>
+
         <!-- Domain Name -->
         <div class="p-4 bg-accent/5 border border-accent/20 rounded-lg">
           <label class="block text-sm font-semibold text-zinc-900 mb-1">Mapped Domain Name</label>
@@ -84,6 +90,7 @@ const showMediaLibrary = ref(false);
 const form = ref({
   name: '',
   bio: '',
+  intro: '',
   whatsappNumber: '',
   domainName: '',
   photoId: null,
@@ -97,6 +104,7 @@ onMounted(async () => {
       form.value = {
         name: res.data.name || '',
         bio: res.data.bio || '',
+        intro: res.data.intro || '',
         whatsappNumber: res.data.whatsappNumber || '',
         domainName: res.data.domainName || '',
         photoId: res.data.photoId || null,
@@ -128,6 +136,7 @@ const saveProfile = async () => {
     const res = await api.put('/admin/owner/profile', {
       name: form.value.name,
       bio: form.value.bio,
+      intro: form.value.intro,
       whatsappNumber: form.value.whatsappNumber,
       domainName: form.value.domainName,
       photoId: form.value.photoId
