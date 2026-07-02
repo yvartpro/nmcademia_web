@@ -64,7 +64,7 @@
           <button @click="showMediaLibrary = false" class="p-2 text-zinc-500 hover:text-zinc-900 rounded-lg transition">✕</button>
         </div>
         <div class="flex-grow overflow-auto p-4">
-          <MediaLibrary @select="selectMedia" :selectable="true" />
+          <MediaLibrary v-model="form.photoId" @select="selectMedia" :selectable="true" />
         </div>
       </div>
     </div>
@@ -119,6 +119,7 @@ const selectMedia = (media) => {
   form.value.photoId = media.id;
   form.value.photoUrl = getFullMediaUrl(media.filePath);
   showMediaLibrary.value = false;
+  console.log('Selected media:', media);
 };
 
 const saveProfile = async () => {

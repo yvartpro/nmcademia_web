@@ -26,7 +26,9 @@
       <div
         v-for="asset in mediaStore.assets"
         :key="asset.id"
-        class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm"
+        class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm transition"
+        :class="{ 'cursor-pointer hover:border-[#008A20]/40 hover:shadow-md': selectable && asset.type === 'image' }"
+        @click="handleSelect(asset)"
       >
         <div class="aspect-square bg-[#F4F6F5] relative flex items-center justify-center overflow-hidden">
           <img
@@ -62,14 +64,14 @@
           </p>
           <button
             type="button"
-            @click="copyUrl(asset)"
+            @click.stop="copyUrl(asset)"
             class="w-full text-[10px] text-zinc-600 hover:text-[#008A20] border border-zinc-200 hover:border-[#008A20]/30 rounded py-1.5 transition font-semibold"
           >
             Copy file URL
           </button>
           <button
             type="button"
-            @click="handleDelete(asset.id)"
+            @click.stop="handleDelete(asset.id)"
             class="w-full text-[10px] text-red-500 hover:text-red-700 border border-red-100 hover:border-red-200 rounded py-1 transition"
           >
             Delete
@@ -87,6 +89,19 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useMediaStore } from '../../stores/media';
+
+const props = defineProps({
+  selectable: {
+    type: Boolean,
+    default: false
+  },
+  modelValue: {
+    type: [Number, String, null],
+    default: null
+  }
+});
+
+const emit = defineEmits(['select', 'update:modelValue']);
 
 const mediaStore = useMediaStore();
 const brokenPreviews = ref(new Set());
@@ -111,6 +126,13 @@ const uploadFile = async (type, e) => {
     alert('Upload failed.');
   }
   e.target.value = '';
+};
+
+const handleSelect = (asset) => {
+  if (!props.selectable || asset.type !== 'image') return;
+
+  emit('select', asset);
+  emit('update:modelValue', asset.id);
 };
 
 const copyUrl = async (asset) => {
