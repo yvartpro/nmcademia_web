@@ -35,7 +35,7 @@
               Welcome to Network Marketing Academia. You are entering a global industry where millions of people are building income, developing leadership, and transforming their financial future.
             </p>
             <div 
-              @click="openVideo('https://www.youtube.com/embed/j-j72H2rJqA', 'What is Network Marketing')"
+              @click="playIntroVideo"
               class="aspect-video bg-zinc-900 rounded-xl overflow-hidden shadow-glow relative cursor-pointer group flex items-center justify-center"
             >
               <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556761175-5973dc0f32d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-40 group-hover:opacity-50 transition duration-500"></div>
@@ -623,6 +623,7 @@ import { useLeadsStore } from '../stores/leads';
 import { useChatStore } from '../stores/chat';
 import { useMemberStore } from '../stores/member';
 import { useVideoPlayerStore } from '../stores/videoPlayer';
+import { useSettingsStore } from '../stores/settings';
 
 import { useOwnerStore } from '../stores/owner';
 
@@ -632,10 +633,18 @@ const router = useRouter();
 const ownerStore = useOwnerStore();
 
 const videoStore = useVideoPlayerStore();
+const settingsStore = useSettingsStore();
 
 const openVideo = (src, title) => {
   videoStore.open({ src, title });
 };
+
+const introVideoSrc = computed(() => {
+  const s = settingsStore.settings?.risk_video || settingsStore.settings?.nm_video_url || 'https://www.youtube.com/embed/j-j72H2rJqA';
+  return videoStore.resolveUrl(s);
+});
+
+const playIntroVideo = () => openVideo(introVideoSrc.value, 'What is Network Marketing');
 
 const catalogStore = useCatalogStore();
 const leadsStore = useLeadsStore();
@@ -661,6 +670,7 @@ onMounted(async () => {
   if (saved) {
     selectedCountry.value = saved;
   }
+  await settingsStore.fetchSettings();
 });
 
 // Paths specific content
