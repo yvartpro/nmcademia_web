@@ -6,6 +6,23 @@
     @touchstart="triggerControls"
   >
 
+    <!-- LOADING OVERLAY -->
+    <div
+      v-if="store.isBuffering"
+      class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50"
+    >
+      <div class="flex flex-col items-center gap-4">
+        <LoadingDots color="bg-accent" />
+        <p class="text-white/70 text-sm font-medium">Buffering...</p>
+        <div v-if="store.bufferProgress > 0" class="w-48 h-1 bg-white/10 rounded-full overflow-hidden">
+          <div
+            class="h-full bg-accent transition-all duration-300"
+            :style="{ width: store.bufferProgress + '%' }"
+          />
+        </div>
+      </div>
+    </div>
+
     <!-- NATIVE VIDEO -->
     <video
       v-if="!isIframe"
@@ -103,6 +120,7 @@
 <script setup>
 import { computed, ref, watch, nextTick } from 'vue';
 import { useVideoPlayerStore } from '@/stores/videoPlayer';
+import LoadingDots from './ui/LoadingDots.vue';
 
 const store = useVideoPlayerStore();
 
@@ -273,6 +291,24 @@ watch(src, async (newSrc) => {
   video.addEventListener('pause', () => {
     isPlaying.value = false;
     stopSaveTimer();
+  });
+  
+  // Buffer event handlers
+  video.addEventListener('waiting', () => {
+    store.setBuffering(true);
+  });
+  video.addEventListener('canplay', () => {
+    store.setBuffering(false);
+  });
+  video.addEventListener('canplaythrough', () => {
+    store.setBuffering(false);
+  });
+  video.addEventListener('progress', () => {
+    if (video.buffered.length > 0) {
+      const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+      const percentage = (bufferedEnd / video.duration) * 100;
+      store.setBufferProgress(percentage);
+    }
   });
 }, { immediate: true });
 </script>

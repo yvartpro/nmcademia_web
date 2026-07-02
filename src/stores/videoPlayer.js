@@ -22,6 +22,8 @@ export const useVideoPlayerStore = defineStore('videoPlayer', () => {
   const visible = ref(false);
   const src = ref(null);
   const title = ref('');
+  const isBuffering = ref(false);
+  const bufferProgress = ref(0);
 
   // Per-video resume positions: { [srcKey]: seconds }
   const positions = ref(loadPositions());
@@ -76,15 +78,30 @@ export const useVideoPlayerStore = defineStore('videoPlayer', () => {
     title.value = '';
   }
 
+  function setBuffering(buffering) {
+    isBuffering.value = buffering;
+    if (!buffering) {
+      bufferProgress.value = 0;
+    }
+  }
+
+  function setBufferProgress(progress) {
+    bufferProgress.value = Math.min(100, Math.max(0, progress));
+  }
+
   return {
     visible,
     src,
     title,
+    isBuffering,
+    bufferProgress,
     resumeAt,
     resolveUrl,
     open,
     close,
     closeAt,
     savePosition,
+    setBuffering,
+    setBufferProgress,
   };
 });
