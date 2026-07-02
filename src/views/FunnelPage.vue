@@ -183,13 +183,16 @@
             </div>
 
             <div v-else class="space-y-6 animate-fade-in">
-              <div class="p-6 bg-gradient-to-br from-zinc-900 to-indigo-950 border border-accent/20 rounded-card flex gap-4 items-center">
-                <div class="w-16 h-16 bg-accent rounded-full flex items-center justify-center text-slate-900 font-black text-xl">
-                  Coach
+              <div class="p-6 bg-emerald-50 border rounded-card flex gap-4 items-center" :class="{'border-emerald-300': true}">
+                <div class="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center bg-emerald-100">
+                  <img v-if="ownerStore.photoUrl" :src="ownerStore.photoUrl" alt="Coach photo" class="w-full h-full object-cover" />
+                  <div v-else class="w-full h-full flex items-center justify-center text-emerald-800 font-black text-xl">
+                    {{ ownerInitials }}
+                  </div>
                 </div>
                 <div>
-                  <h4 class="text-lg font-bold text-accent">Academia Elite Coach</h4>
-                  <p class="text-xs text-zinc-400">Specialist in Duplication Systems & Team Expansion</p>
+                  <h4 class="text-lg font-bold text-emerald-700">{{ ownerStore.name }}</h4>
+                  <p class="text-xs text-emerald-600">{{ ownerStore.bio || 'Your dedicated Academy Coach' }}</p>
                 </div>
               </div>
               
@@ -687,6 +690,7 @@ onMounted(async () => {
     selectedCountry.value = saved;
   }
   await settingsStore.fetchSettings();
+  await ownerStore.fetchProfile();
 });
 
 // Paths specific content
@@ -727,6 +731,11 @@ const packages = [
 ];
 
 const matchingAnimation = ref(false);
+
+const ownerInitials = computed(() => {
+  const n = ownerStore.name || '';
+  return n.split(' ').map(s => s[0] || '').join('').slice(0,2).toUpperCase();
+});
 
 const totalSteps = computed(() => {
   if (funnelId.value === 'new-to-nm') return 3;
