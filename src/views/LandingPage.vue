@@ -143,7 +143,10 @@
             class="nma-card p-6 hover:border-accent hover:shadow-glow flex flex-col justify-between transition-all duration-300 group"
           >
             <div class="space-y-4">
-              <span class="text-3xl block group-hover:scale-110 transition-transform duration-300">{{ j.icon }}</span>
+              <div v-if="j.imageUrl" class="w-12 h-12 overflow-hidden rounded-xl border border-zinc-200 bg-white/80 flex items-center justify-center shrink-0">
+                <img :src="j.imageUrl" :alt="j.title" class="w-full h-full object-cover" />
+              </div>
+              <span v-else class="text-3xl block group-hover:scale-110 transition-transform duration-300">{{ j.icon }}</span>
               <h3 class="text-lg font-bold text-zinc-950 font-display group-hover:text-accent transition-colors">
                 {{ j.title }}
               </h3>
@@ -173,12 +176,13 @@
 </template>
 
 <script setup>
+import { computed, onMounted } from 'vue';
 import { useOwnerStore } from '../stores/owner';
 import { useSettingsStore } from '../stores/settings';
 import { useVideoPlayerStore } from '../stores/videoPlayer';
 import AppLogo from '../components/ui/AppLogo.vue';
-import { onMounted } from 'vue';
 import { Play } from 'lucide-vue-next';
+import { getFullMediaUrl } from '../api';
 
 const ownerStore = useOwnerStore();
 const settingsStore = useSettingsStore();
@@ -191,6 +195,91 @@ onMounted(async () => {
 const openVideo = (src, title) => {
   videoStore.open({ src, title });
 };
+
+const parseJourneySettings = () => {
+  const raw = settingsStore.settings?.landing_journeys;
+
+  if (Array.isArray(raw)) return raw;
+  if (typeof raw === 'string') {
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  return [];
+};
+
+const journeys = computed(() => {
+  const configured = parseJourneySettings();
+  if (configured.length > 0) {
+    return configured.map((journey) => ({
+      ...journey,
+      imageUrl: journey.image ? getFullMediaUrl(journey.image) : ''
+    }));
+  }
+
+  return [
+    {
+      id: 'new-to-nm',
+      icon: '🌱',
+      title: 'New to Network Marketing',
+      desc: 'Learn the fundamentals of duplication, binary systems, and digital lead generation from the ground up.',
+      ctaLabel: 'Onboarding',
+      image: ''
+    },
+    {
+      id: 'already-in-nm',
+      icon: '📈',
+      title: 'Already in Network Marketing',
+      desc: 'Skip basic definitions. Supercharge your coaching, team retention, upline support, and global recruiting.',
+      ctaLabel: 'Assessment',
+      image: ''
+    },
+    {
+      id: 'switch-companies',
+      icon: '🔄',
+      title: 'Want to Switch Companies',
+      desc: 'Evaluate key company choices, group points accumulation, and position early inside pioneer nodes.',
+      ctaLabel: 'Evaluation',
+      image: ''
+    },
+    {
+      id: 'exploring',
+      icon: '🔍',
+      title: 'Just Exploring Opportunities',
+      desc: 'Take a short, visual presentation of the company plan and explore the network economy at your own pace.',
+      ctaLabel: 'Qualifications',
+      image: ''
+    },
+    {
+      id: 'income-diversification',
+      icon: '💰',
+      title: 'Tired of Depending on Single Income',
+      desc: 'Learn how side network leverage works without quitting your job, and buffer yourself against inflation.',
+      ctaLabel: 'Benefits',
+      image: ''
+    },
+    {
+      id: 'jobless',
+      icon: '🎯',
+      title: 'Tired of Being Jobless',
+      desc: 'Gain high-demand marketing, digital leadership, and communication skills with a zero-risk startup model.',
+      ctaLabel: 'Hope Flow',
+      image: ''
+    },
+    {
+      id: 'fast-track',
+      icon: '🔥',
+      title: 'I Want This Business By All Means',
+      desc: 'Compare entry packages immediately, get assigned a direct mentor, and secure WhatsApp registration assistance.',
+      ctaLabel: 'Fast Track',
+      image: ''
+    }
+  ];
+});
 
 const proofStats = [
   { value: '50,000+', label: 'Active Learners' },
@@ -216,57 +305,6 @@ const testimonials = [
   },
 ];
 
-const journeys = [
-  {
-    id: 'new-to-nm',
-    icon: '🌱',
-    title: 'New to Network Marketing',
-    desc: 'Learn the fundamentals of duplication, binary systems, and digital lead generation from the ground up.',
-    ctaLabel: 'Onboarding',
-  },
-  {
-    id: 'already-in-nm',
-    icon: '📈',
-    title: 'Already in Network Marketing',
-    desc: 'Skip basic definitions. Supercharge your coaching, team retention, upline support, and global recruiting.',
-    ctaLabel: 'Assessment',
-  },
-  {
-    id: 'switch-companies',
-    icon: '🔄',
-    title: 'Want to Switch Companies',
-    desc: 'Evaluate key company choices, group points accumulation, and position early inside pioneer nodes.',
-    ctaLabel: 'Evaluation',
-  },
-  {
-    id: 'exploring',
-    icon: '🔍',
-    title: 'Just Exploring Opportunities',
-    desc: 'Take a short, visual presentation of the company plan and explore the network economy at your own pace.',
-    ctaLabel: 'Qualifications',
-  },
-  {
-    id: 'income-diversification',
-    icon: '💰',
-    title: 'Tired of Depending on Single Income',
-    desc: 'Learn how side network leverage works without quitting your job, and buffer yourself against inflation.',
-    ctaLabel: 'Benefits',
-  },
-  {
-    id: 'jobless',
-    icon: '🎯',
-    title: 'Tired of Being Jobless',
-    desc: 'Gain high-demand marketing, digital leadership, and communication skills with a zero-risk startup model.',
-    ctaLabel: 'Hope Flow',
-  },
-  {
-    id: 'fast-track',
-    icon: '🔥',
-    title: 'I Want This Business By All Means',
-    desc: 'Compare entry packages immediately, get assigned a direct mentor, and secure WhatsApp registration assistance.',
-    ctaLabel: 'Fast Track',
-  },
-];
 </script>
 
 <style scoped>

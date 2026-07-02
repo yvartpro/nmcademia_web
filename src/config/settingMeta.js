@@ -23,7 +23,8 @@ export const SETTING_GROUPS = [
       { key: 'landing_hero_text', label: 'Hero confrontation text', type: 'textarea' },
       { key: 'mission_statement', label: 'Mission', type: 'textarea' },
       { key: 'objectives_statement', label: 'Objectives', type: 'textarea' },
-      { key: 'vision_statement', label: 'Vision', type: 'textarea' }
+      { key: 'vision_statement', label: 'Vision', type: 'textarea' },
+      { key: 'landing_journeys', label: 'Journey cards (JSON array)', type: 'json' }
     ]
   },
   {
