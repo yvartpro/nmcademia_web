@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-surface-0 flex flex-col justify-between nma-gradient-mesh font-sans pb-10">
+  <div class="funnel-page min-h-screen bg-surface-0 flex flex-col justify-between nma-gradient-mesh font-sans pb-10">
     <!-- Header -->
     <header class="sticky top-0 z-50 border-b border-zinc-200/80 bg-surface-1/90 backdrop-blur-xl">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
@@ -27,24 +27,21 @@
         <!-- ================= PATH 1: NEWBIE (new-to-nm) ================= -->
         <div v-if="funnelId === 'new-to-nm'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
-            <UiSectionLabel>Introduction</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 leading-tight">
-              A Global Multibillion-Dollar <span class="nma-gradient-text">Ecosystem</span>
+              Is Network Marketing Academia for<span class="nma-gradient-text"> You?</span>
             </h2>
             <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
-              Is Network Marketing Academia for You?
+A better future begins with the courage to take calculated risks.</br>
 
-A better future begins with the courage to take calculated risks.
+The greatest entrepreneurs, innovators, and leaders in history all stepped beyond their comfort zones to pursue a greater vision. Network marketing is no different.</br>
 
-The greatest entrepreneurs, innovators, and leaders in history all stepped beyond their comfort zones to pursue a greater vision. Network marketing is no different.
+It is not for those seeking guarantees or shortcuts. It is for people who are willing to learn, grow, embrace challenges, develop leadership, and persevere when others give up.<br>
 
-It is not for those seeking guarantees or shortcuts. It is for people who are willing to learn, grow, embrace challenges, develop leadership, and persevere when others give up.
+The question is simple:</br>
 
-The question is simple:
+Will fear keep you where you are, or will courage help you create the future you truly want?</br>
 
-Will fear keep you where you are, or will courage help you create the future you truly want?
-
-If you're ready to invest in yourself, step beyond your comfort zone, and build something meaningful, welcome to Network Marketing Academia—your journey starts here.
+If you're ready to invest in yourself, step beyond your comfort zone, and build something meaningful, welcome to Network Marketing Academia—your journey starts here.</br>
             </p>
             <div 
               @click="playIntroVideo"
@@ -61,7 +58,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
           </div>
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
-            <UiSectionLabel>Onboarding</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Create Your <span class="nma-gradient-text">Account</span>
             </h2>
@@ -92,7 +88,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
           </div>
 
           <div v-else-if="currentStepIndex === 3" class="space-y-6">
-            <UiSectionLabel>Location</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Select Your <span class="nma-gradient-text">Country</span>
             </h2>
@@ -114,7 +109,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
         <!-- ================= PATH 2: ALREADY IN NM (already-in-nm) ================= -->
         <div v-else-if="funnelId === 'already-in-nm'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
-            <UiSectionLabel>Distributor Path</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Accelerate Your <span class="nma-gradient-text">Leadership</span>
             </h2>
@@ -133,7 +127,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
           </div>
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
-            <UiSectionLabel>Assessment</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               What is <span class="nma-gradient-text">Holding You Back</span>?
             </h2>
@@ -161,7 +154,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
           </div>
 
           <div v-else-if="currentStepIndex === 3" class="space-y-6">
-            <UiSectionLabel>Coaching Solution</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Elite Academy <span class="nma-gradient-text">Coaching Track</span>
             </h2>
@@ -181,7 +173,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
           </div>
 
           <div v-else-if="currentStepIndex === 4" class="space-y-6">
-            <UiSectionLabel>Mentor Matching</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Your Assigned <span class="nma-gradient-text">Coach</span>
             </h2>
@@ -238,7 +229,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
         <!-- ================= PATH 3: WANT TO SWITCH COMPANIES (switch-companies) ================= -->
         <div v-else-if="funnelId === 'switch-companies'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
-            <UiSectionLabel>Transition Assessment</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Company Switching <span class="nma-gradient-text">Evaluation</span>
             </h2>
@@ -263,7 +253,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
           </div>
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
-            <UiSectionLabel>Analysis</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Why Leaders <span class="nma-gradient-text">Switch Companies</span>
             </h2>
@@ -287,7 +276,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
           </div>
 
           <div v-else-if="currentStepIndex === 3" class="space-y-6">
-            <UiSectionLabel>Consultation</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Schedule Your <span class="nma-gradient-text">Private Strategy Session</span>
             </h2>
@@ -322,7 +310,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
         <!-- ================= PATH 4: JUST EXPLORING (exploring) ================= -->
         <div v-else-if="funnelId === 'exploring'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
-            <UiSectionLabel>Qualification</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Qualification <span class="nma-gradient-text">Questions</span>
             </h2>
@@ -368,7 +355,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
           </div>
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
-            <UiSectionLabel>Personal Info</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Your <span class="nma-gradient-text">Details</span>
             </h2>
@@ -399,7 +385,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
           </div>
 
           <div v-else-if="currentStepIndex === 3" class="space-y-6">
-            <UiSectionLabel>Overview</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Short Version <span class="nma-gradient-text">Presentation</span>
             </h2>
@@ -434,7 +419,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
         <!-- ================= PATH 5: TIRED OF SINGLE INCOME (income-diversification) ================= -->
         <div v-else-if="funnelId === 'income-diversification'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
-            <UiSectionLabel>Income Security</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               The Vulnerability of a <span class="nma-gradient-text">Single Income</span>
             </h2>
@@ -461,7 +445,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
           </div>
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
-            <UiSectionLabel>Leverage</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Why Create a <span class="nma-gradient-text">Side Network</span>?
             </h2>
@@ -490,7 +473,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
           </div>
 
           <div v-else-if="currentStepIndex === 3" class="space-y-6">
-            <UiSectionLabel>Personal Info</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Unlock Your <span class="nma-gradient-text">Path</span>
             </h2>
@@ -524,7 +506,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
         <!-- ================= PATH 6: JOBLESS (jobless) ================= -->
         <div v-else-if="funnelId === 'jobless'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
-            <UiSectionLabel>Hope & Opportunity</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Launch Your Own <span class="nma-gradient-text">Business Venture</span>
             </h2>
@@ -552,7 +533,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
           </div>
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
-            <UiSectionLabel>Register</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Enter the <span class="nma-gradient-text">Academia</span>
             </h2>
@@ -586,7 +566,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
         <!-- ================= PATH 7: FAST TRACK (fast-track) ================= -->
         <div v-else-if="funnelId === 'fast-track'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
-            <UiSectionLabel>Fast Track</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Position Yourself as a <span class="nma-gradient-text">Pioneer Leader</span>
             </h2>
@@ -608,7 +587,6 @@ If you're ready to invest in yourself, step beyond your comfort zone, and build 
           </div>
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
-            <UiSectionLabel>Registration Details</UiSectionLabel>
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Secure Your <span class="nma-gradient-text">Pioneer Slot</span>
             </h2>
@@ -655,7 +633,6 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Play } from 'lucide-vue-next';
 import AppLogo from '../components/ui/AppLogo.vue';
-import UiSectionLabel from '../components/ui/UiSectionLabel.vue';
 import UiButton from '../components/ui/UiButton.vue';
 import { useCatalogStore } from '../stores/catalog';
 import { useLeadsStore } from '../stores/leads';
@@ -898,6 +875,10 @@ const getChallengesForPayload = () => {
 </script>
 
 <style scoped>
+.funnel-page p {
+  text-align: justify;
+}
+
 .animate-fade-in {
   animation: fadeIn 0.4s ease-out forwards;
 }
