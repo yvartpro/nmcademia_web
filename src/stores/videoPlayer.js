@@ -22,7 +22,7 @@ export const useVideoPlayerStore = defineStore('videoPlayer', () => {
   const visible = ref(false);
   const src = ref(null);
   const title = ref('');
-  const isBuffering = ref(false);
+  const isBuffering = ref(true);
   const bufferProgress = ref(0);
 
   // Per-video resume positions: { [srcKey]: seconds }
