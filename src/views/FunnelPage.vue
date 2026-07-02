@@ -192,7 +192,7 @@
                 </div>
                 <div>
                   <h4 class="text-lg font-bold text-emerald-700">{{ ownerStore.name }}</h4>
-                  <p class="text-xs text-emerald-600">{{ ownerStore.bio || 'Your dedicated Academy Coach' }}</p>
+                  <p class="text-xs text-emerald-600">{{ ownerStore.intro || ownerStore.bio || 'Your dedicated Academy Coach' }}</p>
                 </div>
               </div>
               

@@ -5,6 +5,7 @@ export const useOwnerStore = defineStore('owner', {
   state: () => ({
     name: 'Network Marketing Professional',
     bio: 'Welcome to the platform.',
+    intro: null,
     whatsappNumber: '',
     domainName: '',
     photoUrl: null,
@@ -19,6 +20,7 @@ export const useOwnerStore = defineStore('owner', {
         if (response.data) {
           this.name = response.data.name || this.name;
           this.bio = response.data.bio || this.bio;
+          this.intro = response.data.intro || this.intro;
           this.whatsappNumber = response.data.whatsappNumber || this.whatsappNumber;
           this.domainName = response.data.domainName || this.domainName;
           
