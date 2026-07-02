@@ -84,8 +84,31 @@
           :class="{ 'border-accent ring-1 ring-accent bg-white/95': focusedStreamId === stream.id }"
         >
           <div v-if="stream.media && focusedStreamId === stream.id" class="mt-3">
-            <img v-if="stream.mediaType === 'image'" :src="mediaPreview(stream.media.filePath)" :alt="stream.media.alt" class="w-full h-full object-cover rounded" />
-            <a v-else-if="stream.mediaType === 'video'" @click.stop="openVideo(stream)" class="text-blue-500 hover:underline">Play Video</a>
+            <div class="rounded-3xl border border-zinc-200 bg-zinc-50 overflow-hidden">
+              <img
+                v-if="stream.mediaType === 'image'"
+                :src="mediaPreview(stream.media.filePath)"
+                :alt="stream.media.alt"
+                class="w-full h-[240px] object-cover"
+              />
+
+              <div v-else-if="stream.mediaType === 'video'" class="p-4 sm:p-5 space-y-4">
+                <div class="flex items-start gap-3">
+                  <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-red-500/10 text-red-600 text-sm font-semibold">▶</span>
+                  <div>
+                    <p class="text-sm font-bold text-zinc-900">Video walkthrough available</p>
+                    <p class="text-xs text-zinc-500 mt-1">Open this short explainer video to see the stream in action and learn the payout logic.</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  @click.stop="openVideo(stream)"
+                  class="inline-flex items-center justify-center rounded-full bg-accent px-4 py-2 text-xs font-bold text-zinc-900 hover:bg-accent-light transition"
+                >
+                  Watch the stream video
+                </button>
+              </div>
+            </div>
           </div>
 
           <div class="flex gap-4">
