@@ -114,7 +114,7 @@
         </div>
 
         <div 
-          @click="openVideo('https://www.youtube.com/embed/j-j72H2rJqA', 'Eric Worre - What is Network Marketing')"
+          @click="openVideo(settingsStore.settings['nm_video_url'], 'Eric Worre - What is Network Marketing')"
           class="max-w-3xl mx-auto aspect-video bg-zinc-900 rounded-2xl overflow-hidden shadow-glow relative cursor-pointer group flex items-center justify-center"
         >
           <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556761175-5973dc0f32d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-40 group-hover:opacity-50 transition duration-500"></div>
@@ -174,9 +174,23 @@
 
 <script setup>
 import { useOwnerStore } from '../stores/owner';
+import { useSettingsStore } from '../stores/settings';
+import { useVideoPlayerStore } from '../stores/videoPlayer';
 import AppLogo from '../components/ui/AppLogo.vue';
+import { onMounted } from 'vue';
+import { Play } from 'lucide-vue-next';
 
 const ownerStore = useOwnerStore();
+const settingsStore = useSettingsStore();
+const videoStore = useVideoPlayerStore();
+
+onMounted(async () => {
+  await settingsStore.fetchSettings();
+});
+
+const openVideo = (src, title) => {
+  videoStore.open({ src, title });
+};
 
 const proofStats = [
   { value: '50,000+', label: 'Active Learners' },
