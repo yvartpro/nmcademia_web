@@ -142,6 +142,11 @@
             <span>🖼️</span>
             <span>Media Library</span>
           </button>
+
+          <button @click="activeTab = 'presentations'" :class="tabClass('presentations')">
+            <span>🎬</span>
+            <span>Presentations</span>
+          </button>
         </nav>
       </div>
 
@@ -425,6 +430,7 @@
         <PackagesManager v-else-if="activeTab === 'packages'" />
         <CountriesManager v-else-if="activeTab === 'countries'" />
         <MediaLibrary v-else-if="activeTab === 'media'" />
+        <PresentationsManager v-else-if="activeTab === 'presentations'" />
 
       </div>
     </main>
@@ -508,6 +514,7 @@ import ProductsManager from '../../components/admin/ProductsManager.vue';
 import PackagesManager from '../../components/admin/PackagesManager.vue';
 import CountriesManager from '../../components/admin/CountriesManager.vue';
 import MediaLibrary from '../../components/admin/MediaLibrary.vue';
+import PresentationsManager from '../../components/admin/PresentationsManager.vue';
 import SiteSettingsManager from '../../components/admin/SiteSettingsManager.vue';
 import OwnerProfileManager from '../../components/admin/OwnerProfileManager.vue';
 import AppLogo from '../../components/ui/AppLogo.vue';
@@ -552,6 +559,7 @@ const activeTabTitle = computed(() => {
   if (activeTab.value === 'packages') return 'Registration Packages & Pricing';
   if (activeTab.value === 'countries') return 'Countries & WhatsApp Numbers';
   if (activeTab.value === 'media') return 'Media Library';
+  if (activeTab.value === 'presentations') return 'Product Presentations';
   return 'Dashboard';
 });
 

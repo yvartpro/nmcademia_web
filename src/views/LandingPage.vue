@@ -34,7 +34,7 @@
         <div class="w-48 h-48 sm:w-64 sm:h-64 lg:w-96 lg:h-96 shrink-0 relative">
           <div class="absolute inset-0 bg-accent rounded-full opacity-20 blur-2xl"></div>
           <img 
-            :src="ownerStore.photoUrl || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'" 
+            :src="ownerStore.photoUrl" 
             :alt="ownerStore.name" 
             class="w-full h-full object-cover rounded-full border-4 border-white shadow-xl relative z-10"
           />

@@ -27,8 +27,8 @@
         v-for="asset in mediaStore.assets"
         :key="asset.id"
         class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm transition"
-        :class="{ 'cursor-pointer hover:border-[#008A20]/40 hover:shadow-md': selectable && asset.type === 'image' }"
-        @click="handleSelect(asset)"
+        :class="{ 'cursor-pointer hover:border-[#008A20]/40 hover:shadow-md': selectable, 'border-[#008A20] ring-2 ring-[#008A20]/30': modelValue === asset.id }"
+          @click="handleSelect(asset)"
       >
         <div class="aspect-square bg-[#F4F6F5] relative flex items-center justify-center overflow-hidden">
           <img
@@ -129,7 +129,7 @@ const uploadFile = async (type, e) => {
 };
 
 const handleSelect = (asset) => {
-  if (!props.selectable || asset.type !== 'image') return;
+  if (!props.selectable) return;
 
   emit('select', asset);
   emit('update:modelValue', asset.id);
