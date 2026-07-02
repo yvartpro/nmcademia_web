@@ -21,7 +21,7 @@
       </div>
 
       <div class="space-y-4 max-w-4xl mx-auto">
-        <h1 class="text-3xl sm:text-5xl font-display font-extrabold tracking-tight leading-[1.1] text-zinc-950 text-justify">
+        <h1 class="text-xl sm:text-5xl font-display font-extrabold tracking-tight leading-[1.1] text-zinc-950 text-justify">
           Network Marketing Academia is not here to entertain you—
           <span class="text-accent">it is here to challenge your thinking and elevate your mindset.</span>
         </h1>
