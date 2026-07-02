@@ -13,6 +13,13 @@ const getBackendOrigin = () => {
 };
 
 const getBaseUrl = () => {
+  const envBase = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_BACKEND_ORIGIN;
+
+  if (envBase) {
+    const normalized = envBase.replace(/\/$/, '');
+    return normalized.includes('/api') ? normalized : `${normalized}/api`;
+  }
+
   return '/api';
 };
 

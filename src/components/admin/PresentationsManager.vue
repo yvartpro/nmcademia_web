@@ -147,10 +147,24 @@ const selectedMedia = computed(() => {
 const loadPresentations = async () => {
   try {
     const res = await api.get('/admin/presentations');
-    presentations.value = res.data;
+    const payload = res?.data;
+
+    if (Array.isArray(payload)) {
+      presentations.value = payload;
+    } else if (payload && typeof payload === 'object' && Array.isArray(payload.presentations)) {
+      presentations.value = payload.presentations;
+    } else {
+      presentations.value = [];
+    }
+
     console.log('Loaded presentations:', presentations.value);
   } catch (err) {
+    presentations.value = [];
     console.error('Error fetching presentations:', err);
+
+    if (err?.response?.data && typeof err.response.data === 'string' && err.response.data.includes('<!DOCTYPE')) {
+      console.error('The admin API responded with HTML instead of JSON. Check the configured backend URL and auth setup.');
+    }
   }
 };
 
