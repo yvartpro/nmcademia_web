@@ -9,60 +9,20 @@
         they pair to generate a <strong>Pairing Match Bonus (MSB)</strong>.
       </p>
 
-      <div class="space-y-3">
-        <!-- Controls Bar -->
-        <div class="flex items-center justify-between bg-white border border-zinc-200/50 p-2 rounded-xl text-xs">
-          <span class="font-semibold text-zinc-500 uppercase tracking-wider pl-2">Genealogy Visualizer</span>
-          <div class="flex items-center gap-1">
-            <button type="button" @click="zoomOut" class="p-2 hover:bg-zinc-200 rounded-lg transition text-zinc-600" title="Zoom Out">
-              <ZoomOut :size="16" />
+      <!-- Binary Tree Video Preview -->
+      <div v-if="settings?.['binary_tree_video']" class="rounded-3xl border border-zinc-200 bg-zinc-50 overflow-hidden p-5">
+        <div class="flex items-start gap-3">
+          <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-600 text-sm font-semibold">▶</span>
+          <div class="flex-grow">
+            <p class="text-sm font-bold text-zinc-900">Binary Tree Structure Explainer</p>
+            <p class="text-xs text-zinc-500 mt-1">Watch this short video to understand how the binary structure works and how pairings generate income.</p>
+            <button
+              type="button"
+              @click="openBinaryTreeVideo"
+              class="inline-flex items-center justify-center rounded-full bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 transition mt-3"
+            >
+              Watch Video
             </button>
-            <span class="w-12 text-center font-mono font-bold text-zinc-750">{{ Math.round(zoom * 100) }}%</span>
-            <button type="button" @click="zoomIn" class="p-2 hover:bg-zinc-200 rounded-lg transition text-zinc-600" title="Zoom In">
-              <ZoomIn :size="16" />
-            </button>
-            <button type="button" @click="resetZoom" class="p-2 hover:bg-zinc-200 rounded-lg transition text-zinc-600" title="Reset Zoom">
-              <RotateCcw :size="16" />
-            </button>
-            <div class="h-4 w-px bg-zinc-300 mx-1" />
-            <button type="button" @click="toggleFullscreen" class="p-2 hover:bg-zinc-200 rounded-lg transition text-zinc-600" title="Toggle Fullscreen">
-              <Maximize2 :size="16" />
-            </button>
-          </div>
-        </div>
-
-        <!-- Viewport -->
-        <div class="relative w-full max-h-[400px] overflow-auto border border-zinc-250/20 rounded-xl bg-white select-none py-10">
-          <div
-            class="flex justify-center transition-transform duration-150 ease-out origin-top min-w-max px-8"
-            :style="{ transform: `scale(${zoom})` }"
-          >
-            <BinaryTree :image-url="settings?.['binary_tree_image'] ? getFullMediaUrl(settings['binary_tree_image']) : null" />
-          </div>
-        </div>
-
-        <!-- Fullscreen Modal -->
-        <div v-if="isFullscreen" class="fixed inset-0 z-[100] bg-white/95 backdrop-blur-xl flex flex-col motion-safe:animate-fade-in">
-          <div class="flex items-center justify-between border-b border-zinc-200/30 p-4 bg-white/80">
-            <span class="text-sm font-bold text-zinc-900">Genealogy Diagram (Fullscreen)</span>
-            <div class="flex items-center gap-2">
-              <button type="button" @click="zoomOut" class="p-2.5 hover:bg-zinc-200 rounded-lg text-zinc-700"><ZoomOut :size="18" /></button>
-              <span class="w-12 text-center font-mono font-bold text-zinc-500">{{ Math.round(zoom * 100) }}%</span>
-              <button type="button" @click="zoomIn" class="p-2.5 hover:bg-zinc-200 rounded-lg text-zinc-700"><ZoomIn :size="18" /></button>
-              <button type="button" @click="resetZoom" class="p-2.5 hover:bg-zinc-200 rounded-lg text-zinc-700"><RotateCcw :size="18" /></button>
-              <div class="h-5 w-px bg-zinc-700 mx-2" />
-              <button type="button" @click="toggleFullscreen" class="px-4 py-2 bg-accent hover:bg-accent-light text-zinc-900 font-extrabold rounded-xl transition text-xs">
-                Exit Fullscreen
-              </button>
-            </div>
-          </div>
-          <div class="flex-grow overflow-auto flex items-start justify-center p-8 cursor-grab active:cursor-grabbing">
-            <div class="transition-transform duration-150 ease-out origin-top py-12" :style="{ transform: `scale(${zoom})` }">
-              <BinaryTree
-                :image-url="settings?.['binary_tree_image'] ? getFullMediaUrl(settings['binary_tree_image']) : null"
-                size="lg"
-              />
-            </div>
           </div>
         </div>
       </div>
@@ -201,12 +161,19 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { ZoomIn, ZoomOut, Maximize2, RotateCcw } from 'lucide-vue-next';
 import { getFullMediaUrl } from '../../api';
-import BinaryTree from './BinaryTree.vue';
 import { useVideoPlayerStore } from '@/stores/videoPlayer';
 
 const videoStore = useVideoPlayerStore();
+
+const openBinaryTreeVideo = () => {
+  if (props.settings?.['binary_tree_video']) {
+    videoStore.open({
+      src: props.settings['binary_tree_video'],
+      title: 'Binary Tree Structure Explainer',
+    });
+  }
+};
 
 const openVideo = (stream) => {
   videoStore.open({
@@ -225,14 +192,6 @@ const props = defineProps({
   getPriceForCountry: { type: Function, required: true },
   formatNumber: { type: Function, required: true },
 });
-
-// Zoom
-const zoom = ref(1);
-const isFullscreen = ref(false);
-const zoomIn = () => { if (zoom.value < 3) zoom.value = Number((zoom.value + 0.25).toFixed(2)); };
-const zoomOut = () => { if (zoom.value > 0.5) zoom.value = Number((zoom.value - 0.25).toFixed(2)); };
-const resetZoom = () => { zoom.value = 1; };
-const toggleFullscreen = () => { isFullscreen.value = !isFullscreen.value; zoom.value = 1; };
 
 // Stream focus
 const focusedStreamId = ref(null);
