@@ -1,6 +1,6 @@
 <template>
   <div class="motion-safe:animate-fade-in space-y-8">
-    <h2 class="text-2xl sm:text-3xl font-display font-black">Matched Sales Binary Model</h2>
+    <h2 class="text-2xl sm:text-3xl font-display font-black">Understanding the Binary Structure</h2>
 
     <div class="p-5 bg-white border border-zinc-200 rounded-xl space-y-4">
       <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed">
@@ -14,7 +14,7 @@
         <div class="flex items-start gap-3">
           <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-600 text-sm font-semibold">▶</span>
           <div class="flex-grow">
-            <p class="text-sm font-bold text-zinc-900">Binary Tree Structure Explainer</p>
+            <p class="text-sm font-bold text-zinc-900">How the Binary Structure Really Works</p>
             <p class="text-xs text-zinc-500 mt-1">Watch this short video to understand how the binary structure works and how pairings generate income.</p>
             <button
               type="button"
