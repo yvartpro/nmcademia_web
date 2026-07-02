@@ -59,6 +59,7 @@
         v-else-if="currentSlide === 3"
         :settings="settings"
         :products="catalogStore.products"
+        :presentation="presentation"
       />
       <DreamTestimonials
         v-else-if="currentSlide === 4"
@@ -158,6 +159,7 @@ const totalSlides = 8;
 const showPostSignupWelcome = ref(false);
 const activeQuadrant = ref('B');
 const rawFAQs = ref([]);
+const presentation = ref(null);
 
 const nextSlide = () => {
   if (currentSlide.value < totalSlides) currentSlide.value++;
@@ -182,7 +184,11 @@ const conversionRate = computed(() => {
   return 1.0;
 });
 
-const changeCountry = () => catalogStore.selectCountry(selectedCountryCode.value);
+const changeCountry = async () => {
+  catalogStore.selectCountry(selectedCountryCode.value);
+  localStorage.setItem('selected_country', selectedCountryCode.value);
+  await fetchPresentation();
+};
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 const getPriceForCountry = (pkg, field) => {
@@ -255,7 +261,19 @@ onMounted(async () => {
   if (catalogStore.countries.length > 0 && !catalogStore.countries.some(c => c.code === selectedCountryCode.value)) {
     selectedCountryCode.value = catalogStore.countries[0].code;
   }
+
+  await fetchPresentation();
 });
+
+const fetchPresentation = async () => {
+  try {
+    const response = await api.get(`/presentations/${selectedCountryCode.value}`);
+    presentation.value = response.data;
+  } catch (err) {
+    console.error('Fetch presentation failed:', err);
+    presentation.value = null;
+  }
+};
 
 const fetchFAQs = async () => {
   try {
