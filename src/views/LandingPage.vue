@@ -21,11 +21,11 @@
       </div>
 
       <div class="space-y-4 max-w-4xl mx-auto">
-        <h1 class="text-3xl sm:text-5xl font-display font-extrabold tracking-tight leading-[1.1] text-zinc-950">
+        <h1 class="text-3xl sm:text-5xl font-display font-extrabold tracking-tight leading-[1.1] text-zinc-950 text-justify">
           Network Marketing Academia is not here to entertain you—
           <span class="text-accent">it is here to challenge your thinking and elevate your mindset.</span>
         </h1>
-        <p class="text-base sm:text-xl text-zinc-550 max-w-3xl mx-auto leading-relaxed pt-2">
+        <p class="text-base sm:text-xl text-zinc-550 max-w-3xl mx-auto leading-relaxed pt-2 text-justify">
           The world we were prepared for is no longer the world we are living in. Jobs are shrinking, inflation is rising, and the promise that traditional education alone guarantees freedom is collapsing.
         </p>
       </div>
@@ -76,10 +76,10 @@
       <div class="grid md:grid-cols-2 gap-10 items-center">
         <div class="space-y-6">
           <h3 class="text-xl font-bold text-accent">Power belongs to those who build networks.</h3>
-          <p class="text-zinc-650 leading-relaxed">
+          <p class="text-zinc-650 leading-relaxed text-justify">
             Network Marketing Academia exists to educate a new generation of thinkers, leaders, and builders who understand that the future belongs to those who can create networks, influence people, and build communities in the digital age.
           </p>
-          <p class="text-zinc-650 leading-relaxed">
+          <p class="text-zinc-650 leading-relaxed text-justify">
             This is more than selling products. It is the science of human connection, leadership multiplied through team duplication, and entrepreneurship powered by networks.
           </p>
         </div>
@@ -108,9 +108,9 @@
       <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         <div class="text-center space-y-3">
           <h2 class="text-3xl sm:text-4xl font-display font-black">What Is Network Marketing ?</h2>
-          <p class="text-sm text-zinc-500 max-w-xl mx-auto">A network marketing company is a business that sells its products or services through a network of independent distributors rather than through traditional retail stores. These companies outsource their entire sales and marketing function to individual representatives who earn commissions on personal sales and on the sales of their recruited teams. Network marketing companies operate across many industries: health supplements, skincare, nutrition, financial services, travel, and technology.</p>
+          <p class="text-sm text-zinc-500 max-w-xl mx-auto text-justify">A network marketing company is a business that sells its products or services through a network of independent distributors rather than through traditional retail stores. These companies outsource their entire sales and marketing function to individual representatives who earn commissions on personal sales and on the sales of their recruited teams. Network marketing companies operate across many industries: health supplements, skincare, nutrition, financial services, travel, and technology.</p>
           <h3 class="text-xl font-bold text-accent">How a Network Marketing Company Operates</h3>
-          <p class="max-w-xl mx-auto">The company handles product development, manufacturing, shipping, and commission payments. Distributors handle customer acquisition, product promotion, and team recruitment.</p>
+          <p class="max-w-xl mx-auto text-justify">The company handles product development, manufacturing, shipping, and commission payments. Distributors handle customer acquisition, product promotion, and team recruitment.</p>
         </div>
 
         <div 
@@ -130,7 +130,7 @@
       <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         <div class="text-center space-y-4">
           <h2 class="text-3xl sm:text-5xl font-display font-black">Which Best Describes You?</h2>
-          <p class="text-zinc-600 max-w-xl mx-auto text-sm sm:text-base">
+          <p class="text-zinc-600 max-w-xl mx-auto text-sm sm:text-base text-justify">
             Your selection determines your entire user journey. We do not believe in one-size-fits-all presentation plans.
           </p>
         </div>
