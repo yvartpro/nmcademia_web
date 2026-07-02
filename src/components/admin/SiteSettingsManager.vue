@@ -31,9 +31,9 @@
             class="w-full bg-[#F4F6F5] border border-zinc-200 rounded-lg p-3 text-xs text-[#0A0F0D] focus:border-[#008A20] focus:outline-none font-mono"
           />
           <MediaPicker
-            v-else-if="field.type === 'image'"
+            v-else-if="field.type === 'image' || field.type === 'video'"
             v-model="form[field.key]"
-            assetType="image"
+            :assetType="field.type === 'video' ? 'video' : 'image'"
             :is-url-mode="true"
             :label="''"
             class="mt-1"
