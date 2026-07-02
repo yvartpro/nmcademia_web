@@ -32,7 +32,19 @@
               A Global Multibillion-Dollar <span class="nma-gradient-text">Ecosystem</span>
             </h2>
             <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
-              Welcome to Network Marketing Academia. You are entering a global industry where millions of people are building income, developing leadership, and transforming their financial future.
+              Is Network Marketing Academia for You?
+
+A better future begins with the courage to take calculated risks.
+
+The greatest entrepreneurs, innovators, and leaders in history all stepped beyond their comfort zones to pursue a greater vision. Network marketing is no different.
+
+It is not for those seeking guarantees or shortcuts. It is for people who are willing to learn, grow, embrace challenges, develop leadership, and persevere when others give up.
+
+The question is simple:
+
+Will fear keep you where you are, or will courage help you create the future you truly want?
+
+If you're ready to invest in yourself, step beyond your comfort zone, and build something meaningful, welcome to Network Marketing Academia—your journey starts here.
             </p>
             <div 
               @click="playIntroVideo"
@@ -314,6 +326,15 @@
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               Qualification <span class="nma-gradient-text">Questions</span>
             </h2>
+            <div 
+              @click="playIntroVideo"
+              class="mt-3 aspect-video bg-zinc-900 rounded-xl overflow-hidden shadow-glow relative cursor-pointer group flex items-center justify-center"
+            >
+              <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556761175-5973dc0f32d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-40 group-hover:opacity-50 transition duration-500"></div>
+              <div class="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center z-10 shadow-lg group-hover:scale-110 group-hover:bg-accent transition-all duration-300">
+                <Play :size="28" class="text-white ml-1" />
+              </div>
+            </div>
             <div class="space-y-4">
               <div>
                 <label class="block text-xs font-semibold text-zinc-500 mb-2">How many hours per week can you allocate?</label>
@@ -420,6 +441,15 @@
             <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
               Depending on a single job salary in today's economy is highly risky. Inflation, company lay-offs, and rising expenses are quietly eroding financial freedom.
             </p>
+            <div 
+              @click="playIntroVideo"
+              class="mt-3 aspect-video bg-zinc-900 rounded-xl overflow-hidden shadow-glow relative cursor-pointer group flex items-center justify-center"
+            >
+              <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556761175-5973dc0f32d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-40 group-hover:opacity-50 transition duration-500"></div>
+              <div class="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center z-10 shadow-lg group-hover:scale-110 group-hover:bg-accent transition-all duration-300">
+                <Play :size="28" class="text-white ml-1" />
+              </div>
+            </div>
             <div class="p-5 bg-zinc-900/60 border border-white/5 rounded-xl">
               <p class="text-xs sm:text-sm italic text-zinc-300">
                 "True financial stability is built in the B (Business Owner) and I (Investor) quadrants, where duplication and systems generate passive leverage." - Robert Kiyosaki
@@ -501,6 +531,15 @@
             <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
               When traditional jobs are scarce, building networks is the most accessible vehicle to start with limited capital. We focus on teaching digital marketing and leadership skills from scratch.
             </p>
+            <div 
+              @click="playIntroVideo"
+              class="mt-3 aspect-video bg-zinc-900 rounded-xl overflow-hidden shadow-glow relative cursor-pointer group flex items-center justify-center"
+            >
+              <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556761175-5973dc0f32d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-40 group-hover:opacity-50 transition duration-500"></div>
+              <div class="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center z-10 shadow-lg group-hover:scale-110 group-hover:bg-accent transition-all duration-300">
+                <Play :size="28" class="text-white ml-1" />
+              </div>
+            </div>
             <div class="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
               <h4 class="text-xs font-bold text-emerald-500 uppercase tracking-wide mb-1">Zero prior experience needed</h4>
               <p class="text-xs text-zinc-650">
