@@ -148,6 +148,7 @@ const loadPresentations = async () => {
   try {
     const res = await api.get('/admin/presentations');
     presentations.value = res.data;
+    console.log('Loaded presentations:', presentations.value);
   } catch (err) {
     console.error('Error fetching presentations:', err);
   }
