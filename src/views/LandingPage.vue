@@ -39,9 +39,9 @@
             class="w-full h-full object-cover rounded-full border-4 border-white shadow-xl relative z-10"
           />
         </div>
-        <div class="w-full max-w-xl rounded-xl border border-zinc-200 bg-white/70 p-5 text-center lg:text-left">
+        <div class="w-full max-w-xl rounded-xl border border-zinc-200 bg-white/70 p-5 text-left lg:text-left">
           <h2 class="text-xl sm:text-2xl font-semibold text-zinc-950">{{ ownerStore.name }}</h2>
-          <p class="mt-2 text-sm sm:text-base text-zinc-600 leading-relaxed whitespace-pre-wrap">{{ ownerStore.bio }}</p>
+          <p class="mt-2 text-sm sm:text-base text-zinc-600 leading-relaxed whitespace-pre-wrap text-justify">{{ ownerStore.bio }}</p>
         </div>
       </div>
 
