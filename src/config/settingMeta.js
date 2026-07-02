@@ -10,6 +10,7 @@ export const SETTING_GROUPS = [
     keys: [
       { key: 'video_url', label: 'Presentation video (site video asset)', type: 'video' },
       { key: 'nm_video_url', label: '"What is network marketing" video (site video asset)', type: 'video' },
+      { key: 'risk_video', label: 'Risk / compliance short video (site video asset)', type: 'video' },
       { key: 'whatsapp_number', label: 'Trainer WhatsApp number', type: 'text' },
       { key: 'landing_cta_text', label: 'Landing hero button text', type: 'text' },
       { key: 'coaching_cta_text', label: 'Already-in-NM path button text', type: 'text' },
