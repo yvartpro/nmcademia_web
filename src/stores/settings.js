@@ -55,6 +55,7 @@ export const useSettingsStore = defineStore('settings', () => {
     try {
       const response = await api.put('/admin/settings', settingsPayload);
       settings.value = response.data.settings;
+      console.log('Admin update settings successful:', response.data);
       return true;
     } catch (err) {
       console.error('Admin update settings failed:', err);

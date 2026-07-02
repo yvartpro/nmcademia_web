@@ -23,10 +23,10 @@
       <div class="space-y-4 max-w-4xl mx-auto">
         <h1 class="text-3xl sm:text-5xl font-display font-extrabold tracking-tight leading-[1.1] text-zinc-950">
           Network Marketing Academia is not here to entertain you—
-          <span class="text-accent">it is here to confront you.</span>
+          <span class="text-accent">it is here to challenge your thinking and elevate your mindset.</span>
         </h1>
         <p class="text-base sm:text-xl text-zinc-550 max-w-3xl mx-auto leading-relaxed pt-2">
-          The world you were prepared for is no longer the world you are living in. Jobs are shrinking, inflation is rising, and the promise that traditional education alone guarantees freedom is collapsing.
+          The world we were prepared for is no longer the world we are living in. Jobs are shrinking, inflation is rising, and the promise that traditional education alone guarantees freedom is collapsing.
         </p>
       </div>
 
@@ -39,9 +39,9 @@
             class="w-full h-full object-cover rounded-full border-4 border-white shadow-xl relative z-10"
           />
         </div>
-        <div class="space-y-4 text-center lg:text-left">
+        <div class="w-full max-w-xl rounded-xl border border-zinc-200 bg-white/70 p-5 text-center lg:text-left">
           <h2 class="text-xl sm:text-2xl font-semibold text-zinc-950">{{ ownerStore.name }}</h2>
-          <p class="text-sm sm:text-base text-zinc-600 leading-relaxed whitespace-pre-wrap">{{ ownerStore.bio }}</p>
+          <p class="mt-2 text-sm sm:text-base text-zinc-600 leading-relaxed whitespace-pre-wrap">{{ ownerStore.bio }}</p>
         </div>
       </div>
 
