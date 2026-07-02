@@ -31,17 +31,17 @@
               Is Network Marketing Academia for<span class="nma-gradient-text"> You?</span>
             </h2>
             <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
-A better future begins with the courage to take calculated risks.</br>
+              A better future begins with the courage to take calculated risks.<br /><br />
 
-The greatest entrepreneurs, innovators, and leaders in history all stepped beyond their comfort zones to pursue a greater vision. Network marketing is no different.</br>
+              The greatest entrepreneurs, innovators, and leaders in history all stepped beyond their comfort zones to pursue a greater vision. Network marketing is no different.<br /><br />
 
-It is not for those seeking guarantees or shortcuts. It is for people who are willing to learn, grow, embrace challenges, develop leadership, and persevere when others give up.<br>
+              It is not for those seeking guarantees or shortcuts. It is for people who are willing to learn, grow, embrace challenges, develop leadership, and persevere when others give up.<br /><br />
 
-The question is simple:</br>
+              The question is simple:<br /><br />
 
-Will fear keep you where you are, or will courage help you create the future you truly want?</br>
+              Will fear keep you where you are, or will courage help you create the future you truly want?<br /><br />
 
-If you're ready to invest in yourself, step beyond your comfort zone, and build something meaningful, welcome to Network Marketing Academia—your journey starts here.</br>
+              If you're ready to invest in yourself, step beyond your comfort zone, and build something meaningful, welcome to Network Marketing Academia—your journey starts here.<br />
             </p>
             <div 
               @click="playIntroVideo"
