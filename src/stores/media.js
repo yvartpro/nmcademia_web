@@ -52,6 +52,57 @@ export const useMediaStore = defineStore('media', () => {
     }
   };
 
+  const uploadVideoWithThumbnail = async (file, thumbnailFile = null, meta = {}, progressCallbacks = {}) => {
+    // progressCallbacks: { onVideoProgress: (pct), onImageProgress: (pct), onOverall: (pct) }
+    uploading.value = true;
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      if (thumbnailFile) formData.append('thumbnail', thumbnailFile);
+      if (meta.title) formData.append('title', meta.title);
+      if (meta.description) formData.append('description', meta.description);
+      if (meta.thumbnailTitle) formData.append('thumbnailTitle', meta.thumbnailTitle);
+      if (meta.thumbnailDescription) formData.append('thumbnailDescription', meta.thumbnailDescription);
+
+      const totalBytes = file.size + (thumbnailFile ? thumbnailFile.size : 0);
+
+      const res = await api.post('/admin/media/video-with-thumbnail', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        onUploadProgress: (progressEvent) => {
+          const loaded = progressEvent.loaded;
+          const imgSize = thumbnailFile ? thumbnailFile.size : 0;
+          const vidSize = file.size;
+
+          // overall
+          const overallPct = totalBytes > 0 ? Math.min(100, Math.round((loaded / totalBytes) * 100)) : 0;
+          if (progressCallbacks.onOverall) progressCallbacks.onOverall(overallPct);
+
+          // map loaded to per-file progress
+          if (thumbnailFile) {
+            if (loaded <= imgSize) {
+              const imgPct = Math.min(100, Math.round((loaded / imgSize) * 100));
+              if (progressCallbacks.onImageProgress) progressCallbacks.onImageProgress(imgPct);
+              if (progressCallbacks.onVideoProgress) progressCallbacks.onVideoProgress(0);
+            } else {
+              if (progressCallbacks.onImageProgress) progressCallbacks.onImageProgress(100);
+              const vidLoaded = loaded - imgSize;
+              const vidPct = vidSize > 0 ? Math.min(100, Math.round((vidLoaded / vidSize) * 100)) : 0;
+              if (progressCallbacks.onVideoProgress) progressCallbacks.onVideoProgress(vidPct);
+            }
+          } else {
+            // Only video
+            const vidPct = vidSize > 0 ? Math.min(100, Math.round((loaded / vidSize) * 100)) : 0;
+            if (progressCallbacks.onVideoProgress) progressCallbacks.onVideoProgress(vidPct);
+          }
+        }
+      });
+      assets.value.unshift(res.data);
+      return res.data;
+    } finally {
+      uploading.value = false;
+    }
+  };
+
   const deleteAsset = async (id) => {
     await api.delete(`/admin/media/${id}`);
     assets.value = assets.value.filter(a => a.id !== id);
@@ -74,6 +125,7 @@ export const useMediaStore = defineStore('media', () => {
     fetchAll,
     uploadImage,
     uploadVideo,
+    uploadVideoWithThumbnail,
     deleteAsset,
     resolveUrl,
     getCopyUrl,
