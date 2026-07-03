@@ -30,18 +30,53 @@
       class="max-w-full max-h-full w-auto h-auto bg-black rounded-xl shadow-2xl"
       playsinline
       :src="src"
+      :poster="thumbnail ?? undefined"
       @contextmenu.prevent
     />
 
     <!-- IFRAME (YouTube / External) -->
-    <iframe
-      v-else
-      class="w-[90vw] h-[90vh] md:w-[80vw] md:h-[80vh] bg-black rounded-xl shadow-2xl"
-      :src="src"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen
-    />
+    <template v-else>
+      <!-- Thumbnail splash shown until user clicks play -->
+      <div
+        v-if="showIframeSplash"
+        class="relative w-[90vw] h-[90vh] md:w-[80vw] md:h-[80vh] rounded-xl overflow-hidden cursor-pointer group"
+        @click="launchIframe"
+      >
+        <!-- Thumbnail image -->
+        <img
+          v-if="thumbnail"
+          :src="thumbnail"
+          alt="Video preview"
+          class="absolute inset-0 w-full h-full object-cover"
+        />
+        <div v-else class="absolute inset-0 bg-zinc-900" />
+
+        <!-- Dark scrim + play button -->
+        <div class="absolute inset-0 bg-black/40 flex items-center justify-center transition-colors group-hover:bg-black/55">
+          <div class="w-20 h-20 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+            <!-- Play triangle -->
+            <svg class="w-8 h-8 text-white ml-1" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Title overlay -->
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+          <p class="text-white text-sm font-semibold truncate">{{ title }}</p>
+        </div>
+      </div>
+
+      <!-- Actual iframe, shown after splash is dismissed -->
+      <iframe
+        v-else
+        class="w-[90vw] h-[90vh] md:w-[80vw] md:h-[80vh] bg-black rounded-xl shadow-2xl"
+        :src="src"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      />
+    </template>
 
     <!-- TOP BAR -->
     <div
@@ -120,12 +155,18 @@
 <script setup>
 import { computed, ref, watch, nextTick } from 'vue';
 import { useVideoPlayerStore } from '@/stores/videoPlayer';
+import { getFullMediaUrl } from '@/api';
 import LoadingDots from './ui/LoadingDots.vue';
 
 const store = useVideoPlayerStore();
 
 const src = computed(() => store.src);
 const title = computed(() => store.title);
+const thumbnail = computed(() => store.thumbnail ? getFullMediaUrl(store.thumbnail) : null);
+
+// Iframe splash: shown before the user clicks play (avoids auto-loading the iframe)
+const showIframeSplash = ref(true);
+const launchIframe = () => { showIframeSplash.value = false; };
 
 const isIframe = computed(() => {
   if (!src.value) return false;
@@ -264,6 +305,8 @@ const stopSaveTimer = () => clearInterval(saveTimer);
 
 // Watch src changes to re-initialize player
 watch(src, async (newSrc) => {
+  // Reset iframe splash whenever a new video is opened
+  showIframeSplash.value = true;
   if (!newSrc) return;
   stopSaveTimer();
   await nextTick();

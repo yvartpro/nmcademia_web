@@ -7,7 +7,15 @@
       @click="openVideo"
       class="aspect-video bg-white rounded-2xl overflow-hidden shadow-glow border border-zinc-200 relative cursor-pointer group flex items-center justify-center"
     >
-      <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556761175-5973dc0f32d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-20 group-hover:opacity-30 transition duration-500"></div>
+      <!-- Thumbnail background -->
+      <img
+        v-if="previewImage"
+        :src="previewImage"
+        alt="Video preview"
+        class="absolute inset-0 w-full h-full object-cover"
+      />
+      <div v-else class="absolute inset-0 bg-zinc-100 group-hover:bg-zinc-200 transition duration-500"></div>
+      <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition duration-300"></div>
       <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent text-white">
         <p class="text-sm font-bold">{{ presentation?.title || 'Country presentation' }}</p>
         <p v-if="presentation?.description" class="text-[11px] mt-1 text-white/80 line-clamp-2">{{ presentation.description }}</p>
@@ -63,9 +71,19 @@ const presentationVideoSrc = computed(() => {
   return props.settings['video_url'] || '';
 });
 
+const previewImage = computed(() => {
+  if (props.presentation?.media?.thumbnailPath) return getFullMediaUrl(props.presentation.media.thumbnailPath);
+  if (props.settings['video_url_thumbnail']) return getFullMediaUrl(props.settings['video_url_thumbnail']);
+  return props.settings['video_thumbnail'] ? getFullMediaUrl(props.settings['video_thumbnail']) : '';
+});
+
 const openVideo = () => {
   if (presentationVideoSrc.value) {
-    videoStore.open({ src: presentationVideoSrc.value, title: props.presentation?.title || 'Product Catalog Presentation' });
+    videoStore.open({
+      src: presentationVideoSrc.value,
+      title: props.presentation?.title || 'Product Catalog Presentation',
+      thumbnail: previewImage.value || null,
+    });
   }
 };
 </script>

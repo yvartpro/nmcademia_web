@@ -13,8 +13,16 @@ const getBackendOrigin = () => {
 };
 
 const getBaseUrl = () => {
-  const envBase = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_BACKEND_ORIGIN;
+  // In development, always use a relative /api path so the Vite proxy
+  // handles routing to the backend. Using an absolute URL here bypasses
+  // the proxy and can send requests to the wrong server.
+  if (import.meta.env.DEV) {
+    return '/api';
+  }
 
+  // In production, use the explicit base URL if provided, otherwise fall
+  // back to the current origin (works when frontend and API are co-hosted).
+  const envBase = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_BACKEND_ORIGIN;
   if (envBase) {
     const normalized = envBase.replace(/\/$/, '');
     return normalized.includes('/api') ? normalized : `${normalized}/api`;

@@ -16,12 +16,18 @@
         @click="openVideo"
         class="aspect-video bg-zinc-900 relative sm:rounded-xl overflow-hidden cursor-pointer group"
       >
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-white/80 group-hover:bg-black/20 transition-colors">
-          <div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-accent transition-all duration-300">
+        <img
+          v-if="lessonThumbnail"
+          :src="lessonThumbnail"
+          alt="Lesson preview"
+          class="absolute inset-0 w-full h-full object-cover opacity-35 group-hover:opacity-45 transition duration-500"
+        />
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-white/80 group-hover:bg-black/25 transition-colors">
+          <div class="w-16 h-16 rounded-full bg-white/15 backdrop-blur flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-accent transition-all duration-300">
             <Play :size="32" class="ml-1" />
           </div>
-          <p class="text-sm">{{ lesson.title }}</p>
-          <p class="text-xs text-white/50 mt-1">{{ lesson.duration }} min</p>
+          <p class="text-sm font-semibold">{{ lesson.title }}</p>
+          <p class="text-xs text-white/60 mt-1">{{ lesson.duration }} min</p>
         </div>
         <div class="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
           <div class="h-full bg-accent" :style="{ width: `${watchProgress}%` }" />
@@ -100,6 +106,7 @@ import UiSectionLabel from '../../components/ui/UiSectionLabel.vue';
 import { useMemberStore } from '../../stores/member';
 import { useVideoPlayerStore } from '../../stores/videoPlayer';
 import { LESSONS } from '../../data/learning';
+import { getFullMediaUrl } from '../../api';
 
 const route = useRoute();
 const memberStore = useMemberStore();
@@ -156,9 +163,31 @@ function markComplete() {
   }
 }
 
+const lessonThumbnail = computed(() => {
+  if (lesson.value?.thumbnail) return getFullMediaUrl(lesson.value.thumbnail);
+  if (course.value?.id) {
+    if (course.value.id === 'leadership-foundations') {
+      return 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+    }
+    if (course.value.id === 'mindset-mastery') {
+      return 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+    }
+    if (course.value.id === 'network-marketing-101') {
+      return 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+    }
+    if (course.value.id === 'digital-prospecting') {
+      return 'https://images.unsplash.com/photo-1557200134-90327ee9fafa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+    }
+  }
+  return 'https://images.unsplash.com/photo-1556761175-5973dc0f32d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+});
+
 function openVideo() {
-  // If lesson doesn't have an actual video URL in the mock data, provide a fallback.
   const src = lesson.value.videoUrl || 'https://www.youtube.com/embed/j-j72H2rJqA';
-  videoStore.open({ src, title: lesson.value.title });
+  videoStore.open({
+    src,
+    title: lesson.value.title,
+    thumbnail: lessonThumbnail.value
+  });
 }
 </script>

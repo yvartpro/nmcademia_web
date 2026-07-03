@@ -22,6 +22,7 @@ export const useVideoPlayerStore = defineStore('videoPlayer', () => {
   const visible = ref(false);
   const src = ref(null);
   const title = ref('');
+  const thumbnail = ref(null);
   const isBuffering = ref(true);
   const bufferProgress = ref(0);
 
@@ -36,9 +37,10 @@ export const useVideoPlayerStore = defineStore('videoPlayer', () => {
     return positions.value[src.value] || 0;
   });
 
-  function open({ src: videoSrc, title: videoTitle = '' }) {
+  function open({ src: videoSrc, title: videoTitle = '', thumbnail: videoThumbnail = null }) {
     src.value = videoSrc;
     title.value = videoTitle;
+    thumbnail.value = videoThumbnail;
     visible.value = true;
   }
 
@@ -70,12 +72,14 @@ export const useVideoPlayerStore = defineStore('videoPlayer', () => {
     visible.value = false;
     src.value = null;
     title.value = '';
+    thumbnail.value = null;
   }
 
   function close() {
     visible.value = false;
     src.value = null;
     title.value = '';
+    thumbnail.value = null;
   }
 
   function setBuffering(buffering) {
@@ -93,6 +97,7 @@ export const useVideoPlayerStore = defineStore('videoPlayer', () => {
     visible,
     src,
     title,
+    thumbnail,
     isBuffering,
     bufferProgress,
     resumeAt,

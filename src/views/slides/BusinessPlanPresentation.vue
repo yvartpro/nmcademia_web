@@ -17,7 +17,6 @@
       <div class="absolute inset-0 bg-black/35"></div>
 
       <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-        <p class="text-sm uppercase tracking-[0.35em] text-white/70 mb-3">Business Plan Presentation</p>
         <h3 class="text-2xl sm:text-3xl font-black text-white mb-4">{{ titleText }}</h3>
         <p v-if="presentation?.description" class="max-w-2xl text-sm text-white/75 mb-6">{{ presentation.description }}</p>
         <button
@@ -53,7 +52,9 @@ const presentationVideoSrc = computed(() => {
 });
 
 const previewImage = computed(() => {
-  if (props.presentation?.thumbnail) return getFullMediaUrl(props.presentation.thumbnail);
+  if (props.presentation?.media?.thumbnailPath) return getFullMediaUrl(props.presentation.media.thumbnailPath);
+  if (props.settings['video_url_thumbnail']) return getFullMediaUrl(props.settings['video_url_thumbnail']);
+  if (props.settings['video_thumbnail']) return getFullMediaUrl(props.settings['video_thumbnail']);
   return props.settings['presentation_cover_image'] ? getFullMediaUrl(props.settings['presentation_cover_image']) : '';
 });
 
@@ -61,6 +62,10 @@ const titleText = computed(() => props.presentation?.title || 'Business Plan Pre
 
 const openVideo = () => {
   if (!presentationVideoSrc.value) return;
-  videoStore.open({ src: presentationVideoSrc.value, title: titleText.value });
+  videoStore.open({
+    src: presentationVideoSrc.value,
+    title: titleText.value,
+    thumbnail: previewImage.value || null,
+  });
 };
 </script>
