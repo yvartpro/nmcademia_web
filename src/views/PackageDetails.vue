@@ -254,8 +254,8 @@ const formatNumber = (num) => {
 };
 
 const goBack = () => {
-  // Save Slide 7 to restore state on returning
-  sessionStorage.setItem('presentation_slide', '7');
+  // Save Slide 8 to restore state on returning
+  sessionStorage.setItem('presentation_slide', '8');
   router.push('/presentation');
 };
 

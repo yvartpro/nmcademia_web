@@ -82,8 +82,13 @@
         :get-price-for-country="getPriceForCountry"
         :format-number="formatNumber"
       />
-      <EntryPackages
+      <BusinessPlanPresentation
         v-else-if="currentSlide === 7"
+        :presentation="presentation"
+        :settings="settings"
+      />
+      <EntryPackages
+        v-else-if="currentSlide === 8"
         :packages="catalogStore.packages"
         :selected-country-code="selectedCountryCode"
         :currency-symbol="currencySymbol"
@@ -92,7 +97,7 @@
         @details="goToDetails"
       />
       <FAQsFinish
-        v-else-if="currentSlide === 8"
+        v-else-if="currentSlide === 9"
         :faqs="rawFAQs"
         :finish-title="finishTitle"
         :finish-message="finishMessage"
@@ -140,6 +145,7 @@ import ProductsCatalog from './slides/ProductsCatalog.vue';
 import DreamTestimonials from './slides/DreamTestimonials.vue';
 import CashflowQuadrant from './slides/CashflowQuadrant.vue';
 import BinaryCompensation from './slides/BinaryCompensation.vue';
+import BusinessPlanPresentation from './slides/BusinessPlanPresentation.vue';
 import EntryPackages from './slides/EntryPackages.vue';
 import FAQsFinish from './slides/FAQsFinish.vue';
 
@@ -155,7 +161,7 @@ const mediaPreview = (asset) => mediaStore.resolveUrl(asset);
 
 // ── Slide state ──────────────────────────────────────────────────────────────
 const currentSlide = ref(1);
-const totalSlides = 8;
+const totalSlides = 9;
 const showPostSignupWelcome = ref(false);
 const activeQuadrant = ref('B');
 const rawFAQs = ref([]);
@@ -204,7 +210,7 @@ const formatNumber = (num) => {
 };
 
 const goToDetails = (slug) => {
-  sessionStorage.setItem('presentation_slide', '7');
+  sessionStorage.setItem('presentation_slide', '8');
   router.push(`/package-details/${slug}`);
 };
 
