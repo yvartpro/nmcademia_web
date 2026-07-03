@@ -78,12 +78,12 @@
                 <h4 class="font-extrabold text-sm" :class="focusedStreamId === stream.id ? 'text-accent' : 'text-zinc-900'">
                   {{ stream.title }}
                 </h4>
-                <span class="text-[10px] text-zinc-500 font-semibold">
+                <span class="text-[13px] text-zinc-500 font-semibold">
                   {{ focusedStreamId === stream.id ? 'Hide Details' : 'Show Details' }}
                 </span>
               </div>
-              <p class="text-xs text-zinc-500 leading-relaxed mt-1 font-light">{{ stream.shortDescription }}</p>
-              <p v-if="stream.longDescription && focusedStreamId === stream.id" class="text-[10px] text-zinc-400 mt-2 border-t border-zinc-200/50 pt-2 font-light">
+              <p class="text-[14px] text-zinc-800 leading-relaxed mt-1">{{ stream.shortDescription }}</p>
+              <p v-if="stream.longDescription && focusedStreamId === stream.id" class="text-[14px] text-zinc-500 mt-2 border-t border-zinc-200/50 pt-2 font-light">
                 {{ stream.longDescription }}
               </p>
             </div>
@@ -115,7 +115,7 @@
               <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Matched Sales (Pairing) Income</h5>
               <div class="space-y-3">
                 <div>
-                  <label class="block text-[10px] text-zinc-400 uppercase font-bold mb-1">Select structural package level:</label>
+                  <label class="block text-[13px] text-zinc-400 uppercase font-bold mb-1">Select structural package level:</label>
                   <select v-model="msbPkgId" class="w-full bg-white border border-zinc-200 rounded p-2 text-xs text-zinc-900">
                     <option v-for="p in packages" :key="p.id" :value="p.id">
                       {{ p.name }} (Pair bonus: {{ currencySymbol }}{{ getPriceForCountry(p, 'matchBonus') }})
@@ -132,7 +132,7 @@
             <!-- Stairstep Matrix -->
             <div v-else-if="stream.slug === 'stairstep'" class="space-y-4">
               <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Stairstep Rank Promotions Matrix</h5>
-              <div class="space-y-2 text-[10px]">
+              <div class="space-y-2 text-[13px]">
                 <div class="flex justify-between items-center p-2 bg-white rounded border border-zinc-200/50">
                   <span class="font-bold text-zinc-300">Silver Executive</span>
                   <span class="text-accent font-black">10 Points Required (Get +10% rebate)</span>
@@ -145,11 +145,11 @@
                   <span class="font-bold text-zinc-300">Global Ambassador</span>
                   <span class="text-accent font-black">1,000 Points Required (Get +30% rebate)</span>
                 </div>
-                <p class="text-[9px] text-zinc-500 italic mt-2">Points accumulate through group orders with no demotions and no time limit.</p>
+                <p class="text-[13px] text-zinc-500 italic mt-2">Points accumulate through group orders with no demotions and no time limit.</p>
               </div>
             </div>
 
-            <div v-else class="text-[10px] text-zinc-400 leading-relaxed font-light">
+            <div v-else class="text-[13px] text-zinc-400 leading-relaxed font-light">
               This earning stream multiplies your passive income through long-term network duplication and team-wide reorders.
             </div>
           </div>
