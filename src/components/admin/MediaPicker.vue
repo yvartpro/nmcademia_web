@@ -12,13 +12,13 @@
       v-if="selectedAsset"
       class="flex items-center gap-3 p-2 bg-[#F4F6F5] border border-zinc-200 rounded-lg"
     >
-      <img
-        v-if="selectedAsset.type === 'image'"
-        :src="mediaStore.resolveUrl(selectedAsset)"
-        :alt="selectedAsset.title"
-        class="w-14 h-14 object-cover rounded border border-zinc-200"
-      />
-
+      <template v-if="selectedAsset.type === 'image' || (selectedAsset.type === 'video' && selectedAsset.thumbnailPath)">
+        <img
+          :src="previewUrl(selectedAsset)"
+          :alt="selectedAsset.title"
+          class="w-14 h-14 object-cover rounded border border-zinc-200"
+        />
+      </template>
       <div
         v-else
         class="w-14 h-14 rounded bg-zinc-200 flex items-center justify-center text-lg"
@@ -67,18 +67,13 @@
       </label>
 
       <!-- Upload Video (select then optionally thumbnail) -->
-      <div v-if="assetType === 'video' || assetType === 'all'" class="flex items-center gap-2">
-        <label class="cursor-pointer bg-white hover:bg-[#F4F6F5] border border-zinc-200 text-[#008A20] font-bold px-3 py-1.5 rounded text-[10px] transition">
-          Select video
-          <input type="file" accept="video/*" class="hidden" @change="onSelectVideo" />
-        </label>
-
-        <button v-if="tempVideoFile" @click="startUpload" class="bg-[#008A20] text-white px-3 py-1.5 rounded text-[10px]">
-          {{ uploading ? 'Uploading…' : 'Start upload' }}
-        </button>
-      </div>
+      <label v-if="assetType === 'video' || assetType === 'all'" class="cursor-pointer bg-white hover:bg-[#F4F6F5] border border-zinc-200 text-[#008A20] font-bold px-3 py-1.5 rounded text-[10px] transition">
+        Select video
+        <input type="file" accept="video/*" class="hidden" @change="onSelectVideo" />
+      </label>
 
       <button
+        v-if="props.showLibraryToggle"
         type="button"
         @click="showLibrary = !showLibrary"
         class="bg-white hover:bg-[#F4F6F5] border border-zinc-200 text-zinc-600 font-bold px-3 py-1.5 rounded text-[10px] transition"
@@ -88,17 +83,31 @@
     </div>
 
     <!-- Video upload staging area: choose thumbnail and show progress -->
-    <div v-if="tempVideoFile" class="mt-3 p-3 border border-zinc-200 rounded-lg bg-white">
-      <div class="flex items-start gap-3">
-        <div class="w-20 h-20 bg-zinc-100 rounded flex items-center justify-center">🎬</div>
+    <div v-if="tempVideoFile" class="mt-4 p-4 border-2 border-[#008A20] rounded-lg bg-[#F4F6F5]">
+      <div class="flex items-start gap-4">
+        <div class="w-20 h-20 bg-white rounded flex items-center justify-center flex-shrink-0">🎬</div>
         <div class="flex-1">
-          <div class="text-sm font-medium">{{ tempVideoFile.name }}</div>
+          <div class="text-sm font-bold text-[#008A20]">{{ tempVideoFile.name }}</div>
           <div class="text-[11px] text-zinc-500">Size: {{ humanFileSize(tempVideoFile.size) }}</div>
 
-          <div class="mt-2">
-            <label class="block text-[11px] text-zinc-600 mb-1">Optional thumbnail</label>
-            <input type="file" accept="image/*" @change="onSelectThumbnail" />
-            <div v-if="tempThumbnailFile" class="text-[11px] mt-1">Selected: {{ tempThumbnailFile.name }} ({{ humanFileSize(tempThumbnailFile.size) }})</div>
+          <div class="mt-3 p-3 bg-white rounded border border-zinc-200">
+            <label class="block text-[11px] font-semibold text-zinc-700 mb-2">📷 Add thumbnail (required)</label>
+            <label class="inline-block cursor-pointer bg-[#008A20] hover:bg-[#006616] text-white px-3 py-1.5 rounded text-[10px] font-bold transition">
+              Choose image
+              <input type="file" accept="image/*" @change="onSelectThumbnail" class="hidden" />
+            </label>
+            <div v-if="tempThumbnailFile" class="text-[11px] mt-2 p-2 bg-green-50 border border-green-200 rounded">
+              ✓ Selected: <strong>{{ tempThumbnailFile.name }}</strong> ({{ humanFileSize(tempThumbnailFile.size) }})
+            </div>
+          </div>
+
+          <div class="mt-3 flex gap-2">
+            <button @click="startUpload" type="button" :disabled="uploading || !tempThumbnailFile" class="bg-[#008A20] hover:bg-[#006616] text-white font-bold px-4 py-2 rounded text-[11px] transition disabled:opacity-50">
+              {{ uploading ? 'Uploading…' : '↑ Start upload' }}
+            </button>
+            <button @click="resetStaging" type="button" :disabled="uploading" class="px-3 py-2 border border-zinc-300 rounded text-[11px] text-zinc-600 hover:bg-zinc-100 disabled:opacity-50">
+              Cancel
+            </button>
           </div>
 
           <div v-if="uploading" class="mt-3 space-y-2">
@@ -121,7 +130,7 @@
 
     <!-- Library -->
     <div
-      v-if="showLibrary"
+      v-if="props.showLibraryToggle && showLibrary"
       class="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-40 overflow-y-auto p-2 bg-[#F4F6F5] border border-zinc-200 rounded-lg custom-scrollbar"
     >
       <button
@@ -136,12 +145,13 @@
             : 'border-zinc-200 hover:border-zinc-400'
         ]"
       >
-        <img
-          v-if="asset.type === 'image'"
-          :src="mediaStore.resolveUrl(asset)"
-          :alt="asset.title"
-          class="w-full h-full object-cover"
-        />
+        <template v-if="asset.type === 'image' || (asset.type === 'video' && asset.thumbnailPath)">
+          <img
+            :src="previewUrl(asset)"
+            :alt="asset.title"
+            class="w-full h-full object-cover"
+          />
+        </template>
 
         <div
           v-else
@@ -186,6 +196,11 @@ const props = defineProps({
     default: 'image',
     validator: value =>
       ['image', 'video', 'all'].includes(value)
+  },
+
+  showLibraryToggle: {
+    type: Boolean,
+    default: true
   }
 });
 
@@ -218,6 +233,14 @@ const selectedAsset = computed(() => {
       mediaStore.getCopyUrl(asset) === props.modelValue
   );
 });
+
+const previewUrl = (asset) => {
+  if (!asset) return '';
+  if (asset.type === 'video' && asset.thumbnailPath) {
+    return mediaStore.resolveUrl(asset.thumbnailPath);
+  }
+  return mediaStore.resolveUrl(asset);
+};
 
 onMounted(() => {
   if (mediaStore.assets.length === 0) {
@@ -294,6 +317,11 @@ const resetStaging = () => {
 
 const startUpload = async () => {
   if (!tempVideoFile.value) return;
+  if (!tempThumbnailFile.value) {
+    alert('Please select a thumbnail image for this video upload.');
+    return;
+  }
+
   uploading.value = true;
   try {
     const asset = await mediaStore.uploadVideoWithThumbnail(

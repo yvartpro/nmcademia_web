@@ -9,14 +9,57 @@
         </p>
       </div>
       <div class="flex gap-2">
-        <label class="cursor-pointer bg-[#008A20] hover:bg-[#006616] text-white font-bold py-2 px-4 rounded-lg text-xs transition">
-          {{ mediaStore.uploading ? 'Uploading…' : '+ Upload image' }}
-          <input type="file" accept="image/*" class="hidden" :disabled="mediaStore.uploading" @change="uploadFile('image', $event)" />
-        </label>
-        <label class="cursor-pointer bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 font-bold py-2 px-4 rounded-lg text-xs transition">
-          + Upload video
-          <input type="file" accept="video/*" class="hidden" :disabled="mediaStore.uploading" @change="uploadFile('video', $event)" />
-        </label>
+        <MediaPicker
+          v-model="selectedMediaId"
+          assetType="all"
+          label="Upload media"
+          :showLibraryToggle="false"
+        />
+      </div>
+    </div>
+
+    <div v-if="pendingVideoFile" class="mt-4 p-4 border-2 border-[#008A20] rounded-lg bg-[#F4F6F5]">
+      <div class="flex items-start gap-4">
+        <div class="w-20 h-20 bg-white rounded flex items-center justify-center flex-shrink-0">🎬</div>
+        <div class="flex-1">
+          <div class="text-sm font-bold text-[#008A20]">{{ pendingVideoFile.name }}</div>
+          <div class="text-[11px] text-zinc-500">Size: {{ humanFileSize(pendingVideoFile.size) }}</div>
+
+          <div class="mt-3 p-3 bg-white rounded border border-zinc-200">
+            <label class="block text-[11px] font-semibold text-zinc-700 mb-2">📷 Add thumbnail (required)</label>
+            <label class="inline-block cursor-pointer bg-[#008A20] hover:bg-[#006616] text-white px-3 py-1.5 rounded text-[10px] font-bold transition">
+              Choose image
+              <input type="file" accept="image/*" @change="onSelectThumbnail" class="hidden" />
+            </label>
+            <div v-if="pendingThumbnailFile" class="text-[11px] mt-2 p-2 bg-green-50 border border-green-200 rounded">
+              ✓ Selected: <strong>{{ pendingThumbnailFile.name }}</strong> ({{ humanFileSize(pendingThumbnailFile.size) }})
+            </div>
+          </div>
+
+          <div class="mt-3 flex gap-2">
+            <button @click="startVideoUpload" type="button" :disabled="mediaStore.uploading || !pendingThumbnailFile" class="bg-[#008A20] hover:bg-[#006616] text-white font-bold px-4 py-2 rounded text-[11px] transition disabled:opacity-50">
+              {{ mediaStore.uploading ? 'Uploading…' : 'Upload video' }}
+            </button>
+            <button @click="resetStaging" type="button" :disabled="mediaStore.uploading" class="px-3 py-2 border border-zinc-300 rounded text-[11px] text-zinc-600 hover:bg-zinc-100 disabled:opacity-50">
+              Cancel
+            </button>
+          </div>
+
+          <div v-if="mediaStore.uploading" class="mt-3 space-y-2">
+            <div>
+              <div class="text-[11px]">Image upload: {{ imageProgress }}%</div>
+              <div class="w-full bg-zinc-100 rounded h-2 overflow-hidden"><div :style="{width: imageProgress + '%'}" class="h-2 bg-green-500"></div></div>
+            </div>
+            <div>
+              <div class="text-[11px]">Video upload: {{ videoProgress }}%</div>
+              <div class="w-full bg-zinc-100 rounded h-2 overflow-hidden"><div :style="{width: videoProgress + '%'}" class="h-2 bg-emerald-600"></div></div>
+            </div>
+            <div>
+              <div class="text-[11px]">Overall: {{ overallProgress }}%</div>
+              <div class="w-full bg-zinc-100 rounded h-2 overflow-hidden"><div :style="{width: overallProgress + '%'}" class="h-2 bg-teal-500"></div></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -89,6 +132,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useMediaStore } from '../../stores/media';
+import MediaPicker from './MediaPicker.vue';
 
 const props = defineProps({
   selectable: {
@@ -105,10 +149,22 @@ const emit = defineEmits(['select', 'update:modelValue']);
 
 const mediaStore = useMediaStore();
 const brokenPreviews = ref(new Set());
+const selectedMediaId = ref(null);
+const pendingVideoFile = ref(null);
+const pendingThumbnailFile = ref(null);
+const videoProgress = ref(0);
+const imageProgress = ref(0);
+const overallProgress = ref(0);
 
 onMounted(() => mediaStore.fetchAll());
 
-const previewUrl = (asset) => mediaStore.resolveUrl(asset);
+const previewUrl = (asset) => {
+  if (!asset) return '';
+  if (asset.type === 'video' && asset.thumbnailPath) {
+    return mediaStore.resolveUrl(asset.thumbnailPath);
+  }
+  return mediaStore.resolveUrl(asset);
+};
 
 const onPreviewError = (asset) => {
   const next = new Set(brokenPreviews.value);
@@ -116,12 +172,63 @@ const onPreviewError = (asset) => {
   brokenPreviews.value = next;
 };
 
+const onSelectVideo = (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  pendingVideoFile.value = file;
+  pendingThumbnailFile.value = null;
+  e.target.value = '';
+};
+
+const onSelectThumbnail = (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  pendingThumbnailFile.value = file;
+  e.target.value = '';
+};
+
+const resetStaging = () => {
+  pendingVideoFile.value = null;
+  pendingThumbnailFile.value = null;
+  videoProgress.value = 0;
+  imageProgress.value = 0;
+  overallProgress.value = 0;
+};
+
+const startVideoUpload = async () => {
+  if (!pendingVideoFile.value) return;
+  if (!pendingThumbnailFile.value) {
+    alert('Please select a thumbnail image for this video upload.');
+    return;
+  }
+
+  try {
+    const asset = await mediaStore.uploadVideoWithThumbnail(
+      pendingVideoFile.value,
+      pendingThumbnailFile.value,
+      { title: pendingVideoFile.value.name },
+      {
+        onVideoProgress: (pct) => { videoProgress.value = pct; },
+        onImageProgress: (pct) => { imageProgress.value = pct; },
+        onOverall: (pct) => { overallProgress.value = pct; }
+      }
+    );
+    resetStaging();
+  } catch {
+    alert('Upload failed.');
+  }
+};
+
 const uploadFile = async (type, e) => {
   const file = e.target.files?.[0];
   if (!file) return;
   try {
-    if (type === 'image') await mediaStore.uploadImage(file, { title: file.name });
-    else await mediaStore.uploadVideo(file, { title: file.name });
+    if (type === 'image') {
+      await mediaStore.uploadImage(file, { title: file.name });
+    } else {
+      pendingVideoFile.value = file;
+      pendingThumbnailFile.value = null;
+    }
   } catch {
     alert('Upload failed.');
   }
