@@ -108,6 +108,22 @@ export const useMediaStore = defineStore('media', () => {
     assets.value = assets.value.filter(a => a.id !== id);
   };
 
+  const updateThumbnail = async (id, imageFile) => {
+    uploading.value = true;
+    try {
+      const formData = new FormData();
+      formData.append('thumbnail', imageFile);
+      const res = await api.patch(`/admin/media/${id}/thumbnail`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      const idx = assets.value.findIndex(a => a.id === id);
+      if (idx !== -1) assets.value[idx] = res.data;
+      return res.data;
+    } finally {
+      uploading.value = false;
+    }
+  };
+
   const resolveUrl = (assetOrPath) => getFullMediaUrl(assetOrPath);
 
   const getCopyUrl = (asset) => {
@@ -126,6 +142,7 @@ export const useMediaStore = defineStore('media', () => {
     uploadImage,
     uploadVideo,
     uploadVideoWithThumbnail,
+    updateThumbnail,
     deleteAsset,
     resolveUrl,
     getCopyUrl,
