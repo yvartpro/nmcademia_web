@@ -24,28 +24,11 @@
           type="button"
           @click="openVideo"
           :disabled="!presentationVideoSrc"
-          class="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold text-zinc-900 hover:bg-accent-light transition disabled:cursor-not-allowed disabled:opacity-50"
+          class="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold text-zinc-50 hover:text-zinc-500 hover:bg-accent-light transition disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <Play size="18" class="text-zinc-900" />
+          <Play size="18" class="hover:text-zinc-900" />
           Watch business plan video
         </button>
-      </div>
-    </div>
-
-    <div class="grid gap-4 sm:grid-cols-2">
-      <div class="p-5 bg-white border border-zinc-200 rounded-3xl shadow-sm">
-        <p class="text-sm font-semibold text-zinc-900 mb-3">What this slide does</p>
-        <ul class="space-y-2 text-sm text-zinc-600 list-disc list-inside">
-          <li>Confirm the written presentation is complete.</li>
-          <li>Switch focus to the video business plan for delivery.</li>
-          <li>See how the model works as a single pitch with your audience.</li>
-        </ul>
-      </div>
-      <div class="p-5 bg-zinc-950/95 border border-zinc-800 rounded-3xl text-white">
-        <p class="text-sm uppercase tracking-[0.3em] text-zinc-400 mb-3">Why watch it now?</p>
-        <p class="text-sm leading-relaxed">
-          The text slides have laid out the story. This video ties the plan, the product, and the compensation system together so you can present with confidence.
-        </p>
       </div>
     </div>
   </div>
