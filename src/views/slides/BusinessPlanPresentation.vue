@@ -17,8 +17,6 @@
       <div class="absolute inset-0 bg-black/35"></div>
 
       <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-        <h3 class="text-2xl sm:text-3xl font-black text-white mb-4">{{ titleText }}</h3>
-        <p v-if="presentation?.description" class="max-w-2xl text-sm text-white/75 mb-6">{{ presentation.description }}</p>
         <button
           type="button"
           @click="openVideo"

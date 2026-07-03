@@ -23,8 +23,13 @@
             {{ field.label }}
             <span class="text-zinc-400 font-mono normal-case">({{ field.key }})</span>
           </label>
+          <JourneysEditor
+            v-if="field.key === 'landing_journeys'"
+            v-model="form[field.key]"
+            class="mt-2"
+          />
           <textarea
-            v-if="field.type === 'textarea' || field.type === 'json'"
+            v-else-if="field.type === 'textarea' || field.type === 'json'"
             v-model="form[field.key]"
             :rows="field.type === 'json' ? 6 : 4"
             :placeholder="field.type === 'json' ? 'JSON array or one option per line' : ''"
@@ -86,10 +91,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useSettingsStore } from '../../stores/settings';
+import { useAlertStore } from '../../stores/alert';
 import { SETTING_GROUPS, JSON_SETTING_KEYS } from '../../config/settingMeta';
 import MediaPicker from './MediaPicker.vue';
+import JourneysEditor from './JourneysEditor.vue';
 
 const settingsStore = useSettingsStore();
+const alertStore = useAlertStore();
 const form = ref({});
 const saving = ref(false);
 const message = ref('');
@@ -107,6 +115,7 @@ const otherKeys = computed(() =>
 );
 
 const jsonToEditable = (key, value) => {
+  if (key === 'landing_journeys') return value || '[]';
   if (!JSON_SETTING_KEYS.has(key) || !value) return value || '';
   try {
     const parsed = JSON.parse(value);
@@ -118,6 +127,7 @@ const jsonToEditable = (key, value) => {
 };
 
 const editableToJson = (key, raw) => {
+  if (key === 'landing_journeys') return raw;
   if (!JSON_SETTING_KEYS.has(key)) return raw;
   const trimmed = (raw || '').trim();
   if (!trimmed) return '[]';
@@ -136,7 +146,13 @@ const loadForm = () => {
   });
   SETTING_GROUPS.forEach(g => {
     g.keys.forEach(f => {
-      if (next[f.key] === undefined) next[f.key] = '';
+      if (next[f.key] === undefined) {
+        // For landing_journeys: preserve whatever the JourneysEditor has already
+        // emitted into form (its own defaults). Don't clobber it with ''.
+        next[f.key] = (f.key === 'landing_journeys' && form.value[f.key])
+          ? form.value[f.key]
+          : '';
+      }
     });
   });
   form.value = next;
@@ -156,7 +172,8 @@ const addCustom = () => {
 };
 
 const removeCustom = async (key) => {
-  if (!confirm(`Remove setting "${key}" from the database?`)) return;
+  const ok = await alertStore.showConfirm(`Remove setting "${key}" from the database?`, 'Confirm deletion', 'Delete', 'Cancel');
+  if (!ok) return;
   await settingsStore.adminDeleteSetting(key);
   delete form.value[key];
 };
@@ -169,18 +186,18 @@ const saveAll = async () => {
     try {
       payload[key] = JSON_SETTING_KEYS.has(key) ? editableToJson(key, raw) : raw;
     } catch {
-      alert(`Invalid JSON for "${key}". Use one item per line or a valid JSON array.`);
+      alertStore.showError(`Invalid JSON for "${key}". Use one item per line or a valid JSON array.`);
       saving.value = false;
       return;
     }
   }
   const ok = await settingsStore.adminUpdateSettings(payload);
   if (ok) {
-    message.value = 'All settings saved.';
+    alertStore.showSuccess('All settings saved.', 'Settings Saved');
     await settingsStore.fetchSettingsDetailed();
     loadForm();
   } else {
-    alert('Save failed.');
+    alertStore.showError('Save failed.');
   }
   saving.value = false;
 };

@@ -28,7 +28,7 @@ export const SETTING_GROUPS = [
       { key: 'mission_statement', label: 'Mission', type: 'textarea' },
       { key: 'objectives_statement', label: 'Objectives', type: 'textarea' },
       { key: 'vision_statement', label: 'Vision', type: 'textarea' },
-      { key: 'landing_journeys', label: 'Journey cards (JSON array)', type: 'json' }
+      { key: 'landing_journeys', label: 'Journey cards (visual editor below)', type: 'json' }
     ]
   },
   {

@@ -174,6 +174,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import { useMediaStore } from '../../stores/media';
+import { useAlertStore } from '../../stores/alert';
 
 const props = defineProps({
   modelValue: {
@@ -207,6 +208,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue']);
 
 const mediaStore = useMediaStore();
+const alertStore = useAlertStore();
 const showLibrary = ref(false);
 
 const filteredAssets = computed(() => {
@@ -318,7 +320,7 @@ const resetStaging = () => {
 const startUpload = async () => {
   if (!tempVideoFile.value) return;
   if (!tempThumbnailFile.value) {
-    alert('Please select a thumbnail image for this video upload.');
+    alertStore.showError('Please select a thumbnail image for this video upload.');
     return;
   }
 
@@ -341,7 +343,7 @@ const startUpload = async () => {
     resetStaging();
   } catch (err) {
     console.error(err);
-    alert('Upload failed. Try again.');
+    alertStore.showError('Upload failed. Try again.');
     uploading.value = false;
   }
 };
@@ -361,7 +363,7 @@ const onUpload = async (type, e) => {
     showLibrary.value = false;
   } catch (err) {
     console.error(err);
-    alert('Upload failed. Try again.');
+    alertStore.showError('Upload failed. Try again.');
   }
 
   e.target.value = '';

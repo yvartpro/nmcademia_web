@@ -20,6 +20,10 @@
               <circle cx="12" cy="12" r="10"/>
               <line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
+            <svg v-else-if="variant === 'success'" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
             <svg v-else width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"/>
               <path d="M12 8v4"/><path d="M12 16h.01"/>
@@ -32,7 +36,7 @@
 
           <!-- Actions -->
           <div class="nma-confirm-actions">
-            <button type="button" class="nma-confirm-cancel" @click="cancel">
+            <button v-if="showCancel" type="button" class="nma-confirm-cancel" @click="cancel">
               {{ cancelLabel }}
             </button>
             <button type="button" class="nma-confirm-ok" :class="variantOkClass" @click="confirm">
@@ -54,7 +58,8 @@ const props = defineProps({
   message:      { type: String, default: 'This action cannot be undone.' },
   confirmLabel: { type: String, default: 'Confirm' },
   cancelLabel:  { type: String, default: 'Cancel' },
-  variant:      { type: String, default: 'danger' }, // danger | warning | info
+  variant:      { type: String, default: 'danger' }, // danger | warning | info | success
+  showCancel:   { type: Boolean, default: true },
 });
 
 const emit = defineEmits(['update:modelValue', 'confirm', 'cancel']);
@@ -63,12 +68,14 @@ const variantIconClass = computed(() => ({
   danger:  'nma-confirm-icon--danger',
   warning: 'nma-confirm-icon--warning',
   info:    'nma-confirm-icon--info',
+  success: 'nma-confirm-icon--success',
 }[props.variant]));
 
 const variantOkClass = computed(() => ({
   danger:  'nma-confirm-ok--danger',
   warning: 'nma-confirm-ok--warning',
   info:    'nma-confirm-ok--info',
+  success: 'nma-confirm-ok--success',
 }[props.variant]));
 
 const confirm = () => {
@@ -125,6 +132,7 @@ watch(() => props.modelValue, (open) => {
 .nma-confirm-icon--danger  { background: rgba(239,68,68,0.1);  color: #ef4444; }
 .nma-confirm-icon--warning { background: rgba(245,158,11,0.1); color: #f59e0b; }
 .nma-confirm-icon--info    { background: rgba(99,102,241,0.1); color: #6366f1; }
+.nma-confirm-icon--success { background: rgba(0,138,32,0.1);    color: #008a20; }
 
 .nma-confirm-title {
   font-size: 1rem;
@@ -175,6 +183,7 @@ watch(() => props.modelValue, (open) => {
 .nma-confirm-ok--danger  { background: #ef4444; color: #fff; }
 .nma-confirm-ok--warning { background: #f59e0b; color: #1f2937; }
 .nma-confirm-ok--info    { background: #6366f1; color: #fff; }
+.nma-confirm-ok--success { background: #008a20; color: #fff; }
 
 /* Transition */
 .confirm-enter-active,

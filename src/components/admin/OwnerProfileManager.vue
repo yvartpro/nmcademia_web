@@ -82,10 +82,12 @@ import { ref, onMounted } from 'vue';
 import api, { getFullMediaUrl } from '@/api';
 import UiButton from '../ui/UiButton.vue';
 import MediaLibrary from './MediaLibrary.vue';
+import { useAlertStore } from '../../stores/alert';
 
 const loading = ref(true);
 const saving = ref(false);
 const showMediaLibrary = ref(false);
+const alertStore = useAlertStore();
 
 const form = ref({
   name: '',
@@ -113,7 +115,7 @@ onMounted(async () => {
     }
   } catch (error) {
     console.error('Error fetching admin profile:', error);
-    alert('Could not load profile data.');
+    alertStore.showError('Could not load profile data.');
   } finally {
     loading.value = false;
   }
@@ -141,10 +143,10 @@ const saveProfile = async () => {
       domainName: form.value.domainName,
       photoId: form.value.photoId
     });
-    alert('Profile updated successfully!');
+    alertStore.showSuccess('Profile updated successfully!');
   } catch (error) {
     console.error('Error updating profile:', error);
-    alert(error.response?.data?.message || 'Failed to update profile.');
+    alertStore.showError(error.response?.data?.message || 'Failed to update profile.');
   } finally {
     saving.value = false;
   }

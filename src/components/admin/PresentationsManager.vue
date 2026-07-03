@@ -120,10 +120,12 @@ import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
 import { useCatalogStore } from '../../stores/catalog';
 import { useMediaStore } from '../../stores/media';
+import { useAlertStore } from '../../stores/alert';
 import MediaPicker from './MediaPicker.vue';
 
 const catalogStore = useCatalogStore();
 const mediaStore = useMediaStore();
+const alertStore = useAlertStore();
 
 const presentations = ref([]);
 const isModalOpen = ref(false);
@@ -198,11 +200,11 @@ const openModal = (presentation = null) => {
 const saveItem = async () => {
   try {
     if (!form.value.mediaId) {
-      alert('Please select a video');
+      alertStore.showError('Please select a video');
       return;
     }
     if (form.value.countryIds.length === 0) {
-      alert('Please select at least one country');
+      alertStore.showError('Please select at least one country');
       return;
     }
 
@@ -216,7 +218,7 @@ const saveItem = async () => {
     await loadPresentations();
   } catch (err) {
     console.error('Error saving presentation:', err);
-    alert('Failed to save presentation');
+    alertStore.showError('Failed to save presentation');
   }
 };
 
@@ -232,7 +234,7 @@ const executeDelete = async () => {
     await loadPresentations();
   } catch (err) {
     console.error('Error deleting presentation:', err);
-    alert('Failed to delete presentation');
+    alertStore.showError('Failed to delete presentation');
   }
 };
 
