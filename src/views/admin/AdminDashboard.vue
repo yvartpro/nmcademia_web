@@ -52,18 +52,35 @@
             <span>Live Chat Support</span>
           </button>
 
-          <button 
-            @click="activeTab = 'settings'"
-            :class="[
-              'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
-              activeTab === 'settings' 
-                ? 'bg-[#008A20]/10 text-[#008A20] border-l-4 border-[#008A20] font-bold' 
-                : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60'
-            ]"
-          >
-            <span>⚙️</span>
-            <span>Site Configurations</span>
-          </button>
+          <div>
+            <button 
+              @click="selectSettingsSection('contact')"
+              :class="[
+                'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+                activeTab === 'settings' 
+                  ? 'bg-[#008A20]/10 text-[#008A20] border-l-4 border-[#008A20] font-bold' 
+                  : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60'
+              ]"
+            >
+              <span>⚙️</span>
+              <span>Site Configurations</span>
+            </button>
+
+            <div v-if="activeTab === 'settings'" class="ml-6 mt-1 space-y-1">
+              <button
+                v-for="item in settingsSectionItems"
+                :key="item.id"
+                type="button"
+                @click="selectSettingsSection(item.id)"
+                class="w-full rounded-md px-3 py-2 text-left text-[11px] font-semibold transition-all"
+                :class="settingsSection === item.id
+                  ? 'bg-white text-[#008A20] shadow-sm'
+                  : 'text-zinc-500 hover:bg-zinc-100 hover:text-[#0A0F0D]'"
+              >
+                {{ item.label }}
+              </button>
+            </div>
+          </div>
           
           <div class="pt-4 pb-2">
             <span class="px-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Content Management</span>
@@ -416,7 +433,7 @@
 
         </div>
 
-        <SiteSettingsManager v-else-if="activeTab === 'settings'" />
+        <SiteSettingsManager v-else-if="activeTab === 'settings'" :active-group="settingsSection" />
 
         <FoundersManager v-else-if="activeTab === 'founders'" />
         <TestimonialsManager v-else-if="activeTab === 'testimonials'" />
@@ -514,6 +531,7 @@ import CountriesManager from '../../components/admin/CountriesManager.vue';
 import MediaLibrary from '../../components/admin/MediaLibrary.vue';
 import PresentationsManager from '../../components/admin/PresentationsManager.vue';
 import SiteSettingsManager from '../../components/admin/SiteSettingsManager.vue';
+import { SETTING_GROUPS } from '../../config/settingMeta';
 import OwnerProfileManager from '../../components/admin/OwnerProfileManager.vue';
 import CountrySelect from '../../components/ui/CountrySelect.vue';
 import AppLogo from '../../components/ui/AppLogo.vue';
@@ -523,6 +541,11 @@ const router = useRouter();
 const authStore = useAuthStore();
 const leadsStore = useLeadsStore();
 const activeTab = ref('profile');
+const settingsSection = ref('contact');
+const settingsSectionItems = SETTING_GROUPS.map(group => ({
+  id: group.id,
+  label: group.title,
+}));
 const chatStore = useChatStore();
 const catalogStore = useCatalogStore();
 const contentStore = useContentStore();
@@ -568,6 +591,11 @@ const tabClass = (tab) => [
     ? 'bg-[#008A20]/10 text-[#008A20] border border-[#008A20]/20'
     : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60 border border-transparent'
 ];
+
+const selectSettingsSection = (section) => {
+  activeTab.value = 'settings';
+  settingsSection.value = section;
+};
 
 const activeChatSessionDetails = computed(() => {
   return chatStore.activeSessions.find(s => s.id === chatStore.selectedSessionId);

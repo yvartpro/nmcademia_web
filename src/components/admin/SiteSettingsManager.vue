@@ -1,15 +1,39 @@
 <template>
-  <div class="max-w-3xl space-y-8 animate-fade-in">
+  <div class="max-w-4xl space-y-6 animate-fade-in">
     <div>
       <h3 class="text-base font-bold text-[#008A20] font-display uppercase tracking-wider">Site text &amp; configuration</h3>
       <p class="text-zinc-500 text-xs mt-2">
-        Edit all copy shown on the landing page and presentation. Changes apply immediately after you save.
+        Edit each section independently to keep the admin experience focused and easy to scan.
       </p>
     </div>
 
-    <form @submit.prevent="saveAll" class="space-y-8">
+    <div class="flex flex-wrap gap-2 border-b border-zinc-200 pb-4">
+      <button
+        v-for="group in SETTING_GROUPS"
+        :key="group.id"
+        type="button"
+        @click="selectedSection = group.id"
+        class="rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide transition"
+        :class="selectedSection === group.id
+          ? 'border-[#008A20] bg-[#008A20]/10 text-[#008A20]'
+          : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:text-[#0A0F0D]'"
+      >
+        {{ group.title }}
+      </button>
+      <button
+        type="button"
+        @click="selectedSection = 'custom'"
+        class="rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-600 transition hover:border-zinc-300 hover:text-[#0A0F0D]"
+        :class="selectedSection === 'custom' ? 'border-[#008A20] bg-[#008A20]/10 text-[#008A20]' : ''"
+      >
+        Custom settings
+      </button>
+    </div>
+
+    <form @submit.prevent="saveAll" class="space-y-6">
       <section
         v-for="group in SETTING_GROUPS"
+        v-show="selectedSection === group.id"
         :key="group.id"
         class="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm space-y-4"
       >
@@ -52,7 +76,7 @@
         </div>
       </section>
 
-      <section v-if="otherKeys.length" class="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm space-y-4">
+      <section v-if="selectedSection === 'custom' && otherKeys.length" class="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm space-y-4">
         <h4 class="text-sm font-bold text-[#0A0F0D]">Other / custom settings</h4>
         <p class="text-zinc-500 text-[10px]">Keys created outside the groups above (or from the database).</p>
         <div v-for="key in otherKeys" :key="key" class="space-y-1">
@@ -64,7 +88,7 @@
         </div>
       </section>
 
-      <section class="bg-[#F4F6F5] border border-dashed border-zinc-300 rounded-xl p-6 space-y-3">
+      <section v-if="selectedSection === 'custom'" class="bg-[#F4F6F5] border border-dashed border-zinc-300 rounded-xl p-6 space-y-3">
         <h4 class="text-sm font-bold text-zinc-500">Add custom setting</h4>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
           <input v-model="newKey" placeholder="setting_key" class="bg-white border border-zinc-200 rounded p-2 text-xs text-[#0A0F0D] font-mono focus:outline-none focus:border-[#008A20]" />
@@ -89,12 +113,16 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useSettingsStore } from '../../stores/settings';
 import { useAlertStore } from '../../stores/alert';
 import { SETTING_GROUPS, JSON_SETTING_KEYS } from '../../config/settingMeta';
 import MediaPicker from './MediaPicker.vue';
 import JourneysEditor from './JourneysEditor.vue';
+
+const props = defineProps({
+  activeGroup: { type: String, default: 'contact' },
+});
 
 const settingsStore = useSettingsStore();
 const alertStore = useAlertStore();
@@ -103,6 +131,7 @@ const saving = ref(false);
 const message = ref('');
 const newKey = ref('');
 const newValue = ref('');
+const selectedSection = ref(props.activeGroup || 'contact');
 
 const knownKeys = computed(() => {
   const keys = new Set();
@@ -157,6 +186,10 @@ const loadForm = () => {
   });
   form.value = next;
 };
+
+watch(() => props.activeGroup, (value) => {
+  if (value) selectedSection.value = value;
+});
 
 onMounted(async () => {
   await settingsStore.fetchSettingsDetailed();
