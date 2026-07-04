@@ -133,7 +133,7 @@
                   </select>
                 </div>
                 <div class="border-t border-white/5 pt-3 flex justify-between items-center text-xs">
-                  <span class="font-bold text-zinc-350">Total DRB Earnings:</span>
+                  <span class="font-bold text-zinc-600">Total DRB Earnings:</span>
                   <span class="font-mono text-base font-black text-amber-400">{{ currencySymbol }}{{ formatNumber(simulatedDRB) }}</span>
                 </div>
               </div>
@@ -152,7 +152,7 @@
                   </select>
                 </div>
                 <div class="border-t border-white/5 pt-3 flex justify-between items-center text-xs">
-                  <span class="font-bold text-zinc-350">Total MSB Earnings:</span>
+                  <span class="font-bold text-zinc-600">Total MSB Earnings:</span>
                   <span class="font-mono text-base font-black text-amber-400">{{ currencySymbol }}{{ formatNumber(simulatedMSB) }}</span>
                 </div>
               </div>
@@ -163,18 +163,18 @@
               <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Stairstep Rank Promotions Matrix</h5>
               <div class="space-y-2 text-[13px]">
                 <div class="flex justify-between items-center p-2 bg-white rounded border border-zinc-200/50">
-                  <span class="font-bold text-zinc-300">Silver Executive</span>
+                  <span class="font-bold text-zinc-600">Silver Executive</span>
                   <span class="text-accent font-black">10 Points Required (Get +10% rebate)</span>
                 </div>
                 <div class="flex justify-between items-center p-2 bg-white rounded border border-zinc-200/50">
-                  <span class="font-bold text-zinc-300">Gold Executive</span>
+                  <span class="font-bold text-zinc-600">Gold Executive</span>
                   <span class="text-accent font-black">100 Points Required (Get +20% rebate)</span>
                 </div>
                 <div class="flex justify-between items-center p-2 bg-white rounded border border-zinc-200/50">
-                  <span class="font-bold text-zinc-300">Global Ambassador</span>
+                  <span class="font-bold text-zinc-600">Global Ambassador</span>
                   <span class="text-accent font-black">1,000 Points Required (Get +30% rebate)</span>
                 </div>
-                <p class="text-[13px] text-zinc-500 italic mt-2">Points accumulate through group orders with no demotions and no time limit.</p>
+                <p class="text-[13px] text-zinc-600 italic mt-2">Points accumulate through group orders with no demotions and no time limit.</p>
               </div>
             </div>
 
