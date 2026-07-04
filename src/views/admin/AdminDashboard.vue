@@ -10,7 +10,8 @@
     <aside
       :class="[
         'fixed inset-y-0 left-0 z-40 w-72 bg-[#F4F6F5] border-r border-zinc-200 flex flex-col justify-between shrink-0 transform transition-transform duration-300 ease-out',
-        isSidebarOpen ? 'translate-x-0 lg:translate-x-0' : '-translate-x-full lg:-translate-x-full'
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
+        'lg:relative lg:translate-x-0 lg:w-64'
       ]"
     >
       <div>
@@ -591,7 +592,7 @@ const joinedLeads = computed(() => leadsStore.leads.filter(l => l.status === 'Jo
 const leadsFilter = ref({ country: '', status: '' });
 const adminReplyText = ref('');
 const chatMessagesContainer = ref(null);
-const isSidebarOpen = ref(typeof window !== 'undefined' ? window.innerWidth >= 1024 : true);
+const isSidebarOpen = ref(true);
 
 // Details Modal state
 const detailsModal = ref({
@@ -631,13 +632,36 @@ const selectSettingsSection = (section) => {
   closeSidebar();
 };
 
+// Only allow toggling on small screens. On large screens the sidebar remains visible.
 const toggleSidebar = () => {
+  if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+    isSidebarOpen.value = true; // keep visible on large screens
+    return;
+  }
   isSidebarOpen.value = !isSidebarOpen.value;
 };
 
 const closeSidebar = () => {
+  if (typeof window !== 'undefined' && window.innerWidth >= 1024) return;
   isSidebarOpen.value = false;
 };
+
+// Keep sidebar open on large screens and responsive to resizes.
+const handleResize = () => {
+  if (typeof window === 'undefined') return;
+  if (window.innerWidth >= 1024) {
+    isSidebarOpen.value = true;
+  }
+};
+
+onMounted(() => {
+  handleResize();
+  window.addEventListener('resize', handleResize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
+});
 
 const activeChatSessionDetails = computed(() => {
   return chatStore.activeSessions.find(s => s.id === chatStore.selectedSessionId);
