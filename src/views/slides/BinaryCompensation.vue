@@ -28,6 +28,35 @@
       </div>
     </div>
 
+    <!-- Country presentation video (only when assigned to selected country) -->
+    <div v-if="presentationVideoSrc" class="space-y-3">
+      <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-500">Country Presentation</h3>
+      <div
+        @click="openPresentationVideo"
+        class="aspect-video rounded-2xl overflow-hidden border border-zinc-200 bg-white shadow-sm relative cursor-pointer group"
+      >
+        <img
+          v-if="presentationPreviewImage"
+          :src="presentationPreviewImage"
+          :alt="presentation?.title || 'Presentation video'"
+          class="absolute inset-0 w-full h-full object-cover"
+        />
+        <div v-else class="absolute inset-0 bg-zinc-100 group-hover:bg-zinc-200 transition duration-500" />
+        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition duration-300" />
+        <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent text-white">
+          <p class="text-sm font-bold">{{ presentation?.title || 'Country presentation' }}</p>
+          <p v-if="presentation?.description" class="text-[11px] mt-1 text-white/80 line-clamp-2">
+            {{ presentation.description }}
+          </p>
+        </div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-accent transition-all duration-300">
+            <Play :size="28" class="text-white ml-1" />
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Earning Streams -->
     <div class="space-y-4">
       <div class="flex justify-between items-end">
@@ -161,6 +190,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { Play } from 'lucide-vue-next';
 import { getFullMediaUrl } from '../../api';
 import { useVideoPlayerStore } from '@/stores/videoPlayer';
 
@@ -184,6 +214,7 @@ const openVideo = (stream) => {
 
 const props = defineProps({
   settings: { type: Object, required: true },
+  presentation: { type: Object, default: null },
   earningStreams: { type: Array, default: () => [] },
   packages: { type: Array, default: () => [] },
   currencySymbol: { type: String, default: '₦' },
@@ -192,6 +223,27 @@ const props = defineProps({
   getPriceForCountry: { type: Function, required: true },
   formatNumber: { type: Function, required: true },
 });
+
+const presentationVideoSrc = computed(() => {
+  if (props.presentation?.media) return getFullMediaUrl(props.presentation.media);
+  return '';
+});
+
+const presentationPreviewImage = computed(() => {
+  if (props.presentation?.media?.thumbnailPath) {
+    return getFullMediaUrl(props.presentation.media.thumbnailPath);
+  }
+  return '';
+});
+
+const openPresentationVideo = () => {
+  if (!presentationVideoSrc.value) return;
+  videoStore.open({
+    src: presentationVideoSrc.value,
+    title: props.presentation?.title || 'Country Presentation',
+    thumbnail: presentationPreviewImage.value || null,
+  });
+};
 
 // Stream focus
 const focusedStreamId = ref(null);

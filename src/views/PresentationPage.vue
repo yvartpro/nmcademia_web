@@ -81,6 +81,7 @@
       <BinaryCompensation
         v-else-if="currentSlide === 7"
         :settings="settings"
+        :presentation="presentation"
         :earning-streams="earningStreams"
         :packages="catalogStore.packages"
         :currency-symbol="currencySymbol"
