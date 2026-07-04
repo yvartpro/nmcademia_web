@@ -178,7 +178,7 @@
               </div>
             </div>
 
-            <div v-else class="text-[13px] text-zinc-400 leading-relaxed font-light">
+            <div v-else class="text-[13px] text-zinc-700 leading-relaxed font-light">
               This earning stream multiplies your passive income through long-term network duplication and team-wide reorders.
             </div>
           </div>
