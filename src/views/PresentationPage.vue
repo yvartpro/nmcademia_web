@@ -37,9 +37,9 @@
           <h4 class="text-sm font-extrabold text-zinc-900 mt-0.5">{{ memberStore.journey.title }}</h4>
           <p class="text-xs text-zinc-500 mt-1">{{ memberStore.journey.welcomeLine }}</p>
         </div>
-        <UiButton v-if="memberStore.canFeature('courses')" variant="outline" size="sm" to="/app/training" class="shrink-0">
+        <!-- <UiButton v-if="memberStore.canFeature('courses')" variant="outline" size="sm" to="/app/training" class="shrink-0">
           Go to Training Curriculum
-        </UiButton>
+        </UiButton> -->
       </div>
     </div>
 
