@@ -4,7 +4,7 @@
       <h2 class="text-3xl sm:text-4xl font-display font-black text-zinc-900 leading-tight">
         Your Launch Investment
       </h2>
-      <p class="text-sm text-zinc-500 leading-relaxed max-w-xl">
+      <p class="text-base text-zinc-600 leading-relaxed max-w-xl">
         Packages available in {{ selectedCountryCode }} — prices shown in {{ currencySymbol }}.
       </p>
     </div>
@@ -25,7 +25,7 @@
 
         <div class="flex flex-col flex-1 p-5 space-y-2">
           <h3 class="font-extrabold text-lg text-zinc-900">{{ pkg.name }}</h3>
-          <p v-if="pkg.description" class="text-xs text-zinc-500 line-clamp-2">{{ pkg.description }}</p>
+          <p v-if="pkg.description" class="text-sm text-zinc-600 line-clamp-2">{{ pkg.description }}</p>
           <p class="pt-2 font-black text-2xl text-accent">
             {{ currencySymbol }}{{ getPriceForCountry(pkg, 'price') }}
           </p>
@@ -36,7 +36,7 @@
     <div v-else class="text-center py-16 text-zinc-400">
       <div class="text-5xl mb-4">🌍</div>
       <p class="font-semibold text-zinc-500">No packages available for <strong>{{ selectedCountryCode }}</strong>.</p>
-      <p class="text-xs mt-1">Switch country in the top bar to see other options.</p>
+      <p class="text-sm mt-1">Switch country in the top bar to see other options.</p>
     </div>
   </div>
 </template>

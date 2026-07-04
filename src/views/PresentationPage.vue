@@ -25,14 +25,14 @@
     <!-- Post-signup journey welcome -->
     <div v-if="memberStore.isRegistered" class="max-w-3xl mx-auto px-4 sm:px-6 pt-6 space-y-4">
       <div v-if="showPostSignupWelcome" class="p-4 bg-accent/10 border border-accent/20 rounded-xl">
-        <p class="text-sm font-semibold text-zinc-900">
+        <p class="text-base font-semibold text-zinc-900">
           Welcome back, leader. Review this business overview, and transition to your training curriculum when ready.
         </p>
       </div>
       <div class="nma-card-glass p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h4 class="text-sm font-extrabold text-zinc-900 mt-0.5">{{ memberStore.journey.title }}</h4>
-          <p class="text-xs text-zinc-500 mt-1">{{ memberStore.journey.welcomeLine }}</p>
+          <h4 class="text-base font-extrabold text-zinc-900 mt-0.5">{{ memberStore.journey.title }}</h4>
+          <p class="text-sm text-zinc-500 mt-1">{{ memberStore.journey.welcomeLine }}</p>
         </div>
         <!-- <UiButton v-if="memberStore.canFeature('courses')" variant="outline" size="sm" to="/app/training" class="shrink-0">
           Go to Training Curriculum

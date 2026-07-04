@@ -2,7 +2,7 @@
   <div class="motion-safe:animate-fade-in space-y-8">
     <div class="space-y-4">
       <h2 class="text-2xl sm:text-3xl font-display font-black">What is Your Dream?</h2>
-      <p class="text-sm leading-relaxed text-zinc-650 bg-accent/5 p-6 rounded-xl border border-accent/10">
+      <p class="text-base leading-relaxed text-zinc-700 bg-accent/5 p-6 rounded-xl border border-accent/10">
         {{ settings['dream_section_text'] }}
       </p>
     </div>
@@ -19,8 +19,8 @@
             {{ test.name.split(' ').map(n => n[0]).join('') }}
           </div>
           <div class="space-y-2">
-            <p class="text-sm text-zinc-650 italic">"{{ test.quote }}"</p>
-            <h4 class="font-bold text-xs">{{ test.name }}</h4>
+            <p class="text-base text-zinc-700 italic">"{{ test.quote }}"</p>
+            <h4 class="font-bold text-sm">{{ test.name }}</h4>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
   <div class="motion-safe:animate-fade-in space-y-10">
     <div class="space-y-2">
       <h2 class="text-2xl sm:text-3xl font-display font-black">Visionary Founders</h2>
-      <p class="text-xs text-zinc-500 whitespace-pre-line">{{ settings['partner_company_profile'] }}</p>
+      <p class="text-base text-zinc-600 whitespace-pre-line">{{ settings['partner_company_profile'] }}</p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -23,10 +23,10 @@
           </span>
         </div>
         <div>
-          <h4 class="font-extrabold text-sm text-zinc-900">{{ founder.name }}</h4>
-          <p class="text-[10px] text-accent font-bold uppercase tracking-wider">{{ founder.role }}</p>
+          <h4 class="font-extrabold text-base text-zinc-900">{{ founder.name }}</h4>
+          <p class="text-sm text-accent font-bold uppercase tracking-wider">{{ founder.role }}</p>
         </div>
-        <p class="text-xs text-zinc-500 leading-relaxed font-light">{{ founder.bio }}</p>
+        <p class="text-base text-zinc-600 leading-relaxed">{{ founder.bio }}</p>
       </div>
     </div>
 
@@ -48,8 +48,8 @@
             <span v-else class="text-slate-800 font-bold text-xs">{{ partner.name.substring(0, 3) }}</span>
           </div>
           <div>
-            <h5 class="font-bold text-sm">{{ partner.name }}</h5>
-            <p class="text-[10px] text-zinc-500">{{ partner.country }}</p>
+            <h5 class="font-bold text-base">{{ partner.name }}</h5>
+            <p class="text-sm text-zinc-500">{{ partner.country }}</p>
           </div>
         </div>
       </div>

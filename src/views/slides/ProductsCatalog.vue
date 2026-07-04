@@ -17,14 +17,14 @@
       <div v-else class="absolute inset-0 bg-zinc-100 group-hover:bg-zinc-200 transition duration-500"></div>
       <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition duration-300"></div>
       <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent text-white">
-        <p class="text-sm font-bold">{{ presentation?.title || 'Country presentation' }}</p>
-        <p v-if="presentation?.description" class="text-[11px] mt-1 text-white/80 line-clamp-2">{{ presentation.description }}</p>
+        <p class="text-base font-bold">{{ presentation?.title || 'Country presentation' }}</p>
+        <p v-if="presentation?.description" class="text-sm mt-1 text-white/80 line-clamp-2">{{ presentation.description }}</p>
       </div>
       <div class="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center z-10 shadow-lg group-hover:scale-110 group-hover:bg-accent transition-all duration-300">
         <Play :size="28" class="text-white ml-1" />
       </div>
     </div>
-    <div v-else class="aspect-video bg-white rounded-2xl overflow-hidden shadow-glow border border-zinc-200 flex flex-col items-center justify-center text-zinc-500 text-sm">
+    <div v-else class="aspect-video bg-white rounded-2xl overflow-hidden shadow-glow border border-zinc-200 flex flex-col items-center justify-center text-zinc-500 text-base">
       Video presentation goes here
     </div>
 
@@ -42,8 +42,8 @@
             class="w-full h-full object-contain"
           />
         </div>
-        <h4 class="font-extrabold text-sm text-zinc-900">{{ product.name }}</h4>
-        <p class="text-xs text-zinc-500 line-clamp-2 mt-2 font-light">{{ product.description }}</p>
+        <h4 class="font-extrabold text-base text-zinc-900">{{ product.name }}</h4>
+        <p class="text-sm text-zinc-600 line-clamp-2 mt-2">{{ product.description }}</p>
       </div>
     </div>
   </div>

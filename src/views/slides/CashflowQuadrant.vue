@@ -2,7 +2,7 @@
   <div class="motion-safe:animate-fade-in space-y-8">
     <div class="space-y-2">
       <h2 class="text-2xl sm:text-3xl font-display font-black">The Cashflow Quadrant</h2>
-      <p class="text-xs text-zinc-500 leading-relaxed">{{ settings['cashflow_quadrant_explanation'] }}</p>
+      <p class="text-base text-zinc-600 leading-relaxed">{{ settings['cashflow_quadrant_explanation'] }}</p>
     </div>
 
     <!-- Interactive Quadrant -->
@@ -125,12 +125,12 @@
     <!-- Active Quadrant Info Panel -->
     <div v-if="activeQuadrantInfo" class="nma-card p-6 border-accent/30 motion-safe:animate-fade-in">
       <h4 class="font-display font-extrabold text-lg text-accent mb-2">{{ activeQuadrantInfo.title }}</h4>
-      <p class="text-sm text-zinc-650 mb-4 leading-relaxed">{{ activeQuadrantInfo.description }}</p>
-      <div class="flex items-center gap-2 text-xs border-t border-zinc-200/50 pt-3">
+      <p class="text-base text-zinc-700 mb-4 leading-relaxed">{{ activeQuadrantInfo.description }}</p>
+      <div class="flex items-center gap-2 text-sm border-t border-zinc-200/50 pt-3">
         <span class="text-zinc-500 font-bold uppercase tracking-wider">Leverage Factor:</span>
         <span class="text-zinc-700 font-semibold">{{ activeQuadrantInfo.leverage }}</span>
       </div>
-      <p v-if="activeQuadrant === 'B'" class="mt-4 text-xs font-bold text-accent uppercase tracking-wider">
+      <p v-if="activeQuadrant === 'B'" class="mt-4 text-sm font-bold text-accent uppercase tracking-wider">
         ★ Network Marketing = B Quadrant
       </p>
     </div>

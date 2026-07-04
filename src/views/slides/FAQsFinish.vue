@@ -16,7 +16,7 @@
           @click="toggleFAQ(faq.id)"
           class="w-full text-left p-4 flex items-center justify-between hover:bg-zinc-100 transition"
         >
-          <span class="font-bold text-xs sm:text-sm text-zinc-900 pr-4">{{ faq.question }}</span>
+          <span class="font-bold text-base text-zinc-900 pr-4">{{ faq.question }}</span>
           <ChevronDown
             :size="16"
             class="text-zinc-400 shrink-0 transition-transform"
@@ -25,7 +25,7 @@
         </button>
         <div
           v-if="openFAQs.includes(faq.id)"
-          class="px-4 pb-4 text-xs sm:text-sm text-zinc-650 leading-relaxed font-light whitespace-pre-line animate-fade-in"
+          class="px-4 pb-4 text-base text-zinc-700 leading-relaxed whitespace-pre-line animate-fade-in"
         >
           {{ faq.answer }}
         </div>
@@ -35,7 +35,7 @@
     <!-- CTA Card -->
     <div class="nma-card p-6 sm:p-8 text-center space-y-5 border-accent/30 bg-gradient-to-br from-indigo-950/20 to-accent/5">
       <h3 class="font-display font-extrabold text-xl text-accent">{{ finishTitle }}</h3>
-      <p class="text-xs sm:text-sm text-zinc-650 max-w-lg mx-auto">{{ finishMessage }}</p>
+      <p class="text-base text-zinc-700 max-w-lg mx-auto">{{ finishMessage }}</p>
 
       <div v-if="showOwnerMentor" class="text-left pt-2">
         <OwnerMentorCard cta-label="Contact Coordinator Coach" />

@@ -3,7 +3,7 @@
     <h2 class="text-2xl sm:text-3xl font-display font-black">Understanding the Binary Structure</h2>
 
     <div class="p-5 bg-white border border-zinc-200 rounded-xl space-y-4">
-      <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed">
+      <p class="text-base text-zinc-600 leading-relaxed">
         A <strong>Binary Structure</strong> means you build only two sides: a <strong>Left Team</strong> and a
         <strong>Right Team</strong>. Every time you place a package referral on the Left and another on the Right,
         they pair to generate a <strong>Pairing Match Bonus (MSB)</strong>.
@@ -14,12 +14,12 @@
         <div class="flex items-start gap-3">
           <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-600 text-sm font-semibold">▶</span>
           <div class="flex-grow">
-            <p class="text-sm font-bold text-zinc-900">How the Binary Structure Really Works</p>
-            <p class="text-xs text-zinc-500 mt-1">Watch this short video to understand how the binary structure works and how pairings generate income.</p>
+            <p class="text-base font-bold text-zinc-900">How the Binary Structure Really Works</p>
+            <p class="text-sm text-zinc-600 mt-1">Watch this short video to understand how the binary structure works and how pairings generate income.</p>
             <button
               type="button"
               @click="openBinaryTreeVideo"
-              class="inline-flex items-center justify-center rounded-full bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 transition mt-3"
+              class="inline-flex items-center justify-center rounded-full bg-blue-600 px-4 py-2 text-sm font-bold text-white hover:bg-blue-700 transition mt-3"
             >
               Watch Video
             </button>
@@ -30,7 +30,7 @@
 
     <!-- Country presentation video (only when assigned to selected country) -->
     <div v-if="presentationVideoSrc" class="space-y-3">
-      <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-500">Country Presentation</h3>
+      <h3 class="text-base font-bold uppercase tracking-wider text-zinc-500">Country Presentation</h3>
       <div
         @click="openPresentationVideo"
         class="aspect-video rounded-2xl overflow-hidden border border-zinc-200 bg-white shadow-sm relative cursor-pointer group"
@@ -44,8 +44,8 @@
         <div v-else class="absolute inset-0 bg-zinc-100 group-hover:bg-zinc-200 transition duration-500" />
         <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition duration-300" />
         <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent text-white">
-          <p class="text-sm font-bold">{{ presentation?.title || 'Country presentation' }}</p>
-          <p v-if="presentation?.description" class="text-[11px] mt-1 text-white/80 line-clamp-2">
+          <p class="text-base font-bold">{{ presentation?.title || 'Country presentation' }}</p>
+          <p v-if="presentation?.description" class="text-sm mt-1 text-white/80 line-clamp-2">
             {{ presentation.description }}
           </p>
         </div>
@@ -60,9 +60,9 @@
     <!-- Earning Streams -->
     <div class="space-y-4">
       <div class="flex justify-between items-end">
-        <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-500">Earning Streams Breakdown</h3>
+        <h3 class="text-base font-bold uppercase tracking-wider text-zinc-500">Earning Streams Breakdown</h3>
       </div>
-      <p class="text-xs text-zinc-400">Click on any earning stream to show detailed explanations and dynamic calculators.</p>
+      <p class="text-sm text-zinc-500">Click on any earning stream to show detailed explanations and dynamic calculators.</p>
 
       <div class="space-y-3">
         <div
@@ -85,14 +85,14 @@
                 <div class="flex items-start gap-3">
                   <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-red-500/10 text-red-600 text-sm font-semibold">▶</span>
                   <div>
-                    <p class="text-sm font-bold text-zinc-900">Video walkthrough available</p>
-                    <p class="text-xs text-zinc-500 mt-1">Open this short explainer video to see the stream in action and learn the payout logic.</p>
+                    <p class="text-base font-bold text-zinc-900">Video walkthrough available</p>
+                    <p class="text-sm text-zinc-600 mt-1">Open this short explainer video to see the stream in action and learn the payout logic.</p>
                   </div>
                 </div>
                 <button
                   type="button"
                   @click.stop="openVideo(stream)"
-                  class="inline-flex items-center justify-center rounded-full bg-accent px-4 py-2 text-xs font-bold text-zinc-900 hover:bg-accent-light transition"
+                  class="inline-flex items-center justify-center rounded-full bg-accent px-4 py-2 text-sm font-bold text-zinc-900 hover:bg-accent-light transition"
                 >
                   Watch the stream video
                 </button>
@@ -104,15 +104,15 @@
             <span class="text-2xl">{{ stream.icon || '💰' }}</span>
             <div class="flex-grow">
               <div class="flex justify-between items-center">
-                <h4 class="font-extrabold text-sm" :class="focusedStreamId === stream.id ? 'text-accent' : 'text-zinc-900'">
+                <h4 class="font-extrabold text-base" :class="focusedStreamId === stream.id ? 'text-accent' : 'text-zinc-900'">
                   {{ stream.title }}
                 </h4>
                 <span class="text-[13px] text-zinc-500 font-semibold">
                   {{ focusedStreamId === stream.id ? 'Hide Details' : 'Show Details' }}
                 </span>
               </div>
-              <p class="text-[14px] text-zinc-800 leading-relaxed mt-1">{{ stream.shortDescription }}</p>
-              <p v-if="stream.longDescription && focusedStreamId === stream.id" class="text-[14px] text-zinc-500 mt-2 border-t border-zinc-200/50 pt-2 font-light">
+              <p class="text-base text-zinc-900 leading-relaxed mt-1">{{ stream.shortDescription }}</p>
+              <p v-if="stream.longDescription && focusedStreamId === stream.id" class="text-sm text-zinc-600 mt-2 border-t border-zinc-200/50 pt-2">
                 {{ stream.longDescription }}
               </p>
             </div>

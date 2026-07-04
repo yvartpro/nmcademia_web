@@ -4,7 +4,7 @@
       <h2 class="text-3xl sm:text-4xl font-display font-black text-zinc-900 leading-tight">
         Entry Packages for {{ selectedCountryCode }}
       </h2>
-      <p class="text-sm text-zinc-500 leading-relaxed max-w-xl">
+      <p class="text-base text-zinc-600 leading-relaxed max-w-xl">
         Select the tier that fits your goals. Each package unlocks binary positioning and sets your referral reward level.
       </p>
     </div>
@@ -44,7 +44,7 @@
 
         <!-- Body -->
         <div class="flex flex-col flex-1 p-5 space-y-4">
-          <p v-if="pkg.description" class="text-xs text-zinc-500 leading-relaxed line-clamp-3">
+          <p v-if="pkg.description" class="text-sm text-zinc-600 leading-relaxed line-clamp-3">
             {{ pkg.description }}
           </p>
 
@@ -78,7 +78,7 @@
     <div v-else class="text-center py-16 text-zinc-400">
       <div class="text-5xl mb-4">🌍</div>
       <p class="font-semibold text-zinc-500">No entry packages for <strong>{{ selectedCountryCode }}</strong>.</p>
-      <p class="text-xs mt-1">Switch country in the top bar or contact your coordinator.</p>
+      <p class="text-sm mt-1">Switch country in the top bar or contact your coordinator.</p>
     </div>
   </div>
 </template>

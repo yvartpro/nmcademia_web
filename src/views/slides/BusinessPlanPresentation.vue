@@ -2,8 +2,8 @@
   <div class="motion-safe:animate-fade-in space-y-8">
     <div class="space-y-4">
       <h2 class="text-4xl sm:text-5xl font-display font-black text-accent">Business Plan Video Overview</h2>
-      <p class="text-sm sm:text-base text-zinc-600 leading-relaxed">
-        You’ve completed the text presentation. Now watch the business plan video to see the full system, the launch story and the team-building path in one complete view.
+      <p class="text-base sm:text-lg text-zinc-600 leading-relaxed">
+        You’ve completed the written overview. Watch the business plan video to see how the full system, the launch story, and the team-building path connect in one clear journey.
       </p>
     </div>
 
@@ -21,7 +21,7 @@
           type="button"
           @click="openVideo"
           :disabled="!presentationVideoSrc"
-          class="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold text-zinc-50 hover:text-zinc-500 hover:bg-accent-light transition disabled:cursor-not-allowed disabled:opacity-50"
+          class="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-base font-bold text-zinc-50 hover:text-zinc-500 hover:bg-accent-light transition disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Play size="18" class="hover:text-zinc-900" />
           Watch business plan video
