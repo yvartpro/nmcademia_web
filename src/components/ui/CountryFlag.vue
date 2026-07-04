@@ -6,7 +6,7 @@
     role="img"
     :aria-label="title || 'Country flag'"
   >
-    <span :class="flagClasses" class="block w-full h-full bg-cover bg-center" />
+    <span :class="flagClasses" class="block w-full h-full bg-contain bg-center bg-no-repeat" />
   </span>
 </template>
 
