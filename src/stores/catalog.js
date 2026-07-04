@@ -13,6 +13,11 @@ export const useCatalogStore = defineStore('catalog', () => {
     return countries.value.find(c => c.code === selectedCountryCode.value) || countries.value[0];
   });
 
+  const countryByCode = (code) => {
+    if (!code) return null;
+    return countries.value.find((c) => c.code === code) || null;
+  };
+
   const fetchCountries = async () => {
     try {
       const response = await api.get('/countries');
@@ -107,6 +112,7 @@ export const useCatalogStore = defineStore('catalog', () => {
     products,
     selectedCountryCode,
     selectedCountry,
+    countryByCode,
     loading,
     fetchCountries,
     fetchPackages,

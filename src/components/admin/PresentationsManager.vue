@@ -27,10 +27,16 @@
               </span>
             </td>
             <td class="p-4">
-              <div v-if="p.countries && p.countries.length > 0" class="flex flex-wrap gap-1">
-                <span v-for="c in p.countries" :key="c.id" class="inline-block px-2 py-0.5 bg-accent/20 text-accent font-semibold text-[9px] rounded">
-                  {{ c.code }}
-                </span>
+              <div v-if="p.countries && p.countries.length > 0" class="flex flex-wrap gap-1.5">
+                <CountryLabel
+                  v-for="c in p.countries"
+                  :key="c.id"
+                  :code="c.code"
+                  :country="catalogStore.countryByCode(c.code) || c"
+                  show-name
+                  size="xs"
+                  class="px-2 py-0.5 bg-accent/10 rounded"
+                />
               </div>
               <span v-else class="text-zinc-400 text-[9px]">—</span>
             </td>
@@ -75,6 +81,7 @@
                 v-model="form.countryIds"
                 class="w-4 h-4 rounded border-zinc-300"
               />
+              <CountryFlag :flag-icon="c.flagIcon" :code="c.code" :name="c.name" size="sm" />
               <span class="text-zinc-700 font-semibold">{{ c.name }} ({{ c.code }})</span>
             </label>
           </div>
@@ -122,6 +129,8 @@ import { useCatalogStore } from '../../stores/catalog';
 import { useMediaStore } from '../../stores/media';
 import { useAlertStore } from '../../stores/alert';
 import MediaPicker from './MediaPicker.vue';
+import CountryFlag from '../ui/CountryFlag.vue';
+import CountryLabel from '../ui/CountryLabel.vue';
 
 const catalogStore = useCatalogStore();
 const mediaStore = useMediaStore();

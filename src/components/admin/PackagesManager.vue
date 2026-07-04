@@ -48,7 +48,9 @@
             </thead>
             <tbody class="text-zinc-600">
               <tr v-for="pr in pkg.prices || []" :key="pr.countryCode">
-                <td class="py-1 pr-3 font-mono text-[#008A20] font-bold">{{ pr.countryCode }}</td>
+                <td class="py-1 pr-3">
+                  <CountryLabel :code="pr.countryCode" show-name size="xs" />
+                </td>
                 <td class="py-1 pr-3">{{ pr.price }}</td>
                 <td class="py-1 pr-3">{{ pr.referralBonus }}</td>
                 <td class="py-1">{{ pr.matchBonus }}</td>
@@ -109,9 +111,11 @@
             <div v-for="(row, idx) in form.prices" :key="idx" class="p-3 grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-2 items-end">
               <div class="adm-field">
                 <label class="adm-label">Country</label>
-                <select v-model="row.countryCode" class="adm-input adm-select">
-                  <option v-for="c in catalogStore.countries" :key="c.code" :value="c.code">{{ c.code }}</option>
-                </select>
+                <CountrySelect
+                  v-model="row.countryCode"
+                  compact
+                  :full-width="true"
+                />
               </div>
               <div class="adm-field">
                 <label class="adm-label">Price</label>
@@ -164,6 +168,8 @@ import { getFullMediaUrl } from '../../api';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
 import MediaPicker from './MediaPicker.vue';
+import CountrySelect from '../ui/CountrySelect.vue';
+import CountryLabel from '../ui/CountryLabel.vue';
 
 const catalogStore = useCatalogStore();
 const isModalOpen = ref(false);

@@ -7,16 +7,13 @@
         <AppLogo size="sm" />
         <div class="flex items-center gap-3">
           <div class="flex items-center gap-2 bg-white rounded-xl px-3 py-1.5 border border-zinc-200">
-            <Globe :size="14" class="text-zinc-400" />
-            <select
+            <CountrySelect
               v-model="selectedCountryCode"
+              compact
+              show-currency
+              :full-width="false"
               @change="changeCountry"
-              class="bg-transparent text-xs font-semibold text-zinc-700 focus:outline-none cursor-pointer"
-            >
-              <option v-for="c in catalogStore.countries" :key="c.code" :value="c.code">
-                {{ c.code }} ({{ c.currencySymbol }})
-              </option>
-            </select>
+            />
           </div>
         </div>
       </div>
@@ -132,7 +129,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { Globe } from 'lucide-vue-next';
+import CountrySelect from '../components/ui/CountrySelect.vue';
 import { JOURNEY_IDS } from '../data/learnerJourneys';
 
 import AppLogo from '../components/ui/AppLogo.vue';

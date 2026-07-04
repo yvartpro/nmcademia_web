@@ -11,6 +11,7 @@
       <table class="w-full text-left text-xs">
         <thead class="bg-[#F4F6F5] text-[10px] text-[#0A0F0D] font-bold uppercase tracking-widest border-b border-zinc-200">
           <tr>
+            <th class="p-4">Flag</th>
             <th class="p-4">Code</th>
             <th class="p-4">Name</th>
             <th class="p-4">Currency</th>
@@ -20,6 +21,9 @@
         </thead>
         <tbody class="divide-y divide-zinc-100 text-zinc-600">
           <tr v-for="c in catalogStore.countries" :key="c.id" class="hover:bg-[#F4F6F5]/60 transition">
+            <td class="p-4">
+              <CountryFlag :flag-icon="c.flagIcon" :code="c.code" :name="c.name" size="md" />
+            </td>
             <td class="p-4 font-mono text-[#008A20] font-bold">{{ c.code }}</td>
             <td class="p-4 text-[#0A0F0D] font-bold">{{ c.name }}</td>
             <td class="p-4">{{ c.currencySymbol }} ({{ c.currency }})</td>
@@ -33,7 +37,6 @@
       </table>
     </div>
 
-    <!-- Form Modal -->
     <UiModal v-model="isModalOpen" :title="editingId ? 'Edit Country' : 'New Country'" subtitle="Markets &amp; Pricing Regions">
       <form id="country-form" @submit.prevent="saveItem" class="space-y-4 text-xs">
         <div class="adm-field">
@@ -43,12 +46,27 @@
         <div class="grid grid-cols-2 gap-3">
           <div class="adm-field">
             <label class="adm-label">Code (e.g. NG)</label>
-            <input v-model="form.code" required maxlength="10" class="adm-input uppercase" />
+            <input v-model="form.code" required maxlength="10" class="adm-input uppercase" @input="syncFlagFromCode" />
           </div>
           <div class="adm-field">
             <label class="adm-label">Currency code</label>
             <input v-model="form.currency" required class="adm-input" />
           </div>
+        </div>
+        <div class="adm-field">
+          <label class="adm-label">Flag icon (flag-icons)</label>
+          <div class="flex items-center gap-3">
+            <input
+              v-model="form.flagIcon"
+              :placeholder="FLAG_ICON_EXAMPLE"
+              class="adm-input flex-1 font-mono"
+              @input="flagTouched = true"
+            />
+            <CountryFlag :flag-icon="form.flagIcon" :code="form.code" size="lg" />
+          </div>
+          <p class="text-[10px] text-zinc-500 mt-1">
+            Use <code class="font-mono">fi fi-ng</code>, <code class="font-mono">fi-ng</code>, or <code class="font-mono">ng</code>. Auto-filled from country code if empty.
+          </p>
         </div>
         <div class="adm-field">
           <label class="adm-label">Currency symbol</label>
@@ -67,7 +85,6 @@
       </template>
     </UiModal>
 
-    <!-- Confirm Delete -->
     <UiConfirmModal
       v-model="confirmOpen"
       title="Delete this country?"
@@ -83,29 +100,66 @@ import { ref, onMounted } from 'vue';
 import { useCatalogStore } from '../../stores/catalog';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
+import CountryFlag from '../ui/CountryFlag.vue';
+import { defaultFlagIcon, FLAG_ICON_EXAMPLE, normalizeFlagIcon } from '../../utils/countryFlag';
 
 const catalogStore = useCatalogStore();
 const isModalOpen = ref(false);
 const editingId = ref(null);
-const form = ref({ name: '', code: '', currency: '', currencySymbol: '', whatsappNumber: '' });
+const form = ref({
+  name: '',
+  code: '',
+  currency: '',
+  currencySymbol: '',
+  whatsappNumber: '',
+  flagIcon: '',
+});
 const confirmOpen = ref(false);
 const pendingDeleteId = ref(null);
+const flagTouched = ref(false);
 
 onMounted(() => catalogStore.adminFetchCountries());
 
+const syncFlagFromCode = () => {
+  if (!flagTouched.value || !form.value.flagIcon) {
+    form.value.flagIcon = defaultFlagIcon(form.value.code);
+  }
+};
+
 const openModal = (item = null) => {
+  flagTouched.value = false;
   if (item) {
     editingId.value = item.id;
-    form.value = { name: item.name, code: item.code, currency: item.currency, currencySymbol: item.currencySymbol, whatsappNumber: item.whatsappNumber || '' };
+    form.value = {
+      name: item.name,
+      code: item.code,
+      currency: item.currency,
+      currencySymbol: item.currencySymbol,
+      whatsappNumber: item.whatsappNumber || '',
+      flagIcon: item.flagIcon || defaultFlagIcon(item.code),
+    };
+    flagTouched.value = true;
   } else {
     editingId.value = null;
-    form.value = { name: '', code: '', currency: '', currencySymbol: '', whatsappNumber: '' };
+    form.value = {
+      name: '',
+      code: '',
+      currency: '',
+      currencySymbol: '',
+      whatsappNumber: '',
+      flagIcon: '',
+    };
   }
   isModalOpen.value = true;
 };
 
 const saveItem = async () => {
-  const payload = { ...form.value, code: form.value.code.toUpperCase() };
+  const code = form.value.code.toUpperCase();
+  const payload = {
+    ...form.value,
+    code,
+    flagIcon: normalizeFlagIcon(form.value.flagIcon?.trim(), code) || defaultFlagIcon(code),
+  };
   if (editingId.value) await catalogStore.adminUpdateCountry(editingId.value, payload);
   else await catalogStore.adminCreateCountry(payload);
   isModalOpen.value = false;

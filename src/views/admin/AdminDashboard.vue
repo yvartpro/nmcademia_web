@@ -206,16 +206,12 @@
           <!-- Filters area -->
           <div class="bg-white border border-zinc-200 rounded-xl p-4 flex flex-wrap gap-4 items-center justify-between shadow-sm">
             <div class="flex flex-wrap gap-3">
-              <select 
+              <CountrySelect
                 v-model="leadsFilter.country"
+                show-all-option
+                all-label="All Countries"
                 @change="loadLeads"
-                class="bg-white border border-zinc-200 text-xs text-[#0A0F0D] rounded-lg px-3 py-2 focus:outline-none focus:border-[#008A20]"
-              >
-                <option value="">All Countries</option>
-                <option v-for="c in catalogStore.countries" :key="c.code" :value="c.code">
-                  {{ c.name }}
-                </option>
-              </select>
+              />
 
               <select 
                 v-model="leadsFilter.status"
@@ -254,7 +250,9 @@
                   <tr v-for="lead in leadsStore.leads" :key="lead.id" class="hover:bg-[#F4F6F5]/60 transition">
                     <td class="p-4 font-semibold text-[#0A0F0D]">{{ lead.fullName }}</td>
                     <td class="p-4 text-zinc-500">{{ lead.email }}</td>
-                    <td class="p-4 text-[#008A20] font-bold uppercase">{{ lead.country }}</td>
+                    <td class="p-4">
+                      <CountryLabel :code="lead.country" show-name size="sm" code-class="text-[#008A20]" />
+                    </td>
                     <td class="p-4 text-zinc-500 truncate max-w-[150px]">{{ lead.profileType }}</td>
                     <td class="p-4">
                       <select 
@@ -517,6 +515,7 @@ import MediaLibrary from '../../components/admin/MediaLibrary.vue';
 import PresentationsManager from '../../components/admin/PresentationsManager.vue';
 import SiteSettingsManager from '../../components/admin/SiteSettingsManager.vue';
 import OwnerProfileManager from '../../components/admin/OwnerProfileManager.vue';
+import CountrySelect from '../../components/ui/CountrySelect.vue';
 import AppLogo from '../../components/ui/AppLogo.vue';
 import { useMediaStore } from '../../stores/media';
 

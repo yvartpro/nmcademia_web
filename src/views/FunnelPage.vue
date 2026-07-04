@@ -99,11 +99,7 @@
             </h2>
             <p class="text-sm text-zinc-500">We tailor the product prices, currencies, and support mentors based on your location.</p>
             <div class="space-y-4">
-              <select v-model="selectedCountry" class="nma-input-glass">
-                <option v-for="c in catalogStore.countries" :key="c.code" :value="c.code">
-                  {{ c.name }}
-                </option>
-              </select>
+              <CountrySelect v-model="selectedCountry" />
             </div>
             <div class="flex justify-between pt-4 border-t border-zinc-200/50">
               <UiButton variant="ghost" @click="prevStep">Back</UiButton>
@@ -669,6 +665,7 @@ import { useVideoPlayerStore } from '../stores/videoPlayer';
 import { useSettingsStore } from '../stores/settings';
 import { getFullMediaUrl } from '../api';
 
+import CountrySelect from '../components/ui/CountrySelect.vue';
 import { useOwnerStore } from '../stores/owner';
 
 const route = useRoute();
