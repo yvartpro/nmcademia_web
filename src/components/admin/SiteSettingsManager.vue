@@ -7,13 +7,13 @@
       </p>
     </div>
 
-    <div class="flex flex-wrap gap-2 border-b border-zinc-200 pb-4">
+    <div class="flex overflow-x-auto gap-2 border-b border-zinc-200 pb-4 snap-x snap-mandatory">
       <button
         v-for="group in SETTING_GROUPS"
         :key="group.id"
         type="button"
         @click="selectedSection = group.id"
-        class="rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide transition"
+        class="shrink-0 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide transition snap-start"
         :class="selectedSection === group.id
           ? 'border-[#008A20] bg-[#008A20]/10 text-[#008A20]'
           : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:text-[#0A0F0D]'"
@@ -23,7 +23,7 @@
       <button
         type="button"
         @click="selectedSection = 'custom'"
-        class="rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-600 transition hover:border-zinc-300 hover:text-[#0A0F0D]"
+        class="shrink-0 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-600 transition hover:border-zinc-300 hover:text-[#0A0F0D] snap-start"
         :class="selectedSection === 'custom' ? 'border-[#008A20] bg-[#008A20]/10 text-[#008A20]' : ''"
       >
         Custom settings
@@ -35,7 +35,7 @@
         v-for="group in SETTING_GROUPS"
         v-show="selectedSection === group.id"
         :key="group.id"
-        class="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm space-y-4"
+        class="bg-white border border-zinc-200 rounded-xl p-4 sm:p-6 shadow-sm space-y-4"
       >
         <div>
           <h4 class="text-sm font-bold text-[#0A0F0D]">{{ group.title }}</h4>
@@ -76,7 +76,7 @@
         </div>
       </section>
 
-      <section v-if="selectedSection === 'custom' && otherKeys.length" class="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm space-y-4">
+      <section v-if="selectedSection === 'custom' && otherKeys.length" class="bg-white border border-zinc-200 rounded-xl p-4 sm:p-6 shadow-sm space-y-4">
         <h4 class="text-sm font-bold text-[#0A0F0D]">Other / custom settings</h4>
         <p class="text-zinc-500 text-[10px]">Keys created outside the groups above (or from the database).</p>
         <div v-for="key in otherKeys" :key="key" class="space-y-1">
@@ -88,7 +88,7 @@
         </div>
       </section>
 
-      <section v-if="selectedSection === 'custom'" class="bg-[#F4F6F5] border border-dashed border-zinc-300 rounded-xl p-6 space-y-3">
+      <section v-if="selectedSection === 'custom'" class="bg-[#F4F6F5] border border-dashed border-zinc-300 rounded-xl p-4 sm:p-6 space-y-3">
         <h4 class="text-sm font-bold text-zinc-500">Add custom setting</h4>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
           <input v-model="newKey" placeholder="setting_key" class="bg-white border border-zinc-200 rounded p-2 text-xs text-[#0A0F0D] font-mono focus:outline-none focus:border-[#008A20]" />

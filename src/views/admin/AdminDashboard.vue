@@ -1,22 +1,43 @@
 <template>
-  <div class="min-h-screen bg-white text-[#0A0F0D] flex font-sans">
-    
+  <div class="min-h-screen bg-white text-[#0A0F0D] flex flex-col lg:flex-row font-sans relative">
+    <div
+      v-if="isSidebarOpen"
+      class="fixed inset-0 z-30 bg-black/30 backdrop-blur-[1px] lg:hidden"
+      @click="closeSidebar"
+    />
+
     <!-- Sidebar Navigation -->
-    <aside class="w-64 bg-[#F4F6F5] border-r border-zinc-200 flex flex-col justify-between shrink-0">
+    <aside
+      :class="[
+        'fixed inset-y-0 left-0 z-40 w-72 bg-[#F4F6F5] border-r border-zinc-200 flex flex-col justify-between shrink-0 transform transition-transform duration-300 ease-out',
+        isSidebarOpen ? 'translate-x-0 lg:translate-x-0' : '-translate-x-full lg:-translate-x-full'
+      ]"
+    >
       <div>
-        <div class="p-6 border-b border-zinc-200 flex items-center gap-3">
-          <AppLogo size="sm" :show-text="false" />
-          <div>
-            <h1 class="font-display font-bold text-xs tracking-wide text-[#0A0F0D]">NMA Workspace</h1>
-            <span class="text-[9px] text-[#008A20] font-mono tracking-widest">ADMINISTRATOR</span>
+        <div class="p-4 sm:p-6 border-b border-zinc-200 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <AppLogo size="sm" :show-text="false" />
+            <div>
+              <h1 class="font-display font-bold text-xs tracking-wide text-[#0A0F0D]">NMA Workspace</h1>
+              <span class="text-[9px] text-[#008A20] font-mono tracking-widest">ADMINISTRATOR</span>
+            </div>
           </div>
+          <button
+            type="button"
+            @click="closeSidebar"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-sm transition hover:border-[#008A20] hover:text-[#008A20]"
+            aria-label="Collapse sidebar"
+          >
+            <span class="text-base leading-none">‹</span>
+          </button>
         </div>
 
-        <nav class="p-4 space-y-1 max-h-[calc(100vh-10rem)] overflow-y-auto custom-scrollbar">
+        <nav class="p-3 sm:p-4 space-y-1 max-h-none lg:max-h-[calc(100vh-10rem)] overflow-y-auto custom-scrollbar">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
           <button 
             @click="activeTab = 'profile'"
             :class="[
-              'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+              'w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
               activeTab === 'profile' 
                 ? 'bg-[#008A20]/10 text-[#008A20] border-l-4 border-[#008A20] font-bold' 
                 : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60'
@@ -29,7 +50,7 @@
           <button 
             @click="activeTab = 'leads'"
             :class="[
-              'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+              'w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
               activeTab === 'leads' 
                 ? 'bg-[#008A20]/10 text-[#008A20] border-l-4 border-[#008A20] font-bold' 
                 : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60'
@@ -42,7 +63,7 @@
           <button 
             @click="activeTab = 'chats'"
             :class="[
-              'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+              'w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
               activeTab === 'chats' 
                 ? 'bg-[#008A20]/10 text-[#008A20] border-l-4 border-[#008A20] font-bold' 
                 : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60'
@@ -56,7 +77,7 @@
             <button 
               @click="selectSettingsSection('contact')"
               :class="[
-                'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+                'w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
                 activeTab === 'settings' 
                   ? 'bg-[#008A20]/10 text-[#008A20] border-l-4 border-[#008A20] font-bold' 
                   : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60'
@@ -82,14 +103,14 @@
             </div>
           </div>
           
-          <div class="pt-4 pb-2">
+          <div class="pt-4 pb-2 lg:col-span-1 col-span-full">
             <span class="px-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Content Management</span>
           </div>
 
           <button 
             @click="activeTab = 'founders'"
             :class="[
-              'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+              'w-full flex items-center justify-start gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
               activeTab === 'founders' ? 'bg-[#008A20]/10 text-[#008A20] border border-[#008A20]/20' : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60 border border-transparent'
             ]"
           >
@@ -100,7 +121,7 @@
           <button 
             @click="activeTab = 'testimonials'"
             :class="[
-              'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+              'w-full flex items-center justify-start gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
               activeTab === 'testimonials' ? 'bg-[#008A20]/10 text-[#008A20] border border-[#008A20]/20' : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60 border border-transparent'
             ]"
           >
@@ -111,7 +132,7 @@
           <button 
             @click="activeTab = 'partners'"
             :class="[
-              'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+              'w-full flex items-center justify-start gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
               activeTab === 'partners' ? 'bg-[#008A20]/10 text-[#008A20] border border-[#008A20]/20' : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60 border border-transparent'
             ]"
           >
@@ -164,6 +185,7 @@
             <span>🎬</span>
             <span>Presentations</span>
           </button>
+          </div>
         </nav>
       </div>
 
@@ -181,10 +203,20 @@
     <main class="flex-grow flex flex-col bg-[#F4F6F5]/40 overflow-y-auto">
       
       <!-- Top header bar -->
-      <header class="h-16 border-b border-zinc-200 px-8 flex items-center justify-between shrink-0 bg-white">
-        <h2 class="text-sm font-bold tracking-wide uppercase text-[#0A0F0D]">
-          {{ activeTabTitle }}
-        </h2>
+      <header class="border-b border-zinc-200 px-4 sm:px-8 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between shrink-0 bg-white">
+        <div class="flex items-center gap-3">
+          <button
+            type="button"
+            @click="toggleSidebar"
+            class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-sm transition hover:border-[#008A20] hover:text-[#008A20]"
+            :aria-label="isSidebarOpen ? 'Collapse sidebar' : 'Open sidebar'"
+          >
+            <span class="text-base leading-none">{{ isSidebarOpen ? '‹' : '☰' }}</span>
+          </button>
+          <h2 class="text-sm font-bold tracking-wide uppercase text-[#0A0F0D]">
+            {{ activeTabTitle }}
+          </h2>
+        </div>
         <div class="flex items-center gap-4 text-xs">
           <span class="text-zinc-500">Database Status:</span>
           <span class="flex items-center gap-1.5 font-semibold text-[#008A20]">
@@ -194,7 +226,7 @@
       </header>
 
       <!-- Content viewport -->
-      <div class="flex-grow p-8">
+      <div class="flex-grow p-4 sm:p-8">
         <OwnerProfileManager v-if="activeTab === 'profile'" />
         
         <!-- Tab 1: Leads Dashboard -->
@@ -559,6 +591,7 @@ const joinedLeads = computed(() => leadsStore.leads.filter(l => l.status === 'Jo
 const leadsFilter = ref({ country: '', status: '' });
 const adminReplyText = ref('');
 const chatMessagesContainer = ref(null);
+const isSidebarOpen = ref(typeof window !== 'undefined' ? window.innerWidth >= 1024 : true);
 
 // Details Modal state
 const detailsModal = ref({
@@ -586,7 +619,7 @@ const activeTabTitle = computed(() => {
 });
 
 const tabClass = (tab) => [
-  'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
+  'w-full flex items-center justify-start gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200',
   activeTab.value === tab
     ? 'bg-[#008A20]/10 text-[#008A20] border border-[#008A20]/20'
     : 'text-zinc-600 hover:text-[#0A0F0D] hover:bg-zinc-200/60 border border-transparent'
@@ -595,6 +628,15 @@ const tabClass = (tab) => [
 const selectSettingsSection = (section) => {
   activeTab.value = 'settings';
   settingsSection.value = section;
+  closeSidebar();
+};
+
+const toggleSidebar = () => {
+  isSidebarOpen.value = !isSidebarOpen.value;
+};
+
+const closeSidebar = () => {
+  isSidebarOpen.value = false;
 };
 
 const activeChatSessionDetails = computed(() => {
