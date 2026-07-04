@@ -71,8 +71,15 @@
         :settings="settings"
         v-model:activeQuadrant="activeQuadrant"
       />
-      <BinaryCompensation
+      <PackageShowcase
         v-else-if="currentSlide === 6"
+        :packages="catalogStore.packages"
+        :selected-country-code="selectedCountryCode"
+        :currency-symbol="currencySymbol"
+        :get-price-for-country="getPriceForCountry"
+      />
+      <BinaryCompensation
+        v-else-if="currentSlide === 7"
         :settings="settings"
         :earning-streams="earningStreams"
         :packages="catalogStore.packages"
@@ -83,12 +90,12 @@
         :format-number="formatNumber"
       />
       <BusinessPlanPresentation
-        v-else-if="currentSlide === 7"
+        v-else-if="currentSlide === 8"
         :presentation="presentation"
         :settings="settings"
       />
       <EntryPackages
-        v-else-if="currentSlide === 8"
+        v-else-if="currentSlide === 9"
         :packages="catalogStore.packages"
         :selected-country-code="selectedCountryCode"
         :currency-symbol="currencySymbol"
@@ -97,7 +104,7 @@
         @details="goToDetails"
       />
       <FAQsFinish
-        v-else-if="currentSlide === 9"
+        v-else-if="currentSlide === 10"
         :faqs="rawFAQs"
         :finish-title="finishTitle"
         :finish-message="finishMessage"
@@ -144,6 +151,7 @@ import FoundersPartners from './slides/FoundersPartners.vue';
 import ProductsCatalog from './slides/ProductsCatalog.vue';
 import DreamTestimonials from './slides/DreamTestimonials.vue';
 import CashflowQuadrant from './slides/CashflowQuadrant.vue';
+import PackageShowcase from './slides/PackageShowcase.vue';
 import BinaryCompensation from './slides/BinaryCompensation.vue';
 import BusinessPlanPresentation from './slides/BusinessPlanPresentation.vue';
 import EntryPackages from './slides/EntryPackages.vue';
@@ -161,7 +169,7 @@ const mediaPreview = (asset) => mediaStore.resolveUrl(asset);
 
 // ── Slide state ──────────────────────────────────────────────────────────────
 const currentSlide = ref(1);
-const totalSlides = 9;
+const totalSlides = 10;
 const showPostSignupWelcome = ref(false);
 const activeQuadrant = ref('B');
 const rawFAQs = ref([]);
@@ -210,7 +218,7 @@ const formatNumber = (num) => {
 };
 
 const goToDetails = (slug) => {
-  sessionStorage.setItem('presentation_slide', '8');
+  sessionStorage.setItem('presentation_slide', String(currentSlide.value));
   router.push(`/package-details/${slug}`);
 };
 

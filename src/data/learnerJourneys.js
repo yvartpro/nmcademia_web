@@ -89,7 +89,7 @@ export const JOURNEYS = {
     id: JOURNEY_IDS.BUILD,
     title: 'Leader Development',
     subtitle: 'Review the opportunity, then level up with training',
-    welcomeLine: 'You start with the full partner presentation — then continue to advanced training.',
+    welcomeLine: 'In the New Economy, One Income Is a Risk. Multiple Income Streams Are a Strategy..',
     afterSignupRoute: '/presentation',
     defaultRoute: '/presentation',
     features: {

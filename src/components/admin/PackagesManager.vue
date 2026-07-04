@@ -16,7 +16,17 @@
         class="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm"
       >
         <div class="flex justify-between items-start gap-4">
-          <div>
+          <!-- Package image thumbnail -->
+          <div class="w-16 h-16 rounded-lg overflow-hidden border border-zinc-200 bg-zinc-50 shrink-0 flex items-center justify-center">
+            <img
+              v-if="pkg.image"
+              :src="getFullMediaUrl(pkg.image)"
+              :alt="pkg.name"
+              class="w-full h-full object-cover"
+            />
+            <span v-else class="text-2xl">📦</span>
+          </div>
+          <div class="flex-1 min-w-0">
             <h4 class="font-bold text-[#0A0F0D]">{{ pkg.name }}</h4>
             <p class="text-zinc-400 text-[10px] font-mono mt-0.5">{{ pkg.slug }}</p>
             <p class="text-zinc-500 text-xs mt-2 line-clamp-2">{{ pkg.description }}</p>
@@ -73,6 +83,17 @@
         <div class="adm-field">
           <label class="adm-label">Description</label>
           <textarea v-model="form.description" rows="2" class="adm-input"></textarea>
+        </div>
+
+        <!-- Package showcase image -->
+        <div class="adm-field">
+          <label class="adm-label">Showcase Image (shown in packages slide)</label>
+          <MediaPicker
+            v-model="form.mediaAssetId"
+            assetType="image"
+            label=""
+            class="mt-1"
+          />
         </div>
 
         <!-- Prices section -->
@@ -139,8 +160,10 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useCatalogStore } from '../../stores/catalog';
+import { getFullMediaUrl } from '../../api';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
+import MediaPicker from './MediaPicker.vue';
 
 const catalogStore = useCatalogStore();
 const isModalOpen = ref(false);
@@ -153,6 +176,7 @@ const form = ref({
   slug: '',
   description: '',
   featured: false,
+  mediaAssetId: null,
   prices: []
 });
 
@@ -190,11 +214,12 @@ const openModal = (item = null) => {
       slug: item.slug,
       description: item.description || '',
       featured: !!item.featured,
+      mediaAssetId: item.mediaAssetId || null,
       prices: (item.prices || []).map(p => ({ ...p }))
     };
   } else {
     editingId.value = null;
-    form.value = { name: '', slug: '', description: '', featured: false, prices: [] };
+    form.value = { name: '', slug: '', description: '', featured: false, mediaAssetId: null, prices: [] };
     addPriceRow();
   }
   isModalOpen.value = true;
@@ -206,6 +231,7 @@ const saveItem = async () => {
     slug: form.value.slug,
     description: form.value.description,
     featured: form.value.featured,
+    mediaAssetId: form.value.mediaAssetId || null,
     prices: form.value.prices.map(p => ({
       countryCode: p.countryCode,
       currency: catalogStore.countries.find(c => c.code === p.countryCode)?.currency || p.currency,
