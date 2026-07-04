@@ -2,7 +2,7 @@
   <div class="nma-card p-5 border-accent/25 bg-accent-muted/20">
     <div class="flex gap-4">
       <div class="w-12 h-12 rounded-xl nma-gradient-gold flex items-center justify-center shrink-0">
-        <GraduationCap :size="22" class="text-zinc-900" />
+        <GraduationCap :size="22" class="text-zinc-100" />
       </div>
       <div class="flex-1 min-w-0">
         <p class="text-[10px] font-bold uppercase tracking-wider text-accent">Your Academia Coach</p>

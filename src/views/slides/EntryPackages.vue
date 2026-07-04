@@ -1,9 +1,6 @@
 <template>
   <div class="motion-safe:animate-fade-in space-y-8">
     <div class="space-y-3">
-      <span class="inline-block text-[10px] font-bold uppercase tracking-widest text-accent/80 bg-accent/10 px-3 py-1 rounded-full">
-        Choose Your Level
-      </span>
       <h2 class="text-3xl sm:text-4xl font-display font-black text-zinc-900 leading-tight">
         Entry Packages for {{ selectedCountryCode }}
       </h2>

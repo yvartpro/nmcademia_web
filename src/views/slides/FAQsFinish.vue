@@ -1,6 +1,5 @@
 <template>
   <div class="motion-safe:animate-fade-in space-y-8">
-    <UiSectionLabel>Slide 8: Frequently Asked Questions</UiSectionLabel>
     <h2 class="text-2xl sm:text-3xl font-display font-black">Answers to Common Questions</h2>
 
     <input
@@ -57,7 +56,6 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { ChevronDown } from 'lucide-vue-next';
-import UiSectionLabel from '../../components/ui/UiSectionLabel.vue';
 import UiButton from '../../components/ui/UiButton.vue';
 import OwnerMentorCard from '../../components/journey/OwnerMentorCard.vue';
 

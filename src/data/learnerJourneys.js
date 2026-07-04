@@ -56,8 +56,8 @@ export const JOURNEYS = {
   [JOURNEY_IDS.EXPLORE]: {
     id: JOURNEY_IDS.EXPLORE,
     title: 'Opportunity Explorer',
-    subtitle: 'Understand the opportunity at your own pace',
-    welcomeLine: 'Your path is focused on the full partner presentation.',
+    subtitle: 'Review the opportunity, then level up with training',
+    welcomeLine: 'In the New Economy, One Income Is a Risk. Multiple Income Streams Are a Strategy.',
     afterSignupRoute: '/presentation',
     defaultRoute: '/presentation',
     features: {
@@ -72,8 +72,8 @@ export const JOURNEYS = {
   [JOURNEY_IDS.LEARN]: {
     id: JOURNEY_IDS.LEARN,
     title: 'Mentorship Track',
-    subtitle: 'Learn with guidance from your Academia coach',
-    welcomeLine: 'You go straight into mentorship training — the business presentation comes later if you need it.',
+    subtitle: 'Review the opportunity, then level up with training',
+    welcomeLine: 'In the New Economy, One Income Is a Risk. Multiple Income Streams Are a Strategy.',
     afterSignupRoute: '/app/training',
     defaultRoute: '/app/training',
     features: {
@@ -89,7 +89,7 @@ export const JOURNEYS = {
     id: JOURNEY_IDS.BUILD,
     title: 'Leader Development',
     subtitle: 'Review the opportunity, then level up with training',
-    welcomeLine: 'In the New Economy, One Income Is a Risk. Multiple Income Streams Are a Strategy..',
+    welcomeLine: 'In the New Economy, One Income Is a Risk. Multiple Income Streams Are a Strategy.',
     afterSignupRoute: '/presentation',
     defaultRoute: '/presentation',
     features: {
