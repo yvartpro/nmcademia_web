@@ -68,13 +68,12 @@ const presentationVideoSrc = computed(() => {
     return getFullMediaUrl(props.presentation.media);
   }
 
-  return props.settings['video_url'] || '';
+  return props.settings['product_video'] || props.settings['video_url'] || '';
 });
 
 const previewImage = computed(() => {
   if (props.presentation?.media?.thumbnailPath) return getFullMediaUrl(props.presentation.media.thumbnailPath);
-  if (props.settings['video_url_thumbnail']) return getFullMediaUrl(props.settings['video_url_thumbnail']);
-  return props.settings['video_thumbnail'] ? getFullMediaUrl(props.settings['video_thumbnail']) : '';
+  return props.settings['presentation_cover_image'] ? getFullMediaUrl(props.settings['presentation_cover_image']) : '';
 });
 
 const openVideo = () => {
