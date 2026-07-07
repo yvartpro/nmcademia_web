@@ -11,6 +11,7 @@
       <table class="w-full text-left text-xs">
         <thead class="bg-[#F4F6F5] text-[10px] text-[#0A0F0D] font-bold uppercase tracking-widest border-b border-zinc-200">
           <tr>
+            <th class="p-4">Media</th>
             <th class="p-4">Name</th>
             <th class="p-4">Tag</th>
             <th class="p-4">Quote</th>
@@ -19,6 +20,13 @@
         </thead>
         <tbody class="divide-y divide-zinc-100 text-zinc-600">
           <tr v-for="item in contentStore.testimonials" :key="item.id" class="hover:bg-[#F4F6F5]/60 transition">
+            <td class="p-4">
+              <div class="w-16 h-12 rounded overflow-hidden bg-zinc-100 flex items-center justify-center">
+                <img v-if="item.video && item.video.thumbnailPath" :src="$stores.media.resolveUrl(item.video.thumbnailPath)" class="w-full h-full object-cover" />
+                <img v-else-if="item.photo && item.photo.thumbnailPath" :src="$stores.media.resolveUrl(item.photo.thumbnailPath)" class="w-full h-full object-cover" />
+                <div v-else class="text-sm">—</div>
+              </div>
+            </td>
             <td class="p-4 font-bold text-[#0A0F0D]">{{ item.name }}</td>
             <td class="p-4 text-[#008A20] font-mono font-semibold">{{ item.lifestyleTag }}</td>
             <td class="p-4 truncate max-w-xs">{{ item.quote }}</td>
@@ -50,6 +58,7 @@
           <textarea v-model="form.quote" rows="3" required class="adm-input"></textarea>
         </div>
         <MediaPicker v-model="form.mediaAssetId" assetType="image" label="Profile photo" />
+        <MediaPicker v-model="form.videoAssetId" assetType="video" label="Video (optional)" />
       </form>
       <template #footer>
         <button type="button" class="adm-btn-ghost" @click="isModalOpen = false">Cancel</button>
@@ -81,7 +90,7 @@ const contentStore = useContentStore();
 
 const isModalOpen = ref(false);
 const editingId = ref(null);
-const form = ref({ name: '', lifestyleTag: '', quote: '', mediaAssetId: null });
+const form = ref({ name: '', lifestyleTag: '', quote: '', mediaAssetId: null, videoAssetId: null });
 
 const confirmOpen = ref(false);
 const pendingDeleteId = ref(null);
@@ -92,7 +101,7 @@ const openModal = (item = null) => {
     form.value = { ...item };
   } else {
     editingId.value = null;
-    form.value = { name: '', lifestyleTag: '', quote: '', mediaAssetId: null };
+    form.value = { name: '', lifestyleTag: '', quote: '', mediaAssetId: null, videoAssetId: null };
   }
   isModalOpen.value = true;
 };
