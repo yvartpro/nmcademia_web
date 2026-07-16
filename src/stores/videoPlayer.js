@@ -23,13 +23,26 @@ export const useVideoPlayerStore = defineStore('videoPlayer', () => {
   const src = ref(null);
   const title = ref('');
   const thumbnail = ref(null);
+  const asset = ref(null);
   const isBuffering = ref(true);
   const bufferProgress = ref(0);
+  const currentQuality = ref('auto');
 
   // Per-video resume positions: { [srcKey]: seconds }
   const positions = ref(loadPositions());
 
   const resolveUrl = (assetOrPath) => getFullMediaUrl(assetOrPath);
+
+  const resolvePreferredQuality = () => {
+    if (typeof window === 'undefined') return 'auto';
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const effectiveType = conn?.effectiveType || '';
+    const downlink = Number(conn?.downlink || 0);
+    if (conn?.saveData) return '360';
+    if (effectiveType === 'slow-2g' || effectiveType === '2g' || downlink <= 1.5) return '360';
+    if (effectiveType === '3g' || downlink <= 3) return '360';
+    return '720';
+  };
 
   /** The saved resume position for the currently open video */
   const resumeAt = computed(() => {
@@ -37,10 +50,12 @@ export const useVideoPlayerStore = defineStore('videoPlayer', () => {
     return positions.value[src.value] || 0;
   });
 
-  function open({ src: videoSrc, title: videoTitle = '', thumbnail: videoThumbnail = null }) {
+  function open({ src: videoSrc, title: videoTitle = '', thumbnail: videoThumbnail = null, asset: videoAsset = null }) {
     src.value = videoSrc;
     title.value = videoTitle;
     thumbnail.value = videoThumbnail;
+    asset.value = videoAsset;
+    currentQuality.value = resolvePreferredQuality();
     visible.value = true;
   }
 
@@ -73,6 +88,8 @@ export const useVideoPlayerStore = defineStore('videoPlayer', () => {
     src.value = null;
     title.value = '';
     thumbnail.value = null;
+    asset.value = null;
+    currentQuality.value = 'auto';
   }
 
   function close() {
@@ -80,6 +97,8 @@ export const useVideoPlayerStore = defineStore('videoPlayer', () => {
     src.value = null;
     title.value = '';
     thumbnail.value = null;
+    asset.value = null;
+    currentQuality.value = 'auto';
   }
 
   function setBuffering(buffering) {
@@ -93,13 +112,19 @@ export const useVideoPlayerStore = defineStore('videoPlayer', () => {
     bufferProgress.value = Math.min(100, Math.max(0, progress));
   }
 
+  function setPlaybackQuality(quality) {
+    currentQuality.value = quality;
+  }
+
   return {
     visible,
     src,
     title,
     thumbnail,
+    asset,
     isBuffering,
     bufferProgress,
+    currentQuality,
     resumeAt,
     resolveUrl,
     open,
@@ -108,5 +133,6 @@ export const useVideoPlayerStore = defineStore('videoPlayer', () => {
     savePosition,
     setBuffering,
     setBufferProgress,
+    setPlaybackQuality,
   };
 });

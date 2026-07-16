@@ -13,7 +13,7 @@
     >
       <div class="flex flex-col items-center gap-4">
         <LoadingDots color="bg-accent" />
-        <p class="text-white/70 text-sm font-medium">Buffering...</p>
+        <p class="text-white/70 text-sm font-medium">{{ isHlsStream ? 'Buffering adaptive HLS stream…' : 'Buffering...' }}</p>
         <div v-if="store.bufferProgress > 0" class="w-48 h-1 bg-white/10 rounded-full overflow-hidden">
           <div
             class="h-full bg-accent transition-all duration-300"
@@ -114,7 +114,8 @@
       />
 
       <!-- Controls row -->
-      <div class="flex items-center justify-between mt-2">
+      <div class="flex items-center justify-between mt-2 gap-2 flex-wrap">
+        <div class="text-[10px] uppercase tracking-[0.24em] text-zinc-400">{{ streamModeLabel }}</div>
 
         <!-- Play/Pause -->
         <button @click="togglePlay" class="text-green-400 hover:text-green-300 font-semibold">
@@ -137,6 +138,15 @@
           class="w-24 accent-green-500"
         />
 
+        <div v-if="isHlsStream" class="flex items-center gap-2 rounded-full border border-white/10 bg-black/30 px-2 py-1">
+          <span class="text-[10px] uppercase tracking-[0.24em] text-zinc-400">Quality</span>
+          <select v-model="selectedQuality" class="bg-transparent text-xs text-green-300 outline-none">
+            <option class="text-zinc-900" value="auto">Auto</option>
+            <option class="text-zinc-900" value="360">360p</option>
+            <option class="text-zinc-900" value="720">720p</option>
+          </select>
+        </div>
+
         <!-- Time display -->
         <div class="text-xs text-green-300 font-mono">
           {{ formatTime(progress) }} / {{ formatTime(duration) }}
@@ -154,6 +164,7 @@
 
 <script setup>
 import { computed, ref, watch, nextTick } from 'vue';
+import Hls from 'hls.js';
 import { useVideoPlayerStore } from '@/stores/videoPlayer';
 import { getFullMediaUrl } from '@/api';
 import LoadingDots from './ui/LoadingDots.vue';
@@ -163,6 +174,10 @@ const store = useVideoPlayerStore();
 const src = computed(() => store.src);
 const title = computed(() => store.title);
 const thumbnail = computed(() => store.thumbnail ? getFullMediaUrl(store.thumbnail) : null);
+const selectedQuality = computed({
+  get: () => store.currentQuality,
+  set: (value) => store.setPlaybackQuality(value)
+});
 
 // Iframe splash: shown before the user clicks play (avoids auto-loading the iframe)
 const showIframeSplash = ref(true);
@@ -174,6 +189,13 @@ const isIframe = computed(() => {
          src.value.includes('youtu.be') || 
          src.value.includes('vimeo.com');
 });
+
+const isHlsStream = computed(() => {
+  const currentSrc = src.value || '';
+  return currentSrc.endsWith('.m3u8') || !!store.asset?.versions?.hls;
+});
+
+const streamModeLabel = computed(() => (isHlsStream.value ? 'Adaptive HLS • 4s segments' : 'Native video'));
 
 const videoRef = ref(null);
 
@@ -189,6 +211,8 @@ const showResumeBadge = ref(false);
 const showControls = ref(true);
 let hideTimer = null;
 let saveTimer = null;
+let hlsInstance = null;
+let videoEventsBound = false;
 
 const triggerControls = () => {
   showControls.value = true;
@@ -303,27 +327,15 @@ const startSaveTimer = () => {
 
 const stopSaveTimer = () => clearInterval(saveTimer);
 
-// Watch src changes to re-initialize player
-watch(src, async (newSrc) => {
-  // Reset iframe splash whenever a new video is opened
-  showIframeSplash.value = true;
-  if (!newSrc) return;
-  stopSaveTimer();
-  await nextTick();
+const destroyHlsInstance = () => {
+  if (hlsInstance) {
+    try { hlsInstance.destroy(); } catch (_) {}
+    hlsInstance = null;
+  }
+};
 
-  const video = videoRef.value;
-  if (!video) return;
-
-  // Reset state
-  progress.value = 0;
-  duration.value = 0;
-  isPlaying.value = false;
-  showResumeBadge.value = false;
-
-  video.load();
-  // onLoaded will handle resume + autoplay
-
-  // Attach event listeners
+const bindVideoEvents = (video) => {
+  if (!video || videoEventsBound) return;
   video.addEventListener('timeupdate', onTimeUpdate);
   video.addEventListener('loadedmetadata', onLoaded);
   video.addEventListener('ended', onEnded);
@@ -335,8 +347,6 @@ watch(src, async (newSrc) => {
     isPlaying.value = false;
     stopSaveTimer();
   });
-  
-  // Buffer event handlers
   video.addEventListener('waiting', () => {
     store.setBuffering(true);
   });
@@ -349,9 +359,102 @@ watch(src, async (newSrc) => {
   video.addEventListener('progress', () => {
     if (video.buffered.length > 0) {
       const bufferedEnd = video.buffered.end(video.buffered.length - 1);
-      const percentage = (bufferedEnd / video.duration) * 100;
+      const percentage = video.duration ? (bufferedEnd / video.duration) * 100 : 0;
       store.setBufferProgress(percentage);
     }
   });
+  videoEventsBound = true;
+};
+
+const resolvePlaybackSource = () => {
+  if (!isHlsStream.value || !store.asset?.versions?.hls) {
+    return src.value ? getFullMediaUrl(src.value) : '';
+  }
+
+  const resolutions = store.asset.versions.hls.resolutions || {};
+  if (store.currentQuality === '360' && resolutions['360']) {
+    return getFullMediaUrl(resolutions['360']);
+  }
+  if (store.currentQuality === '720' && resolutions['720']) {
+    return getFullMediaUrl(resolutions['720']);
+  }
+  return store.asset.versions.hls.masterUrl ? getFullMediaUrl(store.asset.versions.hls.masterUrl) : getFullMediaUrl(src.value);
+};
+
+const attachHlsStream = async () => {
+  const video = videoRef.value;
+  const playbackUrl = resolvePlaybackSource();
+  if (!video || !playbackUrl || !isHlsStream.value) return;
+
+  bindVideoEvents(video);
+  destroyHlsInstance();
+
+  if (Hls.isSupported()) {
+    hlsInstance = new Hls({
+      maxBufferLength: 6,
+      maxBufferSize: 20 * 1000 * 1000,
+      startPosition: 0
+    });
+
+    hlsInstance.on(Hls.Events.ERROR, (_event, data) => {
+      if (data.fatal) {
+        store.setBuffering(false);
+      }
+    });
+
+    hlsInstance.loadSource(playbackUrl);
+    hlsInstance.attachMedia(video);
+    hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
+      video.play().then(() => {
+        isPlaying.value = true;
+      }).catch(() => {
+        isPlaying.value = false;
+      });
+    });
+    return;
+  }
+
+  if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = playbackUrl;
+    video.load();
+    video.play().then(() => {
+      isPlaying.value = true;
+    }).catch(() => {
+      isPlaying.value = false;
+    });
+  }
+};
+
+// Watch src changes to re-initialize player
+watch([src, () => store.currentQuality], async ([newSrc]) => {
+  // Reset iframe splash whenever a new video is opened
+  showIframeSplash.value = true;
+  if (!newSrc) {
+    destroyHlsInstance();
+    return;
+  }
+  stopSaveTimer();
+  await nextTick();
+
+  const video = videoRef.value;
+  if (!video) return;
+
+  // Reset state
+  progress.value = 0;
+  duration.value = 0;
+  isPlaying.value = false;
+  showResumeBadge.value = false;
+  store.setBuffering(true);
+  bindVideoEvents(video);
+
+  if (isIframe.value) return;
+  if (isHlsStream.value) {
+    await attachHlsStream();
+    return;
+  }
+
+  video.src = getFullMediaUrl(newSrc);
+  video.load();
+  // onLoaded will handle resume + autoplay
 }, { immediate: true });
 </script>

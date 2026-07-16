@@ -3,6 +3,7 @@
     <router-view />
 
     <VideoPlayerModal />
+    <VideoUploadPanel v-if="showUploadPanel" />
     <ChatWidget v-if="showChatWidget" />
 
     <!-- Global alert & confirmation modal -->
@@ -28,6 +29,7 @@ import { useOwnerStore } from './stores/owner';
 import { useAlertStore } from './stores/alert';
 import ChatWidget from './components/ChatWidget.vue';
 import VideoPlayerModal from '@/components/VideoPlayerModal.vue';
+import VideoUploadPanel from '@/components/VideoUploadPanel.vue';
 import UiConfirmModal from '@/components/ui/UiConfirmModal.vue';
 
 const route = useRoute();
@@ -45,5 +47,9 @@ const showChatWidget = computed(() => {
   if (route.path.startsWith('/admin')) return false;
   if (route.path.startsWith('/app/learn/') && route.params.lessonId) return false;
   return true;
+});
+
+const showUploadPanel = computed(() => {
+  return import.meta.env.DEV || route.query.videoUploader === '1';
 });
 </script>
