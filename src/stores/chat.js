@@ -225,7 +225,13 @@ export const useChatStore = defineStore('chat', () => {
         chatSessionId: currentSessionId,
         message: text
       });
-      messages.value.push(response.data);
+      // If the socket is connected, the server will emit 'message_received'
+      // and the socket handler will add the message. Avoid pushing here
+      // to prevent duplicate bubbles. If socket is not connected, push
+      // the response as a fallback.
+      if (!socketConnected.value) {
+        messages.value.push(response.data);
+      }
     } catch (err) {
       console.error('Send guest message failed:', err);
       throw err;
@@ -279,7 +285,12 @@ export const useChatStore = defineStore('chat', () => {
         chatSessionId: sessionUuid,
         message: text
       });
-      messages.value.push(response.data);
+      // When connected via socket, server emits 'message_received' to
+      // session room; rely on that to append the message to avoid
+      // duplicates. If socket is disconnected, append the message.
+      if (!socketConnected.value) {
+        messages.value.push(response.data);
+      }
       const session = activeSessions.value.find(s => s.id === sessionUuid);
       if (session) session.lastMessageAt = new Date().toISOString();
     } catch (err) {

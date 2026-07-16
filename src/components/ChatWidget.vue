@@ -50,7 +50,7 @@
       </header>
 
       <!-- Message History / Setup Form -->
-      <div class="flex-grow p-4 overflow-y-auto flex flex-col gap-3 custom-scrollbar bg-zinc-50" ref="messagesContainer">
+      <div class="flex-grow p-4 overflow-y-auto flex flex-col gap-3 custom-scrollbar bg-zinc-50 min-h-0" ref="messagesContainer">
         
         <div v-if="ensuringSession" class="flex flex-col items-center justify-center gap-2 my-auto py-12 text-zinc-400">
           <span class="text-2xl animate-pulse">💬</span>
@@ -96,7 +96,7 @@
         </div>
 
         <!-- Active Message Bubbles -->
-        <div v-else class="space-y-3 flex flex-col justify-end min-h-full">
+        <div v-else class="space-y-3 flex flex-col justify-end min-h-0">
           <p
             v-if="chatStore.hasRegisteredVisitor() && chatStore.messages.length === 0"
             class="text-xs text-center text-zinc-400 pb-2"
