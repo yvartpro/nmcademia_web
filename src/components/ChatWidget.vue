@@ -50,83 +50,85 @@
       </header>
 
       <!-- Message History / Setup Form -->
-      <div class="flex-grow p-4 overflow-y-auto flex flex-col gap-3 custom-scrollbar bg-zinc-50 min-h-0" ref="messagesContainer">
-        
-        <div v-if="ensuringSession" class="flex flex-col items-center justify-center gap-2 my-auto py-12 text-zinc-400">
-          <span class="text-2xl animate-pulse">💬</span>
-          <p class="text-xs">Restoring your conversation…</p>
-        </div>
-
-        <!-- First-time visitors only: collect details before chat -->
-        <div v-else-if="showRegistrationForm" class="space-y-4 my-auto">
-          <div class="text-center space-y-1 py-4">
-            <span class="text-3xl">👋</span>
-            <h6 class="font-bold text-sm text-zinc-900">Ask a question to our trainer</h6>
-            <p class="text-xs text-zinc-500 max-w-[240px] mx-auto leading-normal">Complete the signup steps first, or fill in your details below to open chat.</p>
+      <div class="flex-1 min-h-0 overflow-y-auto p-4 custom-scrollbar bg-zinc-50" ref="messagesContainer">
+        <div class="flex flex-col gap-3 min-h-full">
+          <div v-if="ensuringSession" class="flex flex-col items-center justify-center gap-2 my-auto py-12 text-zinc-400">
+            <span class="text-2xl animate-pulse">💬</span>
+            <p class="text-xs">Restoring your conversation…</p>
           </div>
-          
-          <form @submit.prevent="startSessionSubmit" class="space-y-3">
-            <input 
-              type="text" 
-              v-model="initForm.name" 
-              required 
-              placeholder="Your Full Name"
-              class="w-full bg-white border border-zinc-200 rounded-lg p-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-accent transition"
-            />
-            <input 
-              type="email" 
-              v-model="initForm.email" 
-              placeholder="Your Email Address (Optional)"
-              class="w-full bg-white border border-zinc-200 rounded-lg p-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-accent transition"
-            />
-            <input 
-              type="tel" 
-              v-model="initForm.phone" 
-              placeholder="Your Phone Number (Optional)"
-              class="w-full bg-white border border-zinc-200 rounded-lg p-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-accent transition"
-            />
-            <button 
-              type="submit" 
-              :disabled="loadingSession"
-              class="w-full bg-accent hover:bg-accent-dark text-white font-bold py-2 px-4 rounded-lg text-xs transition disabled:opacity-50"
+
+          <!-- First-time visitors only: collect details before chat -->
+          <div v-else-if="showRegistrationForm" class="space-y-4 my-auto">
+            <div class="text-center space-y-1 py-4">
+              <span class="text-3xl">👋</span>
+              <h6 class="font-bold text-sm text-zinc-900">Ask a question to our trainer</h6>
+              <p class="text-xs text-zinc-500 max-w-[240px] mx-auto leading-normal">Complete the signup steps first, or fill in your details below to open chat.</p>
+            </div>
+            
+            <form @submit.prevent="startSessionSubmit" class="space-y-3">
+              <input 
+                type="text" 
+                v-model="initForm.name" 
+                required 
+                placeholder="Your Full Name"
+                class="w-full bg-white border border-zinc-200 rounded-lg p-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-accent transition"
+              />
+              <input 
+                type="email" 
+                v-model="initForm.email" 
+                placeholder="Your Email Address (Optional)"
+                class="w-full bg-white border border-zinc-200 rounded-lg p-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-accent transition"
+              />
+              <input 
+                type="tel" 
+                v-model="initForm.phone" 
+                placeholder="Your Phone Number (Optional)"
+                class="w-full bg-white border border-zinc-200 rounded-lg p-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-accent transition"
+              />
+              <button 
+                type="submit" 
+                :disabled="loadingSession"
+                class="w-full bg-accent hover:bg-accent-dark text-white font-bold py-2 px-4 rounded-lg text-xs transition disabled:opacity-50"
+              >
+                {{ loadingSession ? 'Opening session...' : 'Start Chat Session' }}
+              </button>
+            </form>
+          </div>
+
+          <!-- Active Message Bubbles -->
+          <div v-else class="flex flex-col gap-3">
+            <p
+              v-if="chatStore.hasRegisteredVisitor() && chatStore.messages.length === 0"
+              class="text-xs text-center text-zinc-400 pb-2"
             >
-              {{ loadingSession ? 'Opening session...' : 'Start Chat Session' }}
-            </button>
-          </form>
-        </div>
+              Welcome back, {{ chatStore.visitorName }}. Ask your trainer anything below.
+            </p>
+            <div 
+              v-for="msg in chatStore.messages" 
+              :key="msg.id"
+              :class="[
+                'max-w-[75%] p-3 rounded-xl text-xs leading-relaxed break-words',
+                msg.sender === 'guest'
+                  ? 'self-end bg-accent/10 border border-accent/20 text-zinc-800 rounded-br-none'
+                  : 'self-start bg-white border border-zinc-200 text-zinc-700 rounded-bl-none shadow-sm'
+              ]"
+            >
+              <p>{{ msg.message }}</p>
+              <span class="text-[8px] text-zinc-400 block text-right mt-1.5">
+                {{ formatTime(msg.createdAt) }}
+              </span>
+            </div>
 
-        <!-- Active Message Bubbles -->
-        <div v-else class="space-y-3 flex flex-col justify-end min-h-0">
-          <p
-            v-if="chatStore.hasRegisteredVisitor() && chatStore.messages.length === 0"
-            class="text-xs text-center text-zinc-400 pb-2"
-          >
-            Welcome back, {{ chatStore.visitorName }}. Ask your trainer anything below.
-          </p>
-          <div 
-            v-for="msg in chatStore.messages" 
-            :key="msg.id"
-            :class="[
-              'max-w-[75%] p-3 rounded-xl text-xs leading-relaxed break-words',
-              msg.sender === 'guest'
-                ? 'self-end bg-accent/10 border border-accent/20 text-zinc-800 rounded-br-none'
-                : 'self-start bg-white border border-zinc-200 text-zinc-700 rounded-bl-none shadow-sm'
-            ]"
-          >
-            <p>{{ msg.message }}</p>
-            <span class="text-[8px] text-zinc-400 block text-right mt-1.5">
-              {{ formatTime(msg.createdAt) }}
-            </span>
+            <div
+              v-if="chatStore.messages.length === 0 && !chatStore.hasRegisteredVisitor()"
+              class="text-center text-zinc-400 text-xs py-8"
+            >
+              Type your question below to start chatting with the trainer.
+            </div>
           </div>
 
-          <div
-            v-if="chatStore.messages.length === 0 && !chatStore.hasRegisteredVisitor()"
-            class="text-center text-zinc-400 text-xs py-8"
-          >
-            Type your question below to start chatting with the trainer.
-          </div>
+          <div ref="bottomAnchor" class="h-1 shrink-0"></div>
         </div>
-
       </div>
 
       <!-- Message Sender Controls -->
@@ -176,6 +178,7 @@ const isOpen = ref(false);
 const messageText = ref('');
 const loadingSession = ref(false);
 const messagesContainer = ref(null);
+const bottomAnchor = ref(null);
 
 const initForm = ref({
   name: localStorage.getItem('chat_visitor_name') || '',
@@ -248,8 +251,21 @@ const sendMessage = async () => {
 
 const scrollToBottom = async () => {
   await nextTick();
-  if (messagesContainer.value) {
+  await nextTick();
+  if (!messagesContainer.value) return;
+
+  try {
+    if (bottomAnchor.value) {
+      bottomAnchor.value.scrollIntoView({ behavior: 'auto', block: 'end' });
+      return;
+    }
+
     messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+    requestAnimationFrame(() => {
+      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+    });
+  } catch (e) {
+    // ignore
   }
 };
 
@@ -266,8 +282,10 @@ watch(() => chatStore.messages.length, (newVal, oldVal) => {
     if (lastMsg && lastMsg.sender === 'trainer') {
       unreadCount.value++;
     }
+    return; // don't scroll when collapsed
   }
-  scrollToBottom();
+  // Only scroll when open
+  if (isOpen.value) scrollToBottom();
 });
 
 onMounted(async () => {

@@ -22,6 +22,14 @@ export const useChatStore = defineStore('chat', () => {
 
   let socket = null;
   const socketConnected = ref(false);
+  // Track recently-added message IDs to avoid duplicates when API and socket
+  // responses race. Entries are removed after a short timeout.
+  const recentMessageIds = new Set();
+  const markRecent = (id) => {
+    if (!id) return;
+    recentMessageIds.add(id);
+    setTimeout(() => recentMessageIds.delete(id), 30 * 1000); // 30s
+  };
 
   const connectSocket = () => {
     if (socket) return;
@@ -52,8 +60,11 @@ export const useChatStore = defineStore('chat', () => {
     });
 
     socket.on('message_received', (msg) => {
+      if (!msg || !msg.id) return;
+      if (recentMessageIds.has(msg.id)) return; // already added recently
       if (!messages.value.some(m => m.id === msg.id)) {
         messages.value.push(msg);
+        markRecent(msg.id);
       }
       const session = activeSessions.value.find(s => s.id === msg.chatSessionId);
       if (session) {
@@ -230,7 +241,10 @@ export const useChatStore = defineStore('chat', () => {
       // to prevent duplicate bubbles. If socket is not connected, push
       // the response as a fallback.
       if (!socketConnected.value) {
-        messages.value.push(response.data);
+        if (response.data && response.data.id && !messages.value.some(m => m.id === response.data.id)) {
+          messages.value.push(response.data);
+          markRecent(response.data.id);
+        }
       }
     } catch (err) {
       console.error('Send guest message failed:', err);
@@ -289,7 +303,10 @@ export const useChatStore = defineStore('chat', () => {
       // session room; rely on that to append the message to avoid
       // duplicates. If socket is disconnected, append the message.
       if (!socketConnected.value) {
-        messages.value.push(response.data);
+        if (response.data && response.data.id && !messages.value.some(m => m.id === response.data.id)) {
+          messages.value.push(response.data);
+          markRecent(response.data.id);
+        }
       }
       const session = activeSessions.value.find(s => s.id === sessionUuid);
       if (session) session.lastMessageAt = new Date().toISOString();
