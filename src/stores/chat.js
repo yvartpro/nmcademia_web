@@ -26,13 +26,17 @@ export const useChatStore = defineStore('chat', () => {
   const connectSocket = () => {
     if (socket) return;
 
-    socket = io({
-      transports: ['websocket']
+    const backendUrl = import.meta.env.VITE_BACKEND_ORIGIN || 'http://localhost:3000';
+    socket = io(backendUrl, {
+      transports: ['websocket'],
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 5
     });
 
     socket.on('connect', () => {
       socketConnected.value = true;
-      console.log('Connected to socket.io server');
       
       if (sessionId.value) {
         socket.emit('join_session', sessionId.value);
@@ -45,7 +49,6 @@ export const useChatStore = defineStore('chat', () => {
 
     socket.on('disconnect', () => {
       socketConnected.value = false;
-      console.log('Disconnected from socket.io server');
     });
 
     socket.on('message_received', (msg) => {

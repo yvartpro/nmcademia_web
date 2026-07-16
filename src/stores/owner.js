@@ -27,8 +27,6 @@ export const useOwnerStore = defineStore('owner', {
           if (response.data.photo) {
             this.photoUrl = getFullMediaUrl(response.data.photo.filePath);
           }
-          console.log('Owner profile loaded:', this.name, this.domainName, this.intro);
-          console.log('Owner intro:', this.intro);
         }
       } catch (err) {
         console.error('Failed to load owner profile:', err);
