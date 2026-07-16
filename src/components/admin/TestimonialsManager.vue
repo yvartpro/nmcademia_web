@@ -22,8 +22,8 @@
           <tr v-for="item in contentStore.testimonials" :key="item.id" class="hover:bg-[#F4F6F5]/60 transition">
             <td class="p-4">
               <div class="w-16 h-12 rounded overflow-hidden bg-zinc-100 flex items-center justify-center">
-                <img v-if="item.video && item.video.thumbnailPath" :src="$stores.media.resolveUrl(item.video.thumbnailPath)" class="w-full h-full object-cover" />
-                <img v-else-if="item.photo && item.photo.thumbnailPath" :src="$stores.media.resolveUrl(item.photo.thumbnailPath)" class="w-full h-full object-cover" />
+                <img v-if="item.video && item.video.thumbnailPath" :src="mediaStore.resolveUrl(item.video.thumbnailPath)" class="w-full h-full object-cover" />
+                <img v-else-if="item.photo && item.photo.thumbnailPath" :src="mediaStore.resolveUrl(item.photo.thumbnailPath)" class="w-full h-full object-cover" />
                 <div v-else class="text-sm">—</div>
               </div>
             </td>
@@ -82,11 +82,13 @@
 <script setup>
 import { ref } from 'vue';
 import { useContentStore } from '../../stores/content';
+import { useMediaStore } from '../../stores/media';
 import MediaPicker from './MediaPicker.vue';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
 
 const contentStore = useContentStore();
+const mediaStore = useMediaStore();
 
 const isModalOpen = ref(false);
 const editingId = ref(null);
