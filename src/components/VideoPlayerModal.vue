@@ -367,18 +367,33 @@ const bindVideoEvents = (video) => {
 };
 
 const resolvePlaybackSource = () => {
-  if (!isHlsStream.value || !store.asset?.versions?.hls) {
+  if (!isHlsStream.value) {
     return src.value ? getFullMediaUrl(src.value) : '';
   }
+  // For HLS, always load the master.m3u8 to enable adaptive bitrate & manual switching
+  if (store.asset?.versions?.hls?.masterUrl) {
+    return getFullMediaUrl(store.asset.versions.hls.masterUrl);
+  }
+  return src.value ? getFullMediaUrl(src.value) : '';
+};
 
-  const resolutions = store.asset.versions.hls.resolutions || {};
-  if (store.currentQuality === '360' && resolutions['360']) {
-    return getFullMediaUrl(resolutions['360']);
+const updateHlsLevel = () => {
+  if (!hlsInstance || !hlsInstance.levels || hlsInstance.levels.length === 0) return;
+  const quality = store.currentQuality.value || store.currentQuality;
+  
+  if (quality === 'auto') {
+    hlsInstance.currentLevel = -1; // Auto
+  } else {
+    const targetHeight = parseInt(quality, 10);
+    const levelIndex = hlsInstance.levels.findIndex(lvl => lvl.height === targetHeight);
+    if (levelIndex !== -1) {
+      hlsInstance.currentLevel = levelIndex;
+    } else {
+      // Fallback matching
+      const fallbackIdx = quality === '360' ? 0 : hlsInstance.levels.length - 1;
+      hlsInstance.currentLevel = Math.min(fallbackIdx, hlsInstance.levels.length - 1);
+    }
   }
-  if (store.currentQuality === '720' && resolutions['720']) {
-    return getFullMediaUrl(resolutions['720']);
-  }
-  return store.asset.versions.hls.masterUrl ? getFullMediaUrl(store.asset.versions.hls.masterUrl) : getFullMediaUrl(src.value);
 };
 
 const attachHlsStream = async () => {
@@ -404,7 +419,11 @@ const attachHlsStream = async () => {
 
     hlsInstance.loadSource(playbackUrl);
     hlsInstance.attachMedia(video);
+    
     hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
+      // Apply the user's preferred initial quality level
+      updateHlsLevel();
+      
       video.play().then(() => {
         isPlaying.value = true;
       }).catch(() => {
@@ -425,8 +444,8 @@ const attachHlsStream = async () => {
   }
 };
 
-// Watch src changes to re-initialize player
-watch([src, () => store.currentQuality], async ([newSrc]) => {
+// Re-initialize player ONLY when the video source (src) changes
+watch(src, async (newSrc) => {
   // Reset iframe splash whenever a new video is opened
   showIframeSplash.value = true;
   if (!newSrc) {
@@ -455,6 +474,10 @@ watch([src, () => store.currentQuality], async ([newSrc]) => {
 
   video.src = getFullMediaUrl(newSrc);
   video.load();
-  // onLoaded will handle resume + autoplay
 }, { immediate: true });
+
+// Seamlessly switch quality levels on the fly when preferred quality changes
+watch(() => store.currentQuality, () => {
+  updateHlsLevel();
+});
 </script>
