@@ -1,38 +1,26 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import LandingPage from '../views/LandingPage.vue';
-import PresentationPage from '../views/PresentationPage.vue';
-import FunnelPage from '../views/FunnelPage.vue';
-import PackageDetails from '../views/PackageDetails.vue';
-import AdminLogin from '../views/admin/AdminLogin.vue';
-import AdminDashboard from '../views/admin/AdminDashboard.vue';
-import TrainingPage from '../views/member/TrainingPage.vue';
-import CoursePage from '../views/member/CoursePage.vue';
-import LessonPage from '../views/member/LessonPage.vue';
-import ProgressPage from '../views/member/ProgressPage.vue';
-import CertificatesPage from '../views/member/CertificatesPage.vue';
-import SettingsPage from '../views/member/SettingsPage.vue';
 import { useMemberStore } from '../stores/member';
 import { isRouteAllowed, getJourney } from '../data/learnerJourneys';
 
 const routes = [
-  { path: '/', name: 'landing', component: LandingPage },
-  { path: '/funnel/:funnelId', name: 'funnel', component: FunnelPage },
-  { path: '/presentation', name: 'presentation', component: PresentationPage },
-  { path: '/package-details/:slug', name: 'package-details', component: PackageDetails },
-  { path: '/app/training', name: 'training', component: TrainingPage, meta: { requiresLearner: true } },
-  { path: '/app/learn/:courseId', name: 'member-course', component: CoursePage, meta: { requiresLearner: true } },
-  { path: '/app/learn/:courseId/:lessonId', name: 'member-lesson', component: LessonPage, meta: { requiresLearner: true } },
-  { path: '/app/progress', name: 'member-progress', component: ProgressPage, meta: { requiresLearner: true } },
-  { path: '/app/certificates', name: 'member-certificates', component: CertificatesPage, meta: { requiresLearner: true } },
-  { path: '/app/settings', name: 'member-settings', component: SettingsPage, meta: { requiresLearner: true } },
+  { path: '/', name: 'landing', component: () => import('../views/LandingPage.vue') },
+  { path: '/funnel/:funnelId', name: 'funnel', component: () => import('../views/FunnelPage.vue') },
+  { path: '/presentation', name: 'presentation', component: () => import('../views/PresentationPage.vue') },
+  { path: '/package-details/:slug', name: 'package-details', component: () => import('../views/PackageDetails.vue') },
+  { path: '/app/training', name: 'training', component: () => import('../views/member/TrainingPage.vue'), meta: { requiresLearner: true } },
+  { path: '/app/learn/:courseId', name: 'member-course', component: () => import('../views/member/CoursePage.vue'), meta: { requiresLearner: true } },
+  { path: '/app/learn/:courseId/:lessonId', name: 'member-lesson', component: () => import('../views/member/LessonPage.vue'), meta: { requiresLearner: true } },
+  { path: '/app/progress', name: 'member-progress', component: () => import('../views/member/ProgressPage.vue'), meta: { requiresLearner: true } },
+  { path: '/app/certificates', name: 'member-certificates', component: () => import('../views/member/CertificatesPage.vue'), meta: { requiresLearner: true } },
+  { path: '/app/settings', name: 'member-settings', component: () => import('../views/member/SettingsPage.vue'), meta: { requiresLearner: true } },
   // Legacy routes → journey-aware redirects
   { path: '/app/home', redirect: () => redirectForJourney() },
   { path: '/app/learn', redirect: () => redirectForJourney() },
   { path: '/app/community', redirect: () => redirectForJourney() },
   { path: '/app/mentors', redirect: () => redirectForJourney() },
   { path: '/app/mentors/:id', redirect: () => redirectForJourney() },
-  { path: '/admin/login', name: 'admin-login', component: AdminLogin },
-  { path: '/admin/dashboard', name: 'admin-dashboard', component: AdminDashboard, meta: { requiresAuth: true } },
+  { path: '/admin/login', name: 'admin-login', component: () => import('../views/admin/AdminLogin.vue') },
+  { path: '/admin/dashboard', name: 'admin-dashboard', component: () => import('../views/admin/AdminDashboard.vue'), meta: { requiresAuth: true } },
   { path: '/:pathMatch(.*)*', redirect: '/' },
 ];
 

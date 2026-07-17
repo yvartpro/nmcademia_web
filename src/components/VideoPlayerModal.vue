@@ -13,7 +13,7 @@
     >
       <div class="flex flex-col items-center gap-4">
         <LoadingDots color="bg-accent" />
-        <p class="text-white/70 text-sm font-medium">{{ isHlsStream ? 'Buffering adaptive HLS stream…' : 'Buffering...' }}</p>
+        <p class="text-white/70 text-sm font-medium">Buffering...</p>
         <div v-if="store.bufferProgress > 0" class="w-48 h-1 bg-white/10 rounded-full overflow-hidden">
           <div
             class="h-full bg-accent transition-all duration-300"
@@ -115,8 +115,6 @@
 
       <!-- Controls row -->
       <div class="flex items-center justify-between mt-2 gap-2 flex-wrap">
-        <div class="text-[10px] uppercase tracking-[0.24em] text-zinc-400">{{ streamModeLabel }}</div>
-
         <!-- Play/Pause -->
         <button @click="togglePlay" class="text-green-400 hover:text-green-300 font-semibold">
           {{ isPlaying ? 'Pause' : 'Play' }}
@@ -139,7 +137,6 @@
         />
 
         <div v-if="isHlsStream" class="flex items-center gap-2 rounded-full border border-white/10 bg-black/30 px-2 py-1">
-          <span class="text-[10px] uppercase tracking-[0.24em] text-zinc-400">Quality</span>
           <select v-model="selectedQuality" class="bg-transparent text-xs text-green-300 outline-none">
             <option class="text-zinc-900" value="auto">Auto</option>
             <option class="text-zinc-900" value="360">360p</option>
@@ -164,10 +161,11 @@
 
 <script setup>
 import { computed, ref, watch, nextTick } from 'vue';
-import Hls from 'hls.js';
 import { useVideoPlayerStore } from '@/stores/videoPlayer';
 import { getFullMediaUrl } from '@/api';
 import LoadingDots from './ui/LoadingDots.vue';
+
+let Hls = null;
 
 const store = useVideoPlayerStore();
 
@@ -403,6 +401,10 @@ const attachHlsStream = async () => {
 
   bindVideoEvents(video);
   destroyHlsInstance();
+
+  if (!Hls) {
+    Hls = (await import('hls.js/light')).default;
+  }
 
   if (Hls.isSupported()) {
     hlsInstance = new Hls({

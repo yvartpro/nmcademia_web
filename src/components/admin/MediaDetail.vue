@@ -246,8 +246,9 @@
 
 <script setup>
 import { ref, computed, watch, nextTick } from 'vue';
-import Hls from 'hls.js';
 import { useMediaStore } from '../../stores/media';
+
+let Hls = null;
 
 const props = defineProps({
   asset: { type: Object, default: null }
@@ -287,6 +288,9 @@ watch(videoActive, async (isActive) => {
   if (hlsInstance) {
     try { hlsInstance.destroy(); } catch (_) {}
     hlsInstance = null;
+  }
+  if (!Hls) {
+    Hls = (await import('hls.js/light')).default;
   }
   if (Hls.isSupported()) {
     hlsInstance = new Hls({ maxBufferLength: 6 });
