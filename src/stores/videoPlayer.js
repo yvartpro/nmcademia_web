@@ -55,7 +55,7 @@ export const useVideoPlayerStore = defineStore('videoPlayer', () => {
     title.value = videoTitle;
     thumbnail.value = videoThumbnail;
     asset.value = videoAsset;
-    currentQuality.value = resolvePreferredQuality();
+    currentQuality.value = 'auto';
     visible.value = true;
   }
 
