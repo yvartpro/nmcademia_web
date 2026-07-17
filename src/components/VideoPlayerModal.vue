@@ -80,8 +80,8 @@
 
     <!-- TOP BAR -->
     <div
-      class="absolute top-0 left-0 right-0 z-20 flex items-center justify-between p-4 text-white bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-300"
-      :class="showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+      class="absolute top-0 left-0 right-0 z-[60] flex items-center justify-between p-4 text-white bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-300"
+      :class="(showControls || store.isBuffering) ? 'opacity-100' : 'opacity-0 pointer-events-none'"
     >
       <span class="text-sm font-semibold truncate max-w-[70%]">
         {{ title }}
