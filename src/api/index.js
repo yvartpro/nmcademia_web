@@ -63,7 +63,11 @@ export const normalizeMediaPath = (path) => {
   }
   
   const withLeading = path.startsWith('/') ? path : `/${path}`;
-  return withLeading.replace(/\/+/g, '/');
+  const normalized = withLeading.replace(/\/+/g, '/');
+  if (normalized.startsWith('/videos/') || normalized.startsWith('/images/')) {
+    return `/uploads${normalized}`;
+  }
+  return normalized;
 };
 
 export const getMediaUrl = (filePath) => normalizeMediaPath(filePath);

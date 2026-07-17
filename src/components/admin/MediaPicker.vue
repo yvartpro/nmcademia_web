@@ -82,45 +82,55 @@
       </button>
     </div>
 
-    <!-- Video upload staging area: choose thumbnail and show progress -->
+    <!-- Video upload staging area: upload as adaptive HLS stream -->
     <div v-if="tempVideoFile" class="mt-4 p-4 border-2 border-[#008A20] rounded-lg bg-[#F4F6F5]">
       <div class="flex items-start gap-4">
-        <div class="w-20 h-20 bg-white rounded flex items-center justify-center flex-shrink-0">🎬</div>
+        <div class="w-20 h-20 bg-white rounded flex items-center justify-center flex-shrink-0 overflow-hidden border border-zinc-200">
+          <img v-if="tempThumbnailPreview" :src="tempThumbnailPreview" alt="Thumbnail preview" class="w-full h-full object-cover" />
+          <span v-else class="text-2xl">🎬</span>
+        </div>
         <div class="flex-1">
           <div class="text-sm font-bold text-[#008A20]">{{ tempVideoFile.name }}</div>
           <div class="text-[11px] text-zinc-500">Size: {{ humanFileSize(tempVideoFile.size) }}</div>
 
-          <div class="mt-3 p-3 bg-white rounded border border-zinc-200">
-            <label class="block text-[11px] font-semibold text-zinc-700 mb-2">📷 Add thumbnail (required)</label>
-            <label class="inline-block cursor-pointer bg-[#008A20] hover:bg-[#006616] text-white px-3 py-1.5 rounded text-[10px] font-bold transition">
-              Choose image
-              <input type="file" accept="image/*" @change="onSelectThumbnail" class="hidden" />
-            </label>
-            <div v-if="tempThumbnailFile" class="text-[11px] mt-2 p-2 bg-green-50 border border-green-200 rounded">
-              ✓ Selected: <strong>{{ tempThumbnailFile.name }}</strong> ({{ humanFileSize(tempThumbnailFile.size) }})
-            </div>
-          </div>
+          <label class="mt-3 block text-[11px] font-semibold text-zinc-700">Video title</label>
+          <input v-model="tempVideoTitle" class="mt-1 w-full rounded border border-zinc-200 bg-white px-3 py-2 text-[11px] text-zinc-700 outline-none focus:border-[#008A20]" placeholder="Course lesson title" />
+
+          <label class="mt-3 block text-[11px] font-semibold text-zinc-700">
+            Thumbnail <span class="text-red-500">*</span>
+          </label>
+          <p class="text-[10px] text-zinc-500">Required — used as the video preview in the library and player.</p>
+          <label class="mt-1 inline-flex cursor-pointer items-center gap-2 rounded border border-zinc-200 bg-white px-3 py-2 text-[11px] font-semibold text-[#008A20] transition hover:bg-zinc-50">
+            {{ tempThumbnailFile ? 'Change thumbnail' : 'Select thumbnail image' }}
+            <input type="file" accept="image/*" class="hidden" @change="onSelectThumbnail" />
+          </label>
+          <p v-if="tempThumbnailFile" class="mt-1 text-[10px] text-zinc-500">{{ tempThumbnailFile.name }}</p>
 
           <div class="mt-3 flex gap-2">
             <button @click="startUpload" type="button" :disabled="uploading || !tempThumbnailFile" class="bg-[#008A20] hover:bg-[#006616] text-white font-bold px-4 py-2 rounded text-[11px] transition disabled:opacity-50">
-              {{ uploading ? 'Uploading…' : '↑ Start upload' }}
+              {{ uploading ? 'Uploading…' : '↑ Start HLS upload' }}
             </button>
             <button @click="resetStaging" type="button" :disabled="uploading" class="px-3 py-2 border border-zinc-300 rounded text-[11px] text-zinc-600 hover:bg-zinc-100 disabled:opacity-50">
               Cancel
             </button>
           </div>
 
+          <div v-if="uploadStatusLabel" class="mt-3 rounded border border-zinc-200 bg-white px-3 py-2 text-[11px] text-zinc-600">
+            <div class="font-semibold text-[#008A20]">{{ uploadStatusLabel }}</div>
+            <div class="mt-1 text-zinc-500">{{ uploadStatusMessage }}</div>
+          </div>
+
           <div v-if="uploading" class="mt-3 space-y-2">
             <div>
-              <div class="text-[11px]">Image upload: {{ imageProgress }}%</div>
-              <div class="w-full bg-zinc-100 rounded h-2 overflow-hidden"><div :style="{width: imageProgress + '%'}" class="h-2 bg-green-500"></div></div>
-            </div>
-            <div>
-              <div class="text-[11px]">Video upload: {{ videoProgress }}%</div>
+              <div class="text-[11px]">Upload progress: {{ videoProgress }}%</div>
               <div class="w-full bg-zinc-100 rounded h-2 overflow-hidden"><div :style="{width: videoProgress + '%'}" class="h-2 bg-emerald-600"></div></div>
             </div>
+            <div v-if="tempThumbnailFile">
+              <div class="text-[11px]">Thumbnail: {{ imageProgress >= 100 ? 'Ready' : 'Uploading…' }}</div>
+              <div class="w-full bg-zinc-100 rounded h-2 overflow-hidden"><div :style="{width: imageProgress + '%'}" class="h-2 bg-amber-500"></div></div>
+            </div>
             <div>
-              <div class="text-[11px]">Overall: {{ overallProgress }}%</div>
+              <div class="text-[11px]">Encoding status: {{ overallProgress }}%</div>
               <div class="w-full bg-zinc-100 rounded h-2 overflow-hidden"><div :style="{width: overallProgress + '%'}" class="h-2 bg-teal-500"></div></div>
             </div>
           </div>
@@ -280,13 +290,17 @@ const clear = () => {
 };
 
 
-// Video + optional thumbnail flow
+// Video + thumbnail flow
 const tempVideoFile = ref(null);
 const tempThumbnailFile = ref(null);
+const tempThumbnailPreview = ref('');
+const tempVideoTitle = ref('');
 const uploading = ref(false);
 const videoProgress = ref(0);
 const imageProgress = ref(0);
 const overallProgress = ref(0);
+const uploadStatusLabel = ref('');
+const uploadStatusMessage = ref('');
 
 const humanFileSize = (size) => {
   if (!size) return '0 B';
@@ -299,37 +313,55 @@ const onSelectVideo = (e) => {
   const file = e.target.files?.[0];
   if (!file) return;
   tempVideoFile.value = file;
-  tempThumbnailFile.value = null;
+  tempVideoTitle.value = file.name.replace(/\.[^.]+$/, '');
+  e.target.value = '';
 };
 
 const onSelectThumbnail = (e) => {
   const file = e.target.files?.[0];
   if (!file) return;
   tempThumbnailFile.value = file;
+  if (tempThumbnailPreview.value) {
+    URL.revokeObjectURL(tempThumbnailPreview.value);
+  }
+  tempThumbnailPreview.value = URL.createObjectURL(file);
+  e.target.value = '';
 };
 
 const resetStaging = () => {
   tempVideoFile.value = null;
   tempThumbnailFile.value = null;
+  if (tempThumbnailPreview.value) {
+    URL.revokeObjectURL(tempThumbnailPreview.value);
+  }
+  tempThumbnailPreview.value = '';
   uploading.value = false;
   videoProgress.value = 0;
   imageProgress.value = 0;
   overallProgress.value = 0;
+  uploadStatusLabel.value = '';
+  uploadStatusMessage.value = '';
 };
 
 const startUpload = async () => {
   if (!tempVideoFile.value) return;
   if (!tempThumbnailFile.value) {
-    alertStore.showError('Please select a thumbnail image for this video upload.');
+    alertStore.showError('Please select a thumbnail image before uploading.');
     return;
   }
 
   uploading.value = true;
+  uploadStatusLabel.value = 'Uploading source video';
+  uploadStatusMessage.value = 'Transferring the file and thumbnail to the server';
+  videoProgress.value = 0;
+  overallProgress.value = 0;
+  imageProgress.value = 0;
+
   try {
     const asset = await mediaStore.uploadVideoWithThumbnail(
       tempVideoFile.value,
       tempThumbnailFile.value,
-      { title: tempVideoFile.value.name, description: '' },
+      { title: tempVideoTitle.value || tempVideoFile.value.name, description: '' },
       {
         onVideoProgress: (pct) => { videoProgress.value = pct; },
         onImageProgress: (pct) => { imageProgress.value = pct; },
@@ -337,12 +369,19 @@ const startUpload = async () => {
       }
     );
 
+    uploadStatusLabel.value = asset?.streamType === 'hls' ? 'Adaptive HLS stream ready' : 'Upload complete';
+    uploadStatusMessage.value = asset?.streamType === 'hls'
+      ? '360p and 720p variants are now available for adaptive playback.'
+      : 'The asset was uploaded successfully.';
+
     const value = props.isUrlMode ? asset.filePath : asset.id;
     emit('update:modelValue', value);
     showLibrary.value = false;
-    resetStaging();
+    setTimeout(() => resetStaging(), 1800);
   } catch (err) {
     console.error(err);
+    uploadStatusLabel.value = 'Upload failed';
+    uploadStatusMessage.value = 'Try again with a different file or check the server logs.';
     alertStore.showError('Upload failed. Try again.');
     uploading.value = false;
   }

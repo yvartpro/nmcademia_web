@@ -64,7 +64,8 @@
                   <div class="relative w-full aspect-video rounded-lg overflow-hidden bg-black shadow">
                     <video
                       v-if="videoActive"
-                      :src="resolvedFileUrl"
+                      ref="videoRef"
+                      :src="isHlsAsset ? undefined : resolvedFileUrl"
                       class="w-full h-full object-contain"
                       controls
                       autoplay
@@ -244,7 +245,8 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
+import Hls from 'hls.js';
 import { useMediaStore } from '../../stores/media';
 
 const props = defineProps({
@@ -257,22 +259,52 @@ const mediaStore = useMediaStore();
 const videoActive = ref(false);
 const previewBroken = ref(false);
 const thumbBroken = ref(false);
+const videoRef = ref(null);
+let hlsInstance = null;
 const copied = ref(null);
 const toast = ref('');
 let toastTimer = null;
 let copiedTimer = null;
 
 // Reset state when asset changes
-watch(() => props.asset, () => {
+watch(() => props.asset, async () => {
   videoActive.value = false;
   previewBroken.value = false;
   thumbBroken.value = false;
   copied.value = null;
+  if (hlsInstance) {
+    try { hlsInstance.destroy(); } catch (_) {}
+    hlsInstance = null;
+  }
+  await nextTick();
+});
+
+watch(videoActive, async (isActive) => {
+  if (!isActive || !props.asset || !isHlsAsset.value) return;
+  await nextTick();
+  const video = videoRef.value;
+  if (!video) return;
+  if (hlsInstance) {
+    try { hlsInstance.destroy(); } catch (_) {}
+    hlsInstance = null;
+  }
+  if (Hls.isSupported()) {
+    hlsInstance = new Hls({ maxBufferLength: 6 });
+    hlsInstance.loadSource(resolvedFileUrl.value);
+    hlsInstance.attachMedia(video);
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = resolvedFileUrl.value;
+  }
 });
 
 const resolvedFileUrl = computed(() => {
   if (!props.asset) return '';
   return mediaStore.getCopyUrl(props.asset);
+});
+
+const isHlsAsset = computed(() => {
+  const filePath = props.asset?.filePath || '';
+  return props.asset?.streamType === 'hls' || props.asset?.versions?.stream?.streamType === 'hls' || filePath.endsWith('.m3u8');
 });
 
 const resolvedThumbnailUrl = computed(() => {

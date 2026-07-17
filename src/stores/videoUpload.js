@@ -38,7 +38,7 @@ export const useVideoUploadStore = defineStore('videoUpload', () => {
       formData.append('description', description || '');
       formData.append('excerpt', excerpt || '');
 
-      const response = await api.post('/api/admin/media/hls-upload', formData, {
+      const response = await api.post('/admin/media/hls-upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         onUploadProgress: (event) => {
           if (!event.total) return;
