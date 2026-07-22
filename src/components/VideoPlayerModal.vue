@@ -210,7 +210,6 @@ const showControls = ref(true);
 let hideTimer = null;
 let saveTimer = null;
 let hlsInstance = null;
-let videoEventsBound = false;
 
 const triggerControls = () => {
   showControls.value = true;
@@ -333,7 +332,7 @@ const destroyHlsInstance = () => {
 };
 
 const bindVideoEvents = (video) => {
-  if (!video || videoEventsBound) return;
+  if (!video || video.dataset.eventsBound) return;
   video.addEventListener('timeupdate', onTimeUpdate);
   video.addEventListener('loadedmetadata', onLoaded);
   video.addEventListener('ended', onEnded);
@@ -361,7 +360,7 @@ const bindVideoEvents = (video) => {
       store.setBufferProgress(percentage);
     }
   });
-  videoEventsBound = true;
+  video.dataset.eventsBound = 'true';
 };
 
 const resolvePlaybackSource = () => {

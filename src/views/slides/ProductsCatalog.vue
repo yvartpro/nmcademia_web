@@ -17,8 +17,8 @@
       <div v-else class="absolute inset-0 bg-zinc-100 group-hover:bg-zinc-200 transition duration-500"></div>
       <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition duration-300"></div>
       <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent text-white">
-        <p class="text-base font-bold">{{ presentation?.title || 'Country presentation' }}</p>
-        <p v-if="presentation?.description" class="text-sm mt-1 text-white/80 line-clamp-2">{{ presentation.description }}</p>
+        <p class="text-base font-bold">{{ displayTitle }}</p>
+        <p v-if="displayDescription" class="text-sm mt-1 text-white/80 line-clamp-2">{{ displayDescription }}</p>
       </div>
       <div class="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center z-10 shadow-lg group-hover:scale-110 group-hover:bg-accent transition-all duration-300">
         <Play :size="28" class="text-white ml-1" />
@@ -64,23 +64,45 @@ const props = defineProps({
 const videoStore = useVideoPlayerStore();
 
 const presentationVideoSrc = computed(() => {
+  if (props.settings['product_video']) {
+    return getFullMediaUrl(props.settings['product_video']);
+  }
+
   if (props.presentation?.media) {
     return getFullMediaUrl(props.presentation.media);
   }
 
-  return props.settings['product_video'] || props.settings['video_url'] || '';
+  return props.settings['video_url'] || '';
 });
 
 const previewImage = computed(() => {
+  if (props.settings['product_video']) {
+    return props.settings['presentation_cover_image'] ? getFullMediaUrl(props.settings['presentation_cover_image']) : '';
+  }
+  
   if (props.presentation?.media?.thumbnailPath) return getFullMediaUrl(props.presentation.media.thumbnailPath);
   return props.settings['presentation_cover_image'] ? getFullMediaUrl(props.settings['presentation_cover_image']) : '';
+});
+
+const displayTitle = computed(() => {
+  if (props.settings['product_video']) {
+    return 'Product Presentation';
+  }
+  return props.presentation?.title || 'Country presentation';
+});
+
+const displayDescription = computed(() => {
+  if (props.settings['product_video']) {
+    return '';
+  }
+  return props.presentation?.description || '';
 });
 
 const openVideo = () => {
   if (presentationVideoSrc.value) {
     videoStore.open({
       src: presentationVideoSrc.value,
-      title: props.presentation?.title || 'Product Catalog Presentation',
+      title: displayTitle.value,
       thumbnail: previewImage.value || null,
     });
   }

@@ -5,10 +5,24 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
       <div class="lg:col-span-2 bg-white p-4 rounded shadow-sm">
         <div v-if="featured" class="space-y-3">
-          <div class="w-full aspect-video bg-black rounded overflow-hidden flex items-center justify-center">
-            <video v-if="featured.video && featured.video.filePath" :src="mediaResolve(featured.video.filePath)" controls class="w-full h-full object-cover" />
-            <div v-else class="text-white">No video available</div>
+          <div
+            v-if="featured.video && featured.video.filePath"
+            @click="openVideo(featured)"
+            class="w-full aspect-video bg-black rounded overflow-hidden flex items-center justify-center relative cursor-pointer group"
+          >
+            <img
+              v-if="featured.video.thumbnailPath"
+              :src="mediaResolve(featured.video.thumbnailPath)"
+              alt="Video thumbnail"
+              class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+            />
+            <div v-else class="absolute inset-0 bg-zinc-900"></div>
+            
+            <div class="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center z-10 shadow-lg group-hover:scale-110 group-hover:bg-accent transition-all duration-300">
+              <Play :size="28" class="text-white ml-1" />
+            </div>
           </div>
+          <div v-else class="w-full aspect-video bg-black rounded overflow-hidden flex items-center justify-center text-white">No video available</div>
 
           <div>
             <h4 class="text-xl font-extrabold">{{ featured.name }}</h4>
@@ -39,8 +53,21 @@
 import { computed, ref } from 'vue';
 import { useMediaStore } from '../../stores/media';
 import { useContentStore } from '../../stores/content';
+import { Play } from 'lucide-vue-next';
+import { useVideoPlayerStore } from '@/stores/videoPlayer';
 
 const mediaStore = useMediaStore();
+const videoStore = useVideoPlayerStore();
+
+const openVideo = (testimonial) => {
+  if (testimonial.video && testimonial.video.filePath) {
+    videoStore.open({
+      src: mediaStore.resolveUrl(testimonial.video.filePath),
+      title: testimonial.name,
+      thumbnail: testimonial.video.thumbnailPath ? mediaStore.resolveUrl(testimonial.video.thumbnailPath) : null,
+    });
+  }
+};
 const contentStore = useContentStore();
 
 const videoTestimonials = computed(() => (contentStore.testimonials || []).filter(t => t.hasVideo || (t.video && t.video.filePath)));
