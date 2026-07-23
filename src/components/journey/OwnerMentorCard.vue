@@ -14,7 +14,7 @@
         </p>
       </div>
     </div>
-    <UiButton variant="primary" full-width class="mt-4" @click="contactCoach">
+    <UiButton variant="primary" full-width class="mt-4" @click="joinGroup(settingsStore, 'new-to-mlm')">
       {{ ctaLabel }}
     </UiButton>
   </div>
@@ -26,10 +26,11 @@ import { GraduationCap } from 'lucide-vue-next';
 import UiButton from '../ui/UiButton.vue';
 import { useSettingsStore } from '../../stores/settings';
 import { useCatalogStore } from '../../stores/catalog';
+import { joinGroup } from '../../utils/whatsapp';
 
 const props = defineProps({
   message: { type: String, default: '' },
-  ctaLabel: { type: String, default: 'Message Your Coach' },
+  ctaLabel: { type: String, default: 'Join Our WhatsApp Group' },
 });
 
 const settingsStore = useSettingsStore();
@@ -46,17 +47,5 @@ const description = computed(
     || 'Your mentor is the founder of this Academia — one dedicated coach, not a marketplace of strangers.'
 );
 
-function contactCoach() {
-  const number =
-    catalogStore.selectedCountry?.whatsappNumber
-    || settingsStore.settings?.whatsapp_number
-    || '';
-  const text = encodeURIComponent(
-    props.message
-    || 'Hello, I am learning through Network Marketing Academia and would like mentorship guidance.'
-  );
-  if (number) {
-    window.open(`https://wa.me/${number.replace(/\+/g, '')}?text=${text}`, '_blank');
-  }
-}
+
 </script>

@@ -46,7 +46,7 @@
             <UiButton variant="primary" size="sm" full-width :to="`/app/mentors/${mentor.id}`">
               View Profile
             </UiButton>
-            <UiButton variant="outline" size="sm" @click="openWhatsApp(mentor)">
+            <UiButton variant="outline" size="sm" @click="joinGroup(settingsStore, 'other')">
               Message
             </UiButton>
           </div>
@@ -62,9 +62,11 @@ import { Search, Star } from 'lucide-vue-next';
 import MemberLayout from '../../layouts/MemberLayout.vue';
 import UiButton from '../../components/ui/UiButton.vue';
 import { MENTORS } from '../../data/learning';
+import { useSettingsStore } from '../../stores/settings';
+import { joinGroup } from '../../utils/whatsapp';
 
 const search = ref('');
-
+const settingsStore = useSettingsStore();
 const filteredMentors = computed(() => {
   if (!search.value.trim()) return MENTORS;
   const q = search.value.toLowerCase();
@@ -74,9 +76,4 @@ const filteredMentors = computed(() => {
       m.specialties.some((s) => s.toLowerCase().includes(q))
   );
 });
-
-function openWhatsApp(mentor) {
-  const text = encodeURIComponent(`Hello ${mentor.name}, I'd like mentorship support from Network Marketing Academia.`);
-  window.open(`https://wa.me/?text=${text}`, '_blank');
-}
 </script>

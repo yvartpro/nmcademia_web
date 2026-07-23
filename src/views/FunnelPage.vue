@@ -257,6 +257,7 @@ import { getFullMediaUrl } from '../api';
 import CountrySelect from '../components/ui/CountrySelect.vue';
 import { useOwnerStore } from '../stores/owner';
 
+import { joinGroup } from '../utils/whatsapp';
 const route = useRoute();
 const router = useRouter();
 
@@ -475,12 +476,8 @@ const submitLeadAndCompleteFlow = async () => {
       profileType: segmentLabel
     });
     
-    // Redirect to direct WhatsApp contact of the mentor
-    const whatsappNum = ownerStore.whatsappNumber || catalogStore.selectedCountry?.whatsappNumber || '+2348030001111';
-    const coachName = ownerStore.name || 'Coach';
-    const text = encodeURIComponent(`Hello ${coachName}, I just completed my onboarding on Network Marketing Academia under path [${segmentLabel}]. Please guide me on my customized leadership track.`);
-    window.open(`https://wa.me/${whatsappNum.replace(/\+/g, '')}?text=${text}`, '_blank');
-    
+    // Redirect to join group page after registration
+    joinGroup(settingsStore, 'new-to-mlm');
     router.push(journey.afterSignupRoute);
   } finally {
     submitting.value = false;
