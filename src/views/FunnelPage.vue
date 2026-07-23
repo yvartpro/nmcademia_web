@@ -223,7 +223,7 @@
                   </label>
                   <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50">
                     <UiButton variant="ghost" @click="prevStep">Back</UiButton>
-                    <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">Confirm Coach & WhatsApp →</UiButton>
+                    <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">Join WhatsApp  Group→ </UiButton>
                   </div>
                 </form>
               </div>
