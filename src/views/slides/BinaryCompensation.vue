@@ -28,35 +28,6 @@
       </div>
     </div>
 
-    <!-- Country presentation video (only when assigned to selected country) -->
-    <div v-if="presentationVideoSrc" class="space-y-3">
-      <h3 class="text-base font-bold uppercase tracking-wider text-zinc-500">Country Presentation</h3>
-      <div
-        @click="openPresentationVideo"
-        class="aspect-video rounded-2xl overflow-hidden border border-zinc-200 bg-white shadow-sm relative cursor-pointer group"
-      >
-        <img
-          v-if="presentationPreviewImage"
-          :src="presentationPreviewImage"
-          :alt="presentation?.title || 'Presentation video'"
-          class="absolute inset-0 w-full h-full object-cover"
-        />
-        <div v-else class="absolute inset-0 bg-zinc-100 group-hover:bg-zinc-200 transition duration-500" />
-        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition duration-300" />
-        <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent text-white">
-          <p class="text-base font-bold">{{ presentation?.title || 'Country presentation' }}</p>
-          <p v-if="presentation?.description" class="text-sm mt-1 text-white/80 line-clamp-2">
-            {{ presentation.description }}
-          </p>
-        </div>
-        <div class="absolute inset-0 flex items-center justify-center">
-          <div class="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-accent transition-all duration-300">
-            <Play :size="28" class="text-white ml-1" />
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Earning Streams -->
     <div class="space-y-4">
       <div class="flex justify-between items-end">

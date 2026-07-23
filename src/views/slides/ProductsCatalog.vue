@@ -88,7 +88,7 @@ const displayTitle = computed(() => {
   if (props.settings['product_video']) {
     return 'Product Presentation';
   }
-  return props.presentation?.title || 'Country presentation';
+  return props.presentation?.title || 'Product presentation';
 });
 
 const displayDescription = computed(() => {
