@@ -162,7 +162,7 @@
             </div>
             <div class="pt-6 flex justify-end">
               <span class="text-xs font-bold text-accent group-hover:translate-x-1.5 transition-transform duration-300">
-                Continue {{ j.ctaLabel }} →
+                {{ j.ctaLabel }}
               </span>
             </div>
           </router-link>
