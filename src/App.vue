@@ -31,15 +31,20 @@ import ChatWidget from './components/ChatWidget.vue';
 import VideoPlayerModal from '@/components/VideoPlayerModal.vue';
 import VideoUploadPanel from '@/components/VideoUploadPanel.vue';
 import UiConfirmModal from '@/components/ui/UiConfirmModal.vue';
+import { useVideoSequencePreloader } from '@/composables/useVideoSequencePreloader';
 
 const route = useRoute();
 const themeStore = useThemeStore();
 const ownerStore = useOwnerStore();
 const alertStore = useAlertStore();
+const preloader = useVideoSequencePreloader();
 
 onMounted(() => {
   themeStore.initTheme();
   ownerStore.fetchProfile();
+  
+  // Start the background preloader
+  preloader.init();
 });
 
 const showChatWidget = computed(() => {
