@@ -215,6 +215,10 @@
                     <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">Phone / WhatsApp Number</label>
                     <input v-model="form.phone" type="tel" required class="nma-input-glass" placeholder="+2348030001111" />
                   </div>
+                  <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">Country</label>
+                    <CountrySelect v-model="selectedCountry" />
+                  </div>
                   <label class="flex items-start gap-3 cursor-pointer mt-4">
                     <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
                     <span class="text-xs sm:text-sm text-zinc-650">

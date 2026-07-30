@@ -6,7 +6,10 @@
       <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <AppLogo size="sm" />
         <div class="flex items-center gap-4">
-          <a href="#journeys" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-50 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
+          <router-link v-if="memberStore.isRegistered" :to="memberStore.journey?.defaultRoute || '/presentation'" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-50 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
+            Continue presentation
+          </router-link>
+          <a v-else href="#journeys" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-50 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
             Start Journey
           </a>
         </div>
@@ -46,7 +49,10 @@
       </div>
 
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <a href="#journeys" class="w-full sm:w-auto text-white bg-gradient-to-r from-accent to-accent-dark hover:text-zinc-900 hover:from-accent-light hover:to-accent text-slate-950 font-black px-8 py-4 rounded-xl text-sm uppercase tracking-wide transition-all shadow-glow hover:scale-[1.02] text-center">
+        <router-link v-if="memberStore.isRegistered" :to="memberStore.journey?.defaultRoute || '/presentation'" class="w-full sm:w-auto text-white bg-gradient-to-r from-accent to-accent-dark hover:text-zinc-900 hover:from-accent-light hover:to-accent text-slate-950 font-black px-8 py-4 rounded-xl text-sm uppercase tracking-wide transition-all shadow-glow hover:scale-[1.02] text-center">
+          Continue presentation
+        </router-link>
+        <a v-else href="#journeys" class="w-full sm:w-auto text-white bg-gradient-to-r from-accent to-accent-dark hover:text-zinc-900 hover:from-accent-light hover:to-accent text-slate-950 font-black px-8 py-4 rounded-xl text-sm uppercase tracking-wide transition-all shadow-glow hover:scale-[1.02] text-center">
           Start Your Journey
         </a>
         <a href="#why-nm" class="w-full sm:w-auto bg-white/5 border border-zinc-350 hover:bg-white/10 text-zinc-900 font-bold px-8 py-4 rounded-xl text-sm transition text-center">
@@ -132,7 +138,7 @@
     </section>
 
     <!-- Funnel Journey Selection Section -->
-    <section id="journeys" class="border-t border-zinc-200/80 bg-gradient-to-b from-transparent to-zinc-950/20 py-24 scroll-mt-16">
+    <section v-if="!memberStore.isRegistered" id="journeys" class="border-t border-zinc-200/80 bg-gradient-to-b from-transparent to-zinc-950/20 py-24 scroll-mt-16">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         <div class="text-center space-y-4">
           <h2 class="text-3xl sm:text-5xl font-display font-black">Which Best Describes You?</h2>
@@ -186,10 +192,12 @@ import { computed, onMounted } from 'vue';
 import { useOwnerStore } from '../stores/owner';
 import { useSettingsStore } from '../stores/settings';
 import { useVideoPlayerStore } from '../stores/videoPlayer';
+import { useMemberStore } from '../stores/member';
 import AppLogo from '../components/ui/AppLogo.vue';
 import { Play } from 'lucide-vue-next';
 import { getFullMediaUrl } from '../api';
 
+const memberStore = useMemberStore();
 const ownerStore = useOwnerStore();
 const settingsStore = useSettingsStore();
 const videoStore = useVideoPlayerStore();
