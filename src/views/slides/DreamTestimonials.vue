@@ -15,12 +15,14 @@
           :key="test.id"
           class="nma-card p-5 flex flex-col sm:flex-row gap-4 items-start"
         >
-          <div class="w-12 h-12 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0 text-accent font-bold text-sm">
-            {{ test.name.split(' ').map(n => n[0]).join('') }}
-          </div>
-          <div class="space-y-2">
-            <p class="text-base text-zinc-700 italic">"{{ test.quote }}"</p>
-            <h4 class="font-bold text-sm">{{ test.name }}</h4>
+          <div v-if="!test.video">
+            <div class="w-12 h-12 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0 text-accent font-bold text-sm">
+              {{ test.name.split(' ').map(n => n[0]).join('') }}
+            </div>
+            <div class="space-y-2">
+              <p class="text-base text-zinc-700 italic">"{{ test.quote }}"</p>
+              <h4 class="font-bold text-sm">{{ test.name }}</h4>
+            </div>
           </div>
         </div>
       </div>
