@@ -1,7 +1,13 @@
 <template>
   <div class="space-y-6">
-    <h3 class="text-lg font-bold font-display">Featured Testimonials (Video)</h3>
-
+    <h3 class="text-lg font-bold font-display">Other Success Stories</h3>
+    <h4 class="text-sm text-zinc-500">Real People. Real Results. Across Africa and Beyond.</h4>
+    <!-- add a short introduction paragraph -->
+    <p class="text-sm text-zinc-600">
+      Discover inspiring stories from ambassadors who have transformed their lives by leveraging our simple, proven, 
+      and duplicatable business-building system. See how ordinary people are achieving extraordinary results and
+       creating lasting income through the power of network marketing.
+    </p>
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
       <div class="lg:col-span-2 bg-white p-4 rounded shadow-sm">
         <div v-if="featured" class="space-y-3">
