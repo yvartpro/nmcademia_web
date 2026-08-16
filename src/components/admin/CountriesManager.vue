@@ -76,6 +76,15 @@
           <label class="adm-label">Trainer WhatsApp</label>
           <input v-model="form.whatsappNumber" placeholder="+234…" class="adm-input" />
         </div>
+        <div class="adm-field">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input v-model="form.hasOffice" type="checkbox" class="w-4 h-4 rounded border-zinc-300 text-[#008A20] focus:ring-[#008A20]" />
+            <span class="adm-label !margin-0 !mb-0">Has Office</span>
+          </label>
+          <p class="text-[10px] text-zinc-500 mt-1">
+            Uncheck if there's no office. Users will see WhatsApp group link instead of presentation.
+          </p>
+        </div>
       </form>
       <template #footer>
         <button type="button" class="adm-btn-ghost" @click="isModalOpen = false">Cancel</button>
@@ -113,6 +122,7 @@ const form = ref({
   currencySymbol: '',
   whatsappNumber: '',
   flagIcon: '',
+  hasOffice: true,
 });
 const confirmOpen = ref(false);
 const pendingDeleteId = ref(null);
@@ -137,6 +147,7 @@ const openModal = (item = null) => {
       currencySymbol: item.currencySymbol,
       whatsappNumber: item.whatsappNumber || '',
       flagIcon: item.flagIcon || defaultFlagIcon(item.code),
+      hasOffice: item.hasOffice !== false,
     };
     flagTouched.value = true;
   } else {
@@ -148,6 +159,7 @@ const openModal = (item = null) => {
       currencySymbol: '',
       whatsappNumber: '',
       flagIcon: '',
+      hasOffice: true,
     };
   }
   isModalOpen.value = true;

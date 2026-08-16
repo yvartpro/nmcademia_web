@@ -6,6 +6,7 @@ const routes = [
   { path: '/', name: 'landing', component: () => import('../views/LandingPage.vue') },
   { path: '/funnel/:funnelId', name: 'funnel', component: () => import('../views/FunnelPage.vue') },
   { path: '/presentation', name: 'presentation', component: () => import('../views/PresentationPage.vue') },
+  { path: '/join-whatsapp-group', name: 'join-whatsapp-group', component: () => import('../views/JoinWhatsAppGroup.vue') },
   { path: '/package-details/:slug', name: 'package-details', component: () => import('../views/PackageDetails.vue') },
   { path: '/app/training', name: 'training', component: () => import('../views/member/TrainingPage.vue'), meta: { requiresLearner: true } },
   { path: '/app/learn/:courseId', name: 'member-course', component: () => import('../views/member/CoursePage.vue'), meta: { requiresLearner: true } },

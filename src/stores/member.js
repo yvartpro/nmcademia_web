@@ -96,6 +96,12 @@ export const useMemberStore = defineStore('member', {
       if (!course) return 0;
       return state.profile.courseProgress[course.id] || 0;
     },
+
+    countryHasOffice() {
+      // This needs to be called with catalogStore to check if country has office
+      // For now returning true as default, actual check done in component
+      return true;
+    },
   },
 
   actions: {

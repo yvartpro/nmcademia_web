@@ -439,7 +439,13 @@ const saveCountryAndRedirect = () => {
     profileType: segmentLabel
   });
   
-  router.push(journey.afterSignupRoute);
+  // Check if country has office
+  const countryData = catalogStore.countryByCode(selectedCountry.value);
+  if (countryData && !countryData.hasOffice) {
+    router.push('/join-whatsapp-group');
+  } else {
+    router.push(journey.afterSignupRoute);
+  }
 };
 
 const submitLeadAndCompleteFlow = async () => {
@@ -480,9 +486,15 @@ const submitLeadAndCompleteFlow = async () => {
       profileType: segmentLabel
     });
     
-    // Redirect to join group page after registration
-    joinGroup(settingsStore, 'new-to-mlm');
-    router.push(journey.afterSignupRoute);
+    // Check if country has office
+    const countryData = catalogStore.countryByCode(selectedCountry.value);
+    if (countryData && !countryData.hasOffice) {
+      router.push('/join-whatsapp-group');
+    } else {
+      // Redirect to join group page after registration
+      joinGroup(settingsStore, 'new-to-mlm');
+      router.push(journey.afterSignupRoute);
+    }
   } finally {
     submitting.value = false;
   }
