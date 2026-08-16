@@ -35,6 +35,11 @@
           </div>
         </div>
 
+        <div>
+          <label class="block text-sm font-semibold text-zinc-700 mb-1">WhatsApp Group Link</label>
+          <input v-model="form.whatsappGroupLink" type="url" class="nma-input" placeholder="https://chat.whatsapp.com/..." />
+        </div>
+
         <!-- Bio -->
         <div>
           <label class="block text-sm font-semibold text-zinc-700 mb-1">Professional Bio</label>
@@ -94,6 +99,7 @@ const form = ref({
   bio: '',
   intro: '',
   whatsappNumber: '',
+  whatsappGroupLink: '',
   domainName: '',
   photoId: null,
   photoUrl: null
@@ -108,6 +114,7 @@ onMounted(async () => {
         bio: res.data.bio || '',
         intro: res.data.intro || '',
         whatsappNumber: res.data.whatsappNumber || '',
+        whatsappGroupLink: res.data.whatsappGroupLink || res.data.whatsapp_group_link || '',
         domainName: res.data.domainName || '',
         photoId: res.data.photoId || null,
         photoUrl: res.data.photo ? getFullMediaUrl(res.data.photo.filePath) : null
@@ -140,6 +147,7 @@ const saveProfile = async () => {
       bio: form.value.bio,
       intro: form.value.intro,
       whatsappNumber: form.value.whatsappNumber,
+      whatsappGroupLink: form.value.whatsappGroupLink,
       domainName: form.value.domainName,
       photoId: form.value.photoId
     });

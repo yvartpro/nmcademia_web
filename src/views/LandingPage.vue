@@ -6,9 +6,12 @@
       <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <AppLogo size="sm" />
         <div class="flex items-center gap-4">
-          <router-link v-if="memberStore.isRegistered" :to="memberStore.journey?.defaultRoute || '/presentation'" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-50 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
+            <router-link v-if="memberStore.isRegistered && countryHasOffice" :to="memberStore.journey?.defaultRoute || '/presentation'" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-50 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
             Continue presentation
           </router-link>
+          <a v-else-if="memberStore.isRegistered && !countryHasOffice && whatsappJoinLink !== '#'" :href="whatsappJoinLink" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
+            Join WhatsApp
+          </a>
           <a v-else href="#journeys" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-50 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
             Start Journey
           </a>
@@ -49,9 +52,12 @@
       </div>
 
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <router-link v-if="memberStore.isRegistered" :to="memberStore.journey?.defaultRoute || '/presentation'" class="w-full sm:w-auto text-white bg-gradient-to-r from-accent to-accent-dark hover:text-zinc-900 hover:from-accent-light hover:to-accent text-slate-950 font-black px-8 py-4 rounded-xl text-sm uppercase tracking-wide transition-all shadow-glow hover:scale-[1.02] text-center">
+        <router-link v-if="memberStore.isRegistered && countryHasOffice" :to="memberStore.journey?.defaultRoute || '/presentation'" class="w-full sm:w-auto text-white bg-gradient-to-r from-accent to-accent-dark hover:text-zinc-900 hover:from-accent-light hover:to-accent text-slate-950 font-black px-8 py-4 rounded-xl text-sm uppercase tracking-wide transition-all shadow-glow hover:scale-[1.02] text-center">
           Continue presentation
         </router-link>
+        <a v-else-if="memberStore.isRegistered && !countryHasOffice && whatsappJoinLink !== '#'" :href="whatsappJoinLink" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-black px-8 py-4 rounded-xl text-sm uppercase tracking-wide transition-all shadow-glow hover:scale-[1.02] text-center">
+          Join WhatsApp
+        </a>
         <a v-else href="#journeys" class="w-full sm:w-auto text-white bg-gradient-to-r from-accent to-accent-dark hover:text-zinc-900 hover:from-accent-light hover:to-accent text-slate-950 font-black px-8 py-4 rounded-xl text-sm uppercase tracking-wide transition-all shadow-glow hover:scale-[1.02] text-center">
           Start Your Journey
         </a>
@@ -193,6 +199,7 @@ import { useOwnerStore } from '../stores/owner';
 import { useSettingsStore } from '../stores/settings';
 import { useVideoPlayerStore } from '../stores/videoPlayer';
 import { useMemberStore } from '../stores/member';
+import { useCatalogStore } from '../stores/catalog';
 import AppLogo from '../components/ui/AppLogo.vue';
 import { Play } from 'lucide-vue-next';
 import { getFullMediaUrl } from '../api';
@@ -200,15 +207,32 @@ import { getFullMediaUrl } from '../api';
 const memberStore = useMemberStore();
 const ownerStore = useOwnerStore();
 const settingsStore = useSettingsStore();
+const catalogStore = useCatalogStore();
 const videoStore = useVideoPlayerStore();
 
 onMounted(async () => {
+  if (catalogStore.countries.length === 0) {
+    await catalogStore.fetchCountries();
+  }
   await settingsStore.fetchSettings();
 });
 
 const openVideo = (src, title, thumbnail = null) => {
   videoStore.open({ src, title, thumbnail });
 };
+
+const selectedCountry = computed(() => {
+  const code = memberStore.isRegistered ? memberStore.profile.country : catalogStore.selectedCountryCode;
+  return catalogStore.countryByCode(code) || catalogStore.selectedCountry || null;
+});
+
+const countryHasOffice = computed(() => {
+  return !selectedCountry.value || selectedCountry.value.hasOffice !== false;
+});
+
+const whatsappJoinLink = computed(() => {
+  return ownerStore.whatsappGroupLink || '#';
+});
 
 const nmVideoThumbnail = computed(() => {
   return settingsStore.settings['nm_video_url_thumbnail'] || settingsStore.settings['nm_video_thumbnail'] || null;

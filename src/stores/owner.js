@@ -7,6 +7,7 @@ export const useOwnerStore = defineStore('owner', {
     bio: 'Welcome to the platform.',
     intro: null,
     whatsappNumber: '',
+    whatsappGroupLink: '',
     domainName: '',
     photoUrl: null,
     loading: false,
@@ -18,10 +19,12 @@ export const useOwnerStore = defineStore('owner', {
       try {
         const response = await api.get('/owner/profile');
         if (response.data) {
+          const link = response.data.whatsappGroupLink ?? response.data.whatsapp_group_link ?? this.whatsappGroupLink;
           this.name = response.data.name || this.name;
           this.bio = response.data.bio || this.bio;
           this.intro = response.data.intro || this.intro;
           this.whatsappNumber = response.data.whatsappNumber || this.whatsappNumber;
+          this.whatsappGroupLink = link || this.whatsappGroupLink;
           this.domainName = response.data.domainName || this.domainName;
           
           if (response.data.photo) {

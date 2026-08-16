@@ -80,31 +80,30 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useMemberStore } from '../stores/member';
 import { useCatalogStore } from '../stores/catalog';
-import { useSettingsStore } from '../stores/settings';
+import { useOwnerStore } from '../stores/owner';
 import AppLogo from '../components/ui/AppLogo.vue';
 import CountryFlag from '../components/ui/CountryFlag.vue';
 
 const memberStore = useMemberStore();
 const catalogStore = useCatalogStore();
-const settingsStore = useSettingsStore();
+const ownerStore = useOwnerStore();
 
 const country = computed(() => {
   return catalogStore.countryByCode(memberStore.profile.country);
 });
 
 const whatsappLink = computed(() => {
-  const link = settingsStore.settings?.whatsapp_new_to_mlm_group_link;
-  return link;
+  return ownerStore.whatsappGroupLink || '';
 });
 
 onMounted(async () => {
   if (catalogStore.countries.length === 0) {
     await catalogStore.fetchCountries();
   }
-  await settingsStore.fetchSettings();
+  await ownerStore.fetchProfile();
 });
 </script>
 
