@@ -32,6 +32,7 @@
             <td class="p-4 truncate max-w-xs">{{ item.quote }}</td>
             <td class="p-4 text-right space-x-2 shrink-0">
               <button @click="openModal(item)" class="text-[#008A20] hover:text-[#006616] font-semibold transition">Edit</button>
+              <button @click="openTranslations(item)" class="text-zinc-600 hover:text-zinc-900 font-semibold transition">Translations</button>
               <button @click="requestDelete(item.id)" class="text-red-500 hover:text-red-700 font-semibold transition">Delete</button>
             </td>
           </tr>
@@ -76,6 +77,9 @@
       confirm-label="Yes, Delete"
       @confirm="executeDelete"
     />
+    <UiModal v-model="showTranslationEditor" :title="`Translations: Testimonial`" size="lg">
+      <TranslationEditor :modelName="'Testimonial'" :recordId="translationRecordId" :fields="['quote','lifestyleTag']" @cancel="showTranslationEditor = false" />
+    </UiModal>
   </div>
 </template>
 
@@ -86,6 +90,7 @@ import { useMediaStore } from '../../stores/media';
 import MediaPicker from './MediaPicker.vue';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
+import TranslationEditor from './TranslationEditor.vue';
 
 const contentStore = useContentStore();
 const mediaStore = useMediaStore();
@@ -125,6 +130,13 @@ const requestDelete = (id) => {
 const executeDelete = async () => {
   if (pendingDeleteId.value) await contentStore.adminDeleteTestimonial(pendingDeleteId.value);
   pendingDeleteId.value = null;
+};
+
+const showTranslationEditor = ref(false);
+const translationRecordId = ref(null);
+const openTranslations = (item) => {
+  translationRecordId.value = item.id;
+  showTranslationEditor.value = true;
 };
 </script>
 
