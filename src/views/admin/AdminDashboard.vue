@@ -162,6 +162,11 @@
             <span>FAQs</span>
           </button>
 
+          <button @click="activeTab = 'languages'" :class="tabClass('languages')">
+            <span>🌐</span>
+            <span>Languages</span>
+          </button>
+
           <button @click="activeTab = 'products'" :class="tabClass('products')">
             <span>📦</span>
             <span>Products</span>
@@ -474,6 +479,7 @@
         <EarningsManager v-else-if="activeTab === 'earnings'" />
         <WaysManager v-else-if="activeTab === 'ways'" />
         <FAQsManager v-else-if="activeTab === 'faqs'" />
+        <LanguagesManager v-else-if="activeTab === 'languages'" />
         <ProductsManager v-else-if="activeTab === 'products'" />
         <PackagesManager v-else-if="activeTab === 'packages'" />
         <CountriesManager v-else-if="activeTab === 'countries'" />
@@ -558,6 +564,7 @@ import PartnersManager from '../../components/admin/PartnersManager.vue';
 import EarningsManager from '../../components/admin/EarningsManager.vue';
 import WaysManager from '../../components/admin/WaysManager.vue';
 import FAQsManager from '../../components/admin/FAQsManager.vue';
+import LanguagesManager from '../../components/admin/LanguagesManager.vue';
 import ProductsManager from '../../components/admin/ProductsManager.vue';
 import PackagesManager from '../../components/admin/PackagesManager.vue';
 import CountriesManager from '../../components/admin/CountriesManager.vue';
@@ -611,6 +618,7 @@ const activeTabTitle = computed(() => {
   if (activeTab.value === 'earnings') return 'Compensation Earning Streams';
   if (activeTab.value === 'ways') return 'Ways of Earning';
   if (activeTab.value === 'faqs') return 'Frequently Asked Questions';
+  if (activeTab.value === 'languages') return 'Languages & Locale Management';
   if (activeTab.value === 'products') return 'Product Catalog';
   if (activeTab.value === 'packages') return 'Registration Packages & Pricing';
   if (activeTab.value === 'countries') return 'Countries & WhatsApp Numbers';

@@ -83,6 +83,27 @@
   .nma-touch {
     @apply min-h-[48px] min-w-[48px];
   }
+
+  .admin-scroll-table,
+  .overflow-x-auto {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-scroll-table table,
+  .overflow-x-auto table {
+    min-width: 760px;
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  @media (max-width: 640px) {
+    .admin-scroll-table table,
+    .overflow-x-auto table {
+      min-width: 640px;
+    }
+  }
 }
 
 @layer utilities {
