@@ -24,6 +24,7 @@
             <td class="p-4 font-mono">{{ p.price }}</td>
             <td class="p-4 text-right space-x-2">
               <button @click="openModal(p)" class="text-[#008A20] hover:text-[#006616] transition font-semibold">Edit</button>
+              <button @click="openTranslations(p)" class="text-[#006699] hover:text-[#004466] transition font-semibold">Translations</button>
               <button @click="requestDelete(p.id)" class="text-red-500 hover:text-red-700 transition font-semibold">Delete</button>
             </td>
           </tr>
@@ -87,6 +88,11 @@
       confirm-label="Yes, Delete"
       @confirm="executeDelete"
     />
+    <UiModal v-model="showTranslationEditor" :title="`Translations: ${translationTarget?.name || ''}`" size="lg">
+      <template v-if="translationTarget">
+        <TranslationEditor :modelName="'Product'" :recordId="translationTarget.id" :fields="['description']" @cancel="showTranslationEditor = false" />
+      </template>
+    </UiModal>
   </div>
 </template>
 
@@ -96,6 +102,7 @@ import { useCatalogStore } from '../../stores/catalog';
 import MediaPicker from './MediaPicker.vue';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
+import TranslationEditor from './TranslationEditor.vue';
 
 const catalogStore = useCatalogStore();
 const isModalOpen = ref(false);
@@ -116,6 +123,8 @@ const emptyForm = () => ({
 });
 
 const form = ref(emptyForm());
+const showTranslationEditor = ref(false);
+const translationTarget = ref(null);
 
 onMounted(() => catalogStore.fetchProducts());
 
@@ -147,6 +156,11 @@ const openModal = (item = null) => {
     form.value = emptyForm();
   }
   isModalOpen.value = true;
+};
+
+const openTranslations = (item) => {
+  translationTarget.value = item;
+  showTranslationEditor.value = true;
 };
 
 const saveItem = async () => {

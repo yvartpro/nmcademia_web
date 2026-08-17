@@ -43,7 +43,10 @@
         <!-- Bio -->
         <div>
           <label class="block text-sm font-semibold text-zinc-700 mb-1">Professional Bio</label>
-          <textarea v-model="form.bio" rows="4" class="nma-input" required placeholder="Tell visitors about your journey..."></textarea>
+          <div class="flex items-start gap-3">
+            <textarea v-model="form.bio" rows="4" class="nma-input" required placeholder="Tell visitors about your journey..."></textarea>
+            <button type="button" @click="openOwnerTranslations" class="text-xs border border-zinc-200 px-3 py-2 rounded-lg">Translations</button>
+          </div>
         </div>
 
         <!-- Intro (short) -->
@@ -80,6 +83,9 @@
       </div>
     </div>
   </div>
+  <UiModal v-model="showOwnerTranslationEditor" :title="`Translations: Owner`" size="lg">
+    <TranslationEditor modelName="Owner" :recordId="'profile'" :fields="['bio','intro']" @cancel="showOwnerTranslationEditor = false" />
+  </UiModal>
 </template>
 
 <script setup>
@@ -88,6 +94,7 @@ import api, { getFullMediaUrl } from '@/api';
 import UiButton from '../ui/UiButton.vue';
 import MediaLibrary from './MediaLibrary.vue';
 import { useAlertStore } from '../../stores/alert';
+import TranslationEditor from './TranslationEditor.vue';
 
 const loading = ref(true);
 const saving = ref(false);
@@ -158,5 +165,10 @@ const saveProfile = async () => {
   } finally {
     saving.value = false;
   }
+};
+
+const showOwnerTranslationEditor = ref(false);
+const openOwnerTranslations = () => {
+  showOwnerTranslationEditor.value = true;
 };
 </script>

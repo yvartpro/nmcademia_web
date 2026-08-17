@@ -136,11 +136,15 @@
       </section>
     </div>
   </div>
+  <DismissibleModal v-model:modelValue="showErrorModal" title="Error" :subtitle="modalMessage">
+    <p class="text-sm text-zinc-700">{{ modalMessage }}</p>
+  </DismissibleModal>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useLanguagesStore } from '../../stores/languages';
+import DismissibleModal from '../../components/ui/DismissibleModal.vue';
 
 const languagesStore = useLanguagesStore();
 const editingId = ref(null);
@@ -185,19 +189,20 @@ const saveLanguage = async () => {
     isActive: form.value.isActive !== false
   };
 
-  try {
-    if (editingId.value) {
-      await languagesStore.updateLanguage(editingId.value, payload);
-    } else {
-      await languagesStore.createLanguage(payload);
-    }
+    try {
+      if (editingId.value) {
+        await languagesStore.updateLanguage(editingId.value, payload);
+      } else {
+        await languagesStore.createLanguage(payload);
+      }
 
-    resetForm();
-    await languagesStore.fetchLanguages();
-  } catch (error) {
-    console.error('Save language failed:', error);
-    alert(error?.response?.data?.message || 'Unable to save language.');
-  }
+      resetForm();
+      await languagesStore.fetchLanguages();
+    } catch (error) {
+      console.error('Save language failed:', error);
+      modalMessage.value = error?.response?.data?.message || 'Unable to save language.';
+      showErrorModal.value = true;
+    }
 };
 
 const setAsDefault = async (language) => {
@@ -233,11 +238,21 @@ const deleteLanguage = async (language) => {
 
   const ok = await languagesStore.deleteLanguage(language.id);
   if (!ok) {
-    alert('Unable to delete language.');
+    modalMessage.value = 'Unable to delete language.';
+    showErrorModal.value = true;
   }
 };
 
 onMounted(() => {
   languagesStore.fetchLanguages();
+});
+
+// Modal state for errors
+const showErrorModal = ref(false);
+const modalMessage = ref('');
+
+window.addEventListener('dismissible-modal-close', () => {
+  showErrorModal.value = false;
+  modalMessage.value = '';
 });
 </script>
