@@ -228,6 +228,11 @@
           <span class="flex items-center gap-1.5 font-semibold text-[#008A20]">
             <span class="w-1.5 h-1.5 rounded-full bg-[#008A20]"></span> Connected
           </span>
+          <div class="border-l pl-4">
+            <select v-model="languagesStore.selectedLanguageId" @change="onLangChange" class="text-xs bg-white border border-zinc-200 rounded px-2 py-1">
+              <option v-for="l in languagesStore.languages" :key="l.id" :value="l.id">{{ l.name }} ({{ l.code }})</option>
+            </select>
+          </div>
         </div>
       </header>
 
@@ -558,10 +563,12 @@ import { useChatStore } from '../../stores/chat';
 import { useCatalogStore } from '../../stores/catalog';
 import { useContentStore } from '../../stores/content';
 
+import { useLanguagesStore } from '../../stores/languages';
 import FoundersManager from '../../components/admin/FoundersManager.vue';
 import TestimonialsManager from '../../components/admin/TestimonialsManager.vue';
 import PartnersManager from '../../components/admin/PartnersManager.vue';
 import EarningsManager from '../../components/admin/EarningsManager.vue';
+const languagesStore = useLanguagesStore();
 import WaysManager from '../../components/admin/WaysManager.vue';
 import FAQsManager from '../../components/admin/FAQsManager.vue';
 import LanguagesManager from '../../components/admin/LanguagesManager.vue';
@@ -646,6 +653,9 @@ const toggleSidebar = () => {
     isSidebarOpen.value = true; // keep visible on large screens
     return;
   }
+  const onLangChange = () => {
+    languagesStore.setSelectedLanguage(languagesStore.selectedLanguageId);
+  };
   isSidebarOpen.value = !isSidebarOpen.value;
 };
 

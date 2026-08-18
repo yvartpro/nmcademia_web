@@ -8,6 +8,9 @@
         <AppLogo :logo-url="logoUrl" :show-tagline="showTagline" />
       </router-link>
       <div class="flex items-center gap-2">
+        <select v-if="languages.length" v-model="selected" @change="onChange" class="text-xs bg-white border border-zinc-200 rounded px-2 py-1">
+          <option v-for="l in languages" :key="l.id" :value="l.id">{{ l.name }}</option>
+        </select>
         <UiButton
           v-if="showMemberLink && memberStore.isRegistered"
           variant="ghost"
@@ -32,8 +35,23 @@
 import AppLogo from '../components/ui/AppLogo.vue';
 import UiButton from '../components/ui/UiButton.vue';
 import { useMemberStore } from '../stores/member';
+import { useLanguagesStore } from '../stores/languages';
+import { onMounted, ref } from 'vue';
 
 const memberStore = useMemberStore();
+const languagesStore = useLanguagesStore();
+const languages = ref([]);
+const selected = ref(null);
+
+onMounted(async () => {
+  const langs = await languagesStore.fetchLanguages();
+  languages.value = langs;
+  selected.value = languagesStore.selectedLanguageId;
+});
+
+const onChange = () => {
+  languagesStore.setSelectedLanguage(selected.value);
+};
 
 defineProps({
   logoUrl: { type: String, default: '' },
