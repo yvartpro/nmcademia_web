@@ -215,7 +215,8 @@ const setAsDefault = async (language) => {
     await languagesStore.fetchLanguages();
   } catch (error) {
     console.error('Set default failed:', error);
-    alert(error?.response?.data?.message || 'Unable to set default language.');
+    modalMessage.value = error?.response?.data?.message || 'Unable to set default language.';
+    showErrorModal.value = true;
   }
 };
 
@@ -229,16 +230,7 @@ const toggleActive = async (language) => {
     await languagesStore.fetchLanguages();
   } catch (error) {
     console.error('Toggle language failed:', error);
-    alert(error?.response?.data?.message || 'Unable to update language status.');
-  }
-};
-
-const deleteLanguage = async (language) => {
-  if (!confirm(`Delete the "${language.name}" language?`)) return;
-
-  const ok = await languagesStore.deleteLanguage(language.id);
-  if (!ok) {
-    modalMessage.value = 'Unable to delete language.';
+    modalMessage.value = error?.response?.data?.message || 'Unable to update language status.';
     showErrorModal.value = true;
   }
 };

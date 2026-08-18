@@ -29,6 +29,7 @@
               <span :class="item.active ? 'text-[#008A20] font-bold' : 'text-zinc-400'">{{ item.active ? 'Yes' : 'No' }}</span>
             </td>
             <td class="p-4 text-right space-x-2 shrink-0">
+              <button @click="openTranslationEditor(item)" class="text-[#008A20] hover:text-[#006616] font-semibold transition">Translations</button>
               <button @click="openModal(item)" class="text-[#008A20] hover:text-[#006616] font-semibold transition">Edit</button>
               <button @click="requestDelete(item.id)" class="text-red-500 hover:text-red-700 font-semibold transition">Delete</button>
             </td>
@@ -39,6 +40,16 @@
         </tbody>
       </table>
     </div>
+
+    <UiModal v-model="showTranslationEditor" :title="`Translations: ${translationTarget?.title || ''}`" size="lg">
+      <TranslationEditor
+        v-if="translationTarget"
+        :modelName="'EarningStream'"
+        :recordId="translationTarget.id"
+        :fields="['title', 'shortDescription', 'longDescription']"
+        @cancel="showTranslationEditor = false"
+      />
+    </UiModal>
 
     <!-- Form Modal -->
     <UiModal v-model="isModalOpen" :title="editingId ? 'Edit Earning Stream' : 'New Earning Stream'" subtitle="Compensation Plan" size="lg">
@@ -113,10 +124,13 @@ import { useContentStore } from '../../stores/content';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
 import MediaPicker from './MediaPicker.vue';
+import TranslationEditor from './TranslationEditor.vue';
 
 const contentStore = useContentStore();
 
 const isModalOpen = ref(false);
+const showTranslationEditor = ref(false);
+const translationTarget = ref(null);
 const editingId = ref(null);
 const form = ref({
   title: '',
@@ -142,6 +156,11 @@ const autoSlug = () => {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-|-$/g, '');
   }
+};
+
+const openTranslationEditor = (item) => {
+  translationTarget.value = item;
+  showTranslationEditor.value = true;
 };
 
 const openModal = (item = null) => {

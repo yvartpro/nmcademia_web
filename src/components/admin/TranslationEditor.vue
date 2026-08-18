@@ -22,11 +22,16 @@
       <button @click="$emit('cancel')" class="text-xs border border-zinc-200 px-3 py-2 rounded">Close</button>
     </div>
   </div>
+
+  <DismissibleModal v-model:modelValue="showNotice" :title="noticeTitle" :subtitle="noticeSubtitle">
+    <p class="text-sm text-zinc-700">{{ noticeMessage }}</p>
+  </DismissibleModal>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import api from '../../api';
+import DismissibleModal from '../ui/DismissibleModal.vue';
 
 const props = defineProps({
   modelName: { type: String, required: true },
@@ -38,6 +43,17 @@ const languages = ref([]);
 const selectedLanguageId = ref(null);
 const loading = ref(false);
 const values = ref({});
+const showNotice = ref(false);
+const noticeTitle = ref('Notice');
+const noticeSubtitle = ref('');
+const noticeMessage = ref('');
+
+const showNotification = (title, message, subtitle = '') => {
+  noticeTitle.value = title;
+  noticeSubtitle.value = subtitle;
+  noticeMessage.value = message;
+  showNotice.value = true;
+};
 
 const loadLanguages = async () => {
   try {
@@ -79,10 +95,10 @@ const saveTranslations = async () => {
 
   try {
     await api.post('/admin/translations/bulk', payload);
-    alert('Translations saved');
+    showNotification('Translations saved', 'The language values were saved successfully.');
   } catch (err) {
     console.error('Save translations failed', err);
-    alert('Save failed');
+    showNotification('Save failed', err?.response?.data?.message || 'Unable to save the translations.');
   }
 };
 
@@ -91,7 +107,10 @@ const copyFromDefault = async () => {
   try {
     const langs = await api.get('/admin/languages');
     const defaultLang = (langs.data || []).find(l => l.isDefault);
-    if (!defaultLang) return alert('No default language configured');
+    if (!defaultLang) {
+      showNotification('Default language required', 'No default language is configured for this owner.');
+      return;
+    }
 
     const res = await api.get('/admin/translations', { params: { modelName: props.modelName, recordId: String(props.recordId), languageId: defaultLang.id } });
     const list = res.data || [];
@@ -101,6 +120,7 @@ const copyFromDefault = async () => {
     });
   } catch (err) {
     console.error('Copy default failed', err);
+    showNotification('Copy failed', err?.response?.data?.message || 'Unable to copy the default-language values.');
   }
 };
 

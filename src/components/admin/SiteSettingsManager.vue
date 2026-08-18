@@ -28,10 +28,21 @@
       >
         Custom settings
       </button>
-        <UiModal v-model="showTranslationEditor" :title="`Translations: Setting`" size="lg">
-          <TranslationEditor :modelName="'Setting'" :recordId="translationRecordKey" :fields="['value']" @cancel="showTranslationEditor = false" />
-        </UiModal>
     </div>
+
+    <UiModal
+      v-if="showTranslationEditor"
+      v-model="showTranslationEditor"
+      :title="`Translations: Setting`"
+      size="lg"
+    >
+      <TranslationEditor
+        :modelName="'Setting'"
+        :recordId="translationRecordKey"
+        :fields="['value']"
+        @cancel="closeTranslationEditor"
+      />
+    </UiModal>
 
     <form @submit.prevent="saveAll" class="space-y-6">
       <section
@@ -52,7 +63,14 @@
               <span class="text-zinc-400 font-mono normal-case">({{ field.key }})</span>
             </div>
             <div>
-              <button v-if="field.type !== 'image' && field.type !== 'video'" type="button" @click="openTranslations(field.key)" class="text-xs text-zinc-600 hover:text-zinc-900 border border-zinc-200 px-2 py-1 rounded">Translations</button>
+              <button
+                v-if="field.type !== 'image' && field.type !== 'video'"
+                type="button"
+                @click.stop="openTranslations(field.key)"
+                class="text-xs text-zinc-600 hover:text-zinc-900 border border-zinc-200 px-2 py-1 rounded"
+              >
+                Translations
+              </button>
             </div>
           </label>
           <JourneysEditor
@@ -249,5 +267,9 @@ const translationRecordKey = ref(null);
 const openTranslations = (key) => {
   translationRecordKey.value = key;
   showTranslationEditor.value = true;
+};
+const closeTranslationEditor = () => {
+  showTranslationEditor.value = false;
+  translationRecordKey.value = null;
 };
 </script>

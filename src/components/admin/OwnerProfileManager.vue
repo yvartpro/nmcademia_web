@@ -15,7 +15,7 @@
               <span v-else class="text-2xl text-zinc-400">👤</span>
             </div>
             <div class="space-y-2">
-              <UiButton type="button" variant="outline" @click="openMediaLibrary">Choose from Library</UiButton>
+              <UiButton type="button" variant="outline" @click.stop="openMediaLibrary">Choose from Library</UiButton>
               <p class="text-xs text-zinc-500">Recommended size: 500x500px</p>
             </div>
           </div>
@@ -45,7 +45,7 @@
           <label class="block text-sm font-semibold text-zinc-700 mb-1">Professional Bio</label>
           <div class="flex items-start gap-3">
             <textarea v-model="form.bio" rows="4" class="nma-input" required placeholder="Tell visitors about your journey..."></textarea>
-            <button type="button" @click="openOwnerTranslations" class="text-xs border border-zinc-200 px-3 py-2 rounded-lg">Translations</button>
+            <button type="button" @click.stop="openOwnerTranslations" class="text-xs border border-zinc-200 px-3 py-2 rounded-lg">Translations</button>
           </div>
         </div>
 
@@ -83,8 +83,8 @@
       </div>
     </div>
   </div>
-  <UiModal v-model="showOwnerTranslationEditor" :title="`Translations: Owner`" size="lg">
-    <TranslationEditor modelName="Owner" :recordId="'profile'" :fields="['bio','intro']" @cancel="showOwnerTranslationEditor = false" />
+  <UiModal v-if="showOwnerTranslationEditor" v-model="showOwnerTranslationEditor" :title="`Translations: Owner`" size="lg">
+    <TranslationEditor modelName="Owner" :recordId="'profile'" :fields="['bio','intro']" @cancel="closeOwnerTranslations" />
   </UiModal>
 </template>
 
@@ -170,5 +170,8 @@ const saveProfile = async () => {
 const showOwnerTranslationEditor = ref(false);
 const openOwnerTranslations = () => {
   showOwnerTranslationEditor.value = true;
+};
+const closeOwnerTranslations = () => {
+  showOwnerTranslationEditor.value = false;
 };
 </script>

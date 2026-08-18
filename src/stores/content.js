@@ -51,7 +51,7 @@ export const useContentStore = defineStore('content', () => {
 
   const fetchEarningStreams = async () => {
     try {
-      const res = await api.get('/earning-streams');
+      const res = await api.get('/earning-streams', getLanguageParams());
       earningStreams.value = res.data;
     } catch (err) {
       console.error('fetchEarningStreams failed:', err);

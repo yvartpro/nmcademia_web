@@ -75,10 +75,10 @@
       <button
         v-if="props.showLibraryToggle"
         type="button"
-        @click="showLibrary = !showLibrary"
+        @click="openLibrary"
         class="bg-white hover:bg-[#F4F6F5] border border-zinc-200 text-zinc-600 font-bold px-3 py-1.5 rounded text-[10px] transition"
       >
-        {{ showLibrary ? 'Hide library' : 'Pick from library' }}
+        Pick from library
       </button>
     </div>
 
@@ -138,46 +138,52 @@
       </div>
     </div>
 
-    <!-- Library -->
-    <div
-      v-if="props.showLibraryToggle && showLibrary"
-      class="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-40 overflow-y-auto p-2 bg-[#F4F6F5] border border-zinc-200 rounded-lg custom-scrollbar"
+    <UiModal
+      v-if="props.showLibraryToggle"
+      v-model="showLibrary"
+      :title="libraryTitle"
+      :subtitle="assetType === 'video' ? 'Select a media asset' : 'Select an image asset'"
+      size="lg"
     >
-      <button
-        v-for="asset in filteredAssets"
-        :key="asset.id"
-        type="button"
-        @click="select(asset)"
-        :class="[
-          'aspect-square rounded border overflow-hidden transition',
-          modelValue === asset.id
-            ? 'border-[#008A20] ring-1 ring-[#008A20]'
-            : 'border-zinc-200 hover:border-zinc-400'
-        ]"
-      >
-        <template v-if="asset.type === 'image' || (asset.type === 'video' && asset.thumbnailPath)">
-          <img
-            :src="previewUrl(asset)"
-            :alt="asset.title"
-            class="w-full h-full object-cover"
-          />
-        </template>
+      <div class="space-y-4">
+        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 max-h-[60vh] overflow-y-auto p-1 custom-scrollbar">
+          <button
+            v-for="asset in filteredAssets"
+            :key="asset.id"
+            type="button"
+            @click="select(asset)"
+            :class="[
+              'aspect-square rounded-lg border overflow-hidden transition shadow-sm',
+              modelValue === asset.id
+                ? 'border-[#008A20] ring-2 ring-[#008A20]/20'
+                : 'border-zinc-200 hover:border-zinc-400'
+            ]"
+          >
+            <template v-if="asset.type === 'image' || (asset.type === 'video' && asset.thumbnailPath)">
+              <img
+                :src="previewUrl(asset)"
+                :alt="asset.title"
+                class="w-full h-full object-cover"
+              />
+            </template>
 
-        <div
-          v-else
-          class="w-full h-full flex items-center justify-center bg-zinc-200 text-2xl"
-        >
-          🎬
+            <div
+              v-else
+              class="w-full h-full flex items-center justify-center bg-zinc-200 text-2xl"
+            >
+              🎬
+            </div>
+          </button>
+
+          <p
+            v-if="filteredAssets.length === 0"
+            class="col-span-full text-center text-zinc-400 text-[10px] py-6"
+          >
+            No assets found.
+          </p>
         </div>
-      </button>
-
-      <p
-        v-if="filteredAssets.length === 0"
-        class="col-span-full text-center text-zinc-400 text-[10px] py-4"
-      >
-        No assets found.
-      </p>
-    </div>
+      </div>
+    </UiModal>
   </div>
 </template>
 
@@ -185,6 +191,7 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { useMediaStore } from '../../stores/media';
 import { useAlertStore } from '../../stores/alert';
+import UiModal from '../ui/UiModal.vue';
 
 const props = defineProps({
   modelValue: {
@@ -220,6 +227,16 @@ const emit = defineEmits(['update:modelValue']);
 const mediaStore = useMediaStore();
 const alertStore = useAlertStore();
 const showLibrary = ref(false);
+const libraryTitle = computed(() => {
+  if (props.assetType === 'video') return 'Choose video';
+  if (props.assetType === 'all') return 'Choose media';
+  return 'Choose image';
+});
+
+const openLibrary = () => {
+  if (!props.showLibraryToggle) return;
+  showLibrary.value = true;
+};
 
 const filteredAssets = computed(() => {
   if (props.assetType === 'all') {
