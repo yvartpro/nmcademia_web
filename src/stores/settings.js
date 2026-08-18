@@ -1,6 +1,17 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import api from '../api';
+import { useLanguagesStore } from './languages';
+
+const getLanguageParams = () => {
+  const languagesStore = useLanguagesStore();
+  const selectedId = Number(localStorage.getItem('nma.selectedLanguageId') ?? languagesStore.selectedLanguageId ?? 0);
+  const language = languagesStore.languages.find((item) => item.id === selectedId)
+    || languagesStore.languages.find((item) => item.isDefault)
+    || languagesStore.languages[0];
+
+  return language && language.code ? { params: { lang: language.code } } : {};
+};
 
 export const useSettingsStore = defineStore('settings', () => {
   const settings = ref({});
@@ -10,7 +21,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const fetchSettings = async () => {
     loading.value = true;
     try {
-      const response = await api.get('/settings');
+      const response = await api.get('/settings', getLanguageParams());
       settings.value = response.data;
     } catch (err) {
       console.error('Fetch settings failed:', err);

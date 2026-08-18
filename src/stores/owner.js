@@ -1,5 +1,16 @@
 import { defineStore } from 'pinia';
 import api, { getFullMediaUrl } from '../api';
+import { useLanguagesStore } from './languages';
+
+const getLanguageParams = () => {
+  const languagesStore = useLanguagesStore();
+  const selectedId = Number(localStorage.getItem('nma.selectedLanguageId') ?? languagesStore.selectedLanguageId ?? 0);
+  const language = languagesStore.languages.find((item) => item.id === selectedId)
+    || languagesStore.languages.find((item) => item.isDefault)
+    || languagesStore.languages[0];
+
+  return language && language.code ? { params: { lang: language.code } } : {};
+};
 
 export const useOwnerStore = defineStore('owner', {
   state: () => ({
@@ -17,7 +28,7 @@ export const useOwnerStore = defineStore('owner', {
     async fetchProfile() {
       this.loading = true;
       try {
-        const response = await api.get('/owner/profile');
+        const response = await api.get('/owner/profile', getLanguageParams());
         if (response.data) {
           const link = response.data.whatsappGroupLink ?? response.data.whatsapp_group_link ?? this.whatsappGroupLink;
           this.name = response.data.name || this.name;

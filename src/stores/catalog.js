@@ -1,6 +1,17 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import api from '../api';
+import { useLanguagesStore } from './languages';
+
+const getLanguageParams = () => {
+  const languagesStore = useLanguagesStore();
+  const selectedId = Number(localStorage.getItem('nma.selectedLanguageId') ?? languagesStore.selectedLanguageId ?? 0);
+  const language = languagesStore.languages.find((item) => item.id === selectedId)
+    || languagesStore.languages.find((item) => item.isDefault)
+    || languagesStore.languages[0];
+
+  return language && language.code ? { params: { lang: language.code } } : {};
+};
 
 export const useCatalogStore = defineStore('catalog', () => {
   const countries = ref([]);
@@ -29,7 +40,7 @@ export const useCatalogStore = defineStore('catalog', () => {
 
   const fetchPackages = async () => {
     try {
-      const response = await api.get('/packages');
+      const response = await api.get('/packages', getLanguageParams());
       packages.value = response.data;
     } catch (err) {
       console.error('Fetch packages failed:', err);
@@ -38,7 +49,7 @@ export const useCatalogStore = defineStore('catalog', () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await api.get('/products');
+      const response = await api.get('/products', getLanguageParams());
       products.value = response.data;
     } catch (err) {
       console.error('Fetch products failed:', err);

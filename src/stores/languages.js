@@ -76,6 +76,9 @@ export const useLanguagesStore = defineStore('languages', () => {
     fetchLanguages,
     createLanguage,
     updateLanguage,
-    deleteLanguage
+    deleteLanguage,
+    selectedLanguageId,
+    setSelectedLanguage
   };
 });
+ 

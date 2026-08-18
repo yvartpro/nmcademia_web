@@ -655,6 +655,7 @@ const toggleSidebar = () => {
   }
   const onLangChange = () => {
     languagesStore.setSelectedLanguage(languagesStore.selectedLanguageId);
+    window.location.reload();
   };
   isSidebarOpen.value = !isSidebarOpen.value;
 };

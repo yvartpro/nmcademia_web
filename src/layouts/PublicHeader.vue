@@ -51,6 +51,7 @@ onMounted(async () => {
 
 const onChange = () => {
   languagesStore.setSelectedLanguage(selected.value);
+  window.location.reload();
 };
 
 defineProps({

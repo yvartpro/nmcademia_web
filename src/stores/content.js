@@ -1,6 +1,17 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import api from '../api';
+import { useLanguagesStore } from './languages';
+
+const getLanguageParams = () => {
+  const languagesStore = useLanguagesStore();
+  const selectedId = Number(localStorage.getItem('nma.selectedLanguageId') ?? languagesStore.selectedLanguageId ?? 0);
+  const language = languagesStore.languages.find((item) => item.id === selectedId)
+    || languagesStore.languages.find((item) => item.isDefault)
+    || languagesStore.languages[0];
+
+  return language && language.code ? { params: { lang: language.code } } : {};
+};
 
 export const useContentStore = defineStore('content', () => {
   const testimonials = ref([]);
@@ -13,7 +24,7 @@ export const useContentStore = defineStore('content', () => {
 
   const fetchTestimonials = async () => {
     try {
-      const res = await api.get('/testimonials');
+      const res = await api.get('/testimonials', getLanguageParams());
       testimonials.value = res.data;
     } catch (err) {
       console.error('fetchTestimonials failed:', err);
@@ -22,7 +33,7 @@ export const useContentStore = defineStore('content', () => {
 
   const fetchFounders = async () => {
     try {
-      const res = await api.get('/founders');
+      const res = await api.get('/founders', getLanguageParams());
       founders.value = res.data;
     } catch (err) {
       console.error('fetchFounders failed:', err);
@@ -31,7 +42,7 @@ export const useContentStore = defineStore('content', () => {
 
   const fetchManufacturingPartners = async () => {
     try {
-      const res = await api.get('/manufacturing-partners');
+      const res = await api.get('/manufacturing-partners', getLanguageParams());
       manufacturingPartners.value = res.data;
     } catch (err) {
       console.error('fetchManufacturingPartners failed:', err);
@@ -58,7 +69,7 @@ export const useContentStore = defineStore('content', () => {
 
   const fetchWays = async () => {
     try {
-      const res = await api.get('/ways');
+      const res = await api.get('/ways', getLanguageParams());
       ways.value = res.data;
     } catch (err) {
       console.error('fetchWays failed:', err);
@@ -76,7 +87,7 @@ export const useContentStore = defineStore('content', () => {
 
   const fetchFAQs = async () => {
     try {
-      const res = await api.get('/faqs');
+      const res = await api.get('/faqs', getLanguageParams());
       faqs.value = res.data;
     } catch (err) {
       console.error('fetchFAQs failed:', err);
