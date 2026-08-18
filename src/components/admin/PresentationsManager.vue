@@ -43,6 +43,7 @@
             <td class="p-4 font-mono text-zinc-400">{{ p.order }}</td>
             <td class="p-4 text-right space-x-2">
               <button @click="openModal(p)" class="text-[#008A20] hover:text-[#006616] font-semibold transition">Edit</button>
+              <button @click="openTranslations(p)" class="text-[#006699] hover:text-[#004466] font-semibold transition">Translations</button>
               <button @click="requestDelete(p.id)" class="text-red-500 hover:text-red-700 font-semibold transition">Delete</button>
             </td>
           </tr>
@@ -117,6 +118,11 @@
       confirm-label="Yes, Delete"
       @confirm="executeDelete"
     />
+    <UiModal v-model="showTranslationEditor" :title="`Translations: ${translationTarget?.title || ''}`" size="lg">
+      <template v-if="translationTarget">
+        <TranslationEditor :modelName="'Presentation'" :recordId="translationTarget.id" :fields="['title','description']" @cancel="showTranslationEditor = false" />
+      </template>
+    </UiModal>
   </div>
 </template>
 
@@ -131,6 +137,7 @@ import { useAlertStore } from '../../stores/alert';
 import MediaPicker from './MediaPicker.vue';
 import CountryFlag from '../ui/CountryFlag.vue';
 import CountryLabel from '../ui/CountryLabel.vue';
+import TranslationEditor from './TranslationEditor.vue';
 
 const catalogStore = useCatalogStore();
 const mediaStore = useMediaStore();
@@ -245,6 +252,13 @@ const executeDelete = async () => {
     console.error('Error deleting presentation:', err);
     alertStore.showError('Failed to delete presentation');
   }
+};
+
+const showTranslationEditor = ref(false);
+const translationTarget = ref(null);
+const openTranslations = (p) => {
+  translationTarget.value = p;
+  showTranslationEditor.value = true;
 };
 
 onMounted(async () => {

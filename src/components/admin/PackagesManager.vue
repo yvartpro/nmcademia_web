@@ -33,6 +33,7 @@
           </div>
           <div class="flex gap-2 shrink-0">
             <button @click="openModal(pkg)" class="text-[#008A20] text-xs font-bold hover:text-[#006616] transition">Edit</button>
+            <button @click="openTranslations(pkg)" class="text-[#006699] text-xs font-bold hover:text-[#004466] transition">Translations</button>
             <button @click="requestDelete(pkg.id)" class="text-red-500 text-xs font-bold hover:text-red-700 transition">Delete</button>
           </div>
         </div>
@@ -158,6 +159,11 @@
       confirm-label="Yes, Delete"
       @confirm="executeDelete"
     />
+    <UiModal v-model="showTranslationEditor" :title="`Translations: ${translationTarget?.name || ''}`" size="lg">
+      <template v-if="translationTarget">
+        <TranslationEditor :modelName="'Package'" :recordId="translationTarget.id" :fields="['description']" @cancel="showTranslationEditor = false" />
+      </template>
+    </UiModal>
   </div>
 </template>
 
@@ -170,6 +176,7 @@ import UiConfirmModal from '../ui/UiConfirmModal.vue';
 import MediaPicker from './MediaPicker.vue';
 import CountrySelect from '../ui/CountrySelect.vue';
 import CountryLabel from '../ui/CountryLabel.vue';
+import TranslationEditor from './TranslationEditor.vue';
 
 const catalogStore = useCatalogStore();
 const isModalOpen = ref(false);
@@ -260,6 +267,13 @@ const requestDelete = (id) => {
 const executeDelete = async () => {
   if (pendingDeleteId.value) await catalogStore.adminDeletePackage(pendingDeleteId.value);
   pendingDeleteId.value = null;
+};
+
+const showTranslationEditor = ref(false);
+const translationTarget = ref(null);
+const openTranslations = (pkg) => {
+  translationTarget.value = pkg;
+  showTranslationEditor.value = true;
 };
 </script>
 
