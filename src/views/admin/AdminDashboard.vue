@@ -692,6 +692,8 @@ onMounted(async () => {
     router.push('/admin/login');
     return;
   }
+  // Ensure available languages are loaded for admin dropdown
+  await languagesStore.fetchLanguages();
 
   await Promise.all([
     catalogStore.adminFetchCountries(),

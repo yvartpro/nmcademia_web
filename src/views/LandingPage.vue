@@ -6,6 +6,10 @@
       <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <AppLogo size="sm" />
         <div class="flex items-center gap-4">
+            <select v-model="headerSelected" @change="onLangChange" :disabled="languagesStore.loading || !headerLanguages.length" class="text-xs bg-white border border-zinc-200 rounded px-2 py-1">
+              <option v-if="!headerLanguages.length" disabled value="">{{ languagesStore.loading ? 'Loading languages...' : 'No languages' }}</option>
+              <option v-for="l in headerLanguages" :key="l.id" :value="l.id">{{ l.name }}</option>
+            </select>
             <router-link v-if="memberStore.isRegistered && countryHasOffice" :to="memberStore.journey?.defaultRoute || '/presentation'" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-50 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
             Continue presentation
           </router-link>
@@ -194,13 +198,15 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useOwnerStore } from '../stores/owner';
 import { useSettingsStore } from '../stores/settings';
 import { useVideoPlayerStore } from '../stores/videoPlayer';
 import { useMemberStore } from '../stores/member';
 import { useCatalogStore } from '../stores/catalog';
 import AppLogo from '../components/ui/AppLogo.vue';
+import { useLanguagesStore } from '../stores/languages';
+import { useContentStore } from '../stores/content';
 import { Play } from 'lucide-vue-next';
 import { getFullMediaUrl } from '../api';
 
@@ -208,6 +214,10 @@ const memberStore = useMemberStore();
 const ownerStore = useOwnerStore();
 const settingsStore = useSettingsStore();
 const catalogStore = useCatalogStore();
+const languagesStore = useLanguagesStore();
+const contentStore = useContentStore();
+const headerLanguages = ref([]);
+const headerSelected = ref(null);
 const videoStore = useVideoPlayerStore();
 
 onMounted(async () => {
@@ -215,7 +225,31 @@ onMounted(async () => {
     await catalogStore.fetchCountries();
   }
   await settingsStore.fetchSettings();
+  // Load languages for the landing header and initialize select
+  try {
+    const langs = await languagesStore.fetchLanguages();
+    console.log('LandingPage loaded languages:', langs);
+    headerLanguages.value = langs;
+    headerSelected.value = languagesStore.selectedLanguageId;
+  } catch (err) {
+    console.error('Failed loading languages on landing:', err);
+  }
 });
+
+const onLangChange = async () => {
+  languagesStore.setSelectedLanguage(headerSelected.value);
+  try {
+    await Promise.all([
+      contentStore.fetchAll(),
+      catalogStore.fetchProducts(),
+      catalogStore.fetchPackages(),
+      settingsStore.fetchSettings(),
+      ownerStore.fetchProfile()
+    ]);
+  } catch (err) {
+    window.location.reload();
+  }
+};
 
 const openVideo = (src, title, thumbnail = null) => {
   videoStore.open({ src, title, thumbnail });

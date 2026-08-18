@@ -27,6 +27,7 @@ import { useRoute } from 'vue-router';
 import { useThemeStore } from './stores/theme';
 import { useOwnerStore } from './stores/owner';
 import { useAlertStore } from './stores/alert';
+import { useLanguagesStore } from './stores/languages';
 import ChatWidget from './components/ChatWidget.vue';
 import VideoPlayerModal from '@/components/VideoPlayerModal.vue';
 import VideoUploadPanel from '@/components/VideoUploadPanel.vue';
@@ -37,11 +38,18 @@ const route = useRoute();
 const themeStore = useThemeStore();
 const ownerStore = useOwnerStore();
 const alertStore = useAlertStore();
+const languagesStore = useLanguagesStore();
 const preloader = useVideoSequencePreloader();
 
 onMounted(() => {
   themeStore.initTheme();
   ownerStore.fetchProfile();
+  // Ensure available languages are loaded for the whole app
+  languagesStore.fetchLanguages().then((langs) => {
+    console.log('App mounted - languages loaded:', langs && langs.length ? langs.map(l => l.code) : langs);
+  }).catch((err) => {
+    console.error('Failed to load languages on app mount:', err);
+  });
   
   // Start the background preloader
   preloader.init();

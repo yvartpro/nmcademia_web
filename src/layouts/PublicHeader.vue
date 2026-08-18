@@ -8,7 +8,8 @@
         <AppLogo :logo-url="logoUrl" :show-tagline="showTagline" />
       </router-link>
       <div class="flex items-center gap-2">
-        <select v-if="languages.length" v-model="selected" @change="onChange" class="text-xs bg-white border border-zinc-200 rounded px-2 py-1">
+        <select v-model="selected" @change="onChange" :disabled="languagesStore.loading || !languages.length" class="text-xs bg-white border border-zinc-200 rounded px-2 py-1">
+          <option v-if="!languages.length" disabled value="">{{ languagesStore.loading ? 'Loading languages...' : 'No languages available' }}</option>
           <option v-for="l in languages" :key="l.id" :value="l.id">{{ l.name }}</option>
         </select>
         <UiButton
@@ -36,22 +37,44 @@ import AppLogo from '../components/ui/AppLogo.vue';
 import UiButton from '../components/ui/UiButton.vue';
 import { useMemberStore } from '../stores/member';
 import { useLanguagesStore } from '../stores/languages';
+import { useContentStore } from '../stores/content';
+import { useCatalogStore } from '../stores/catalog';
+import { useSettingsStore } from '../stores/settings';
+import { useOwnerStore } from '../stores/owner';
 import { onMounted, ref } from 'vue';
 
 const memberStore = useMemberStore();
 const languagesStore = useLanguagesStore();
+const contentStore = useContentStore();
+const catalogStore = useCatalogStore();
+const settingsStore = useSettingsStore();
+const ownerStore = useOwnerStore();
 const languages = ref([]);
 const selected = ref(null);
 
 onMounted(async () => {
+  console.log('PublicHeader mounted');
   const langs = await languagesStore.fetchLanguages();
+  console.log('PublicHeader fetched languages:', langs);
   languages.value = langs;
   selected.value = languagesStore.selectedLanguageId;
 });
 
-const onChange = () => {
+const onChange = async () => {
   languagesStore.setSelectedLanguage(selected.value);
-  window.location.reload();
+  // Re-fetch public content to reflect new language without a full reload
+  try {
+    await Promise.all([
+      contentStore.fetchAll(),
+      catalogStore.fetchProducts(),
+      catalogStore.fetchPackages(),
+      settingsStore.fetchSettingsDetailed(),
+      ownerStore.fetchProfile()
+    ]);
+  } catch (err) {
+    // fallback to reload if any fetch fails
+    window.location.reload();
+  }
 };
 
 defineProps({
