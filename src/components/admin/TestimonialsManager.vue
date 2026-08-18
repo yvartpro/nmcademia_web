@@ -78,19 +78,21 @@
       @confirm="executeDelete"
     />
     <UiModal v-model="showTranslationEditor" :title="`Translations: Testimonial`" size="lg">
-      <TranslationEditor :modelName="'Testimonial'" :recordId="translationRecordId" :fields="['quote','lifestyleTag']" @cancel="showTranslationEditor = false" />
+      <template v-if="translationRecordId">
+        <TranslationEditor :modelName="'Testimonial'" :recordId="translationRecordId" :fields="['quote','lifestyleTag']" @cancel="showTranslationEditor = false" />
+      </template>
     </UiModal>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, defineAsyncComponent } from 'vue';
 import { useContentStore } from '../../stores/content';
 import { useMediaStore } from '../../stores/media';
 import MediaPicker from './MediaPicker.vue';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
-import TranslationEditor from './TranslationEditor.vue';
+const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
 
 const contentStore = useContentStore();
 const mediaStore = useMediaStore();

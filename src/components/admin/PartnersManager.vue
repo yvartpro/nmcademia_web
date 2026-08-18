@@ -77,12 +77,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, defineAsyncComponent } from 'vue';
 import { useContentStore } from '../../stores/content';
 import MediaPicker from './MediaPicker.vue';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
-import TranslationEditor from './TranslationEditor.vue';
+const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
 
 const contentStore = useContentStore();
 

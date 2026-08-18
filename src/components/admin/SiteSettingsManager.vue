@@ -145,7 +145,9 @@ import { useAlertStore } from '../../stores/alert';
 import { SETTING_GROUPS, JSON_SETTING_KEYS } from '../../config/settingMeta';
 import MediaPicker from './MediaPicker.vue';
 import JourneysEditor from './JourneysEditor.vue';
-import TranslationEditor from './TranslationEditor.vue';
+import UiModal from '../ui/UiModal.vue';
+import { defineAsyncComponent } from 'vue';
+const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
 
 const props = defineProps({
   activeGroup: { type: String, default: 'contact' },

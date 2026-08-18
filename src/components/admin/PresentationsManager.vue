@@ -127,7 +127,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, defineAsyncComponent } from 'vue';
 import api from '@/api';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
@@ -137,7 +137,7 @@ import { useAlertStore } from '../../stores/alert';
 import MediaPicker from './MediaPicker.vue';
 import CountryFlag from '../ui/CountryFlag.vue';
 import CountryLabel from '../ui/CountryLabel.vue';
-import TranslationEditor from './TranslationEditor.vue';
+const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
 
 const catalogStore = useCatalogStore();
 const mediaStore = useMediaStore();

@@ -168,7 +168,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineAsyncComponent } from 'vue';
 import { useCatalogStore } from '../../stores/catalog';
 import { getFullMediaUrl } from '../../api';
 import UiModal from '../ui/UiModal.vue';
@@ -176,7 +176,7 @@ import UiConfirmModal from '../ui/UiConfirmModal.vue';
 import MediaPicker from './MediaPicker.vue';
 import CountrySelect from '../ui/CountrySelect.vue';
 import CountryLabel from '../ui/CountryLabel.vue';
-import TranslationEditor from './TranslationEditor.vue';
+const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
 
 const catalogStore = useCatalogStore();
 const isModalOpen = ref(false);

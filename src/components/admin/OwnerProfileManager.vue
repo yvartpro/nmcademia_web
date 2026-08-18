@@ -92,9 +92,11 @@
 import { ref, onMounted } from 'vue';
 import api, { getFullMediaUrl } from '@/api';
 import UiButton from '../ui/UiButton.vue';
+import UiModal from '../ui/UiModal.vue';
 import MediaLibrary from './MediaLibrary.vue';
 import { useAlertStore } from '../../stores/alert';
-import TranslationEditor from './TranslationEditor.vue';
+import { defineAsyncComponent } from 'vue';
+const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
 
 const loading = ref(true);
 const saving = ref(false);
