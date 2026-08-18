@@ -10,7 +10,7 @@ export const useLanguagesStore = defineStore('languages', () => {
   const fetchLanguages = async () => {
     loading.value = true;
     try {
-      const response = await api.get('/admin/languages');
+      const response = await api.get('/languages');
       languages.value = response.data || [];
       // initialize selected language if not set
       if (!selectedLanguageId.value) {
