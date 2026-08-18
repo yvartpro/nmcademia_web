@@ -8,10 +8,6 @@
         <AppLogo :logo-url="logoUrl" :show-tagline="showTagline" />
       </router-link>
       <div class="flex items-center gap-2">
-        <select v-model="selected" @change="onChange" :disabled="languagesStore.loading || !languages.length" class="text-xs bg-white border border-zinc-200 rounded px-2 py-1">
-          <option v-if="!languages.length" disabled value="">{{ languagesStore.loading ? 'Loading languages...' : 'No languages available' }}</option>
-          <option v-for="l in languages" :key="l.id" :value="l.id">{{ l.name }}</option>
-        </select>
         <UiButton
           v-if="showMemberLink && memberStore.isRegistered"
           variant="ghost"
@@ -27,6 +23,10 @@
         >
           Admin
         </router-link>
+        <select v-model="selected" @change="onChange" :disabled="languagesStore.loading || !languages.length" class="text-xs bg-white border border-accent/20 text-accent rounded-md px-3 py-1 shadow-sm hover:shadow-md transition-shadow duration-150 appearance-none pr-6 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent-dark">
+          <option v-if="!languages.length" disabled value="">{{ languagesStore.loading ? 'Loading languages...' : 'No languages available' }}</option>
+          <option v-for="l in languages" :key="l.id" :value="l.id">{{ l.name }}</option>
+        </select>
       </div>
     </div>
   </header>

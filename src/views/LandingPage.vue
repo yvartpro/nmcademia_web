@@ -6,10 +6,6 @@
       <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <AppLogo size="sm" />
         <div class="flex items-center gap-4">
-            <select v-model="headerSelected" @change="onLangChange" :disabled="languagesStore.loading || !headerLanguages.length" class="text-xs bg-white border border-zinc-200 rounded px-2 py-1">
-              <option v-if="!headerLanguages.length" disabled value="">{{ languagesStore.loading ? 'Loading languages...' : 'No languages' }}</option>
-              <option v-for="l in headerLanguages" :key="l.id" :value="l.id">{{ l.name }}</option>
-            </select>
             <router-link v-if="memberStore.isRegistered && countryHasOffice" :to="memberStore.journey?.defaultRoute || '/presentation'" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-50 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
             Continue presentation
           </router-link>
@@ -19,6 +15,10 @@
           <a v-else href="#journeys" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-50 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
             Start Journey
           </a>
+          <select v-model="headerSelected" @change="onLangChange" :disabled="languagesStore.loading || !headerLanguages.length" class="text-xs bg-white border border-accent/20 text-accent rounded-md px-3 py-1 shadow-sm hover:shadow-md transition-shadow duration-150 appearance-none pr-6 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent-dark">
+              <option v-if="!headerLanguages.length" disabled value="">{{ languagesStore.loading ? 'Loading languages...' : 'No languages' }}</option>
+              <option v-for="l in headerLanguages" :key="l.id" :value="l.id">{{ l.name }}</option>
+            </select>
         </div>
       </div>
     </nav>
