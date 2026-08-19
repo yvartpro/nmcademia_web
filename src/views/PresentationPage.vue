@@ -25,9 +25,7 @@
     <!-- Post-signup journey welcome -->
     <div v-if="memberStore.isRegistered" class="max-w-3xl mx-auto px-4 sm:px-6 pt-6 space-y-4">
       <div v-if="showPostSignupWelcome" class="p-4 bg-accent/10 border border-accent/20 rounded-xl">
-        <p class="text-base font-semibold text-zinc-900">
-          Welcome back, leader. Review this business overview, and transition to your training curriculum when ready.
-        </p>
+        <p class="text-base font-semibold text-zinc-900">{{ $t('presentation.welcomeBack') }}</p>
       </div>
       <div class="nma-card-glass p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -118,10 +116,10 @@
     <!-- Navigation Footer -->
     <div class="fixed bottom-0 left-0 right-0 border-t border-zinc-200/80 bg-surface-1/95 backdrop-blur-xl p-4 z-50 nma-safe-bottom shadow-lg">
       <div class="max-w-3xl mx-auto flex items-center justify-between">
-        <UiButton variant="ghost" size="sm" :disabled="currentSlide === 1" @click="prevSlide">Previous Slide</UiButton>
+        <UiButton variant="ghost" size="sm" :disabled="currentSlide === 1" @click="prevSlide">{{ $t('presentation.previous') }}</UiButton>
         <span class="text-xs text-zinc-500 font-mono font-bold">{{ currentSlide }} / {{ totalSlides }}</span>
         <UiButton variant="primary" size="sm" :disabled="currentSlide === totalSlides" @click="nextSlide">
-          {{ currentSlide === totalSlides ? 'Done' : 'Next Slide →' }}
+          {{ currentSlide === totalSlides ? $t('presentation.done') : $t('presentation.next') }}
         </UiButton>
       </div>
     </div>
@@ -240,16 +238,19 @@ const partners = computed(() => contentStore.manufacturingPartners);
 const earningStreams = computed(() => contentStore.earningStreams);
 
 // ── Finish slide computed ────────────────────────────────────────────────────
+import { useTranslationsStore } from '../stores/translations';
+const translationsStore = useTranslationsStore();
+
 const finishTitle = computed(() => {
-  if (!memberStore.isRegistered) return 'Ready to start your academy enrollment?';
-  if (memberStore.canFeature('courses')) return 'Overview Complete';
-  return 'Thank you for reviewing the business model';
+  if (!memberStore.isRegistered) return translationsStore.t('presentation.finish.readyTitle');
+  if (memberStore.canFeature('courses')) return translationsStore.t('presentation.finish.overviewComplete');
+  return translationsStore.t('presentation.finish.thankYou');
 });
 
 const finishMessage = computed(() => {
-  if (!memberStore.isRegistered) return 'Speak to a trainer on WhatsApp to assist with packaging and pioneer positioning.';
-  if (memberStore.canFeature('courses')) return 'Proceed directly to your personalized learning curriculum dashboard.';
-  return 'Your assigned journey is set to this slide-overview. Direct any questions to your active coordinator.';
+  if (!memberStore.isRegistered) return translationsStore.t('presentation.finish.readyMessage');
+  if (memberStore.canFeature('courses')) return translationsStore.t('presentation.finish.overviewMessage');
+  return translationsStore.t('presentation.finish.thankYouMessage');
 });
 
 // ── Lifecycle ────────────────────────────────────────────────────────────────

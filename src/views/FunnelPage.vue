@@ -3,13 +3,13 @@
     <!-- Header -->
     <header class="sticky top-0 z-50 border-b border-zinc-200/80 bg-surface-1/90 backdrop-blur-xl">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-        <router-link to="/">
-          <AppLogo size="sm" />
-        </router-link>
-        <div class="flex items-center gap-4">
-          <router-link to="/" class="text-xs text-zinc-500 hover:text-accent font-medium">✕ Exit Funnel</router-link>
+          <router-link to="/">
+            <AppLogo size="sm" />
+          </router-link>
+          <div class="flex items-center gap-4">
+            <router-link to="/" class="text-xs text-zinc-500 hover:text-accent font-medium">{{ $t('funnel.header.exit') }}</router-link>
+          </div>
         </div>
-      </div>
       <div class="max-w-4xl mx-auto px-4 sm:px-6 pb-2">
         <div class="h-1.5 w-full bg-zinc-200 rounded-full overflow-hidden">
           <div 
@@ -28,21 +28,9 @@
         <div v-if="funnelId != 'already-in-nm'" class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 leading-tight">
-              Is Network Marketing Academia for<span class="nma-gradient-text"> You?</span>
+              {{ $t('funnel.step1.title') }}
             </h2>
-            <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
-              A better future begins with the courage to take calculated risks.<br /><br />
-
-              The greatest entrepreneurs, innovators, and leaders in history all stepped beyond their comfort zones to pursue a greater vision. Network marketing is no different.<br /><br />
-
-              It is not for those seeking guarantees or shortcuts. It is for people who are willing to learn, grow, embrace challenges, develop leadership, and persevere when others give up.<br /><br />
-
-              The question is simple:<br /><br />
-
-              Will fear keep you where you are, or will courage help you create the future you truly want?<br /><br />
-
-              If you're ready to invest in yourself, step beyond your comfort zone, and build something meaningful, welcome to Network Marketing Academia—your journey starts here.<br />
-            </p>
+            <p class="text-sm sm:text-base leading-relaxed text-zinc-650" v-html="$t('funnel.step1.intro').replace(/\n/g, '<br /><br />')"></p>
             <div 
               @click="playIntroVideo"
               class="aspect-video bg-zinc-900 rounded-xl overflow-hidden shadow-glow relative cursor-pointer group flex items-center justify-center"
@@ -59,51 +47,49 @@
               </div>
             </div>
             <div class="flex justify-end">
-              <UiButton variant="primary" @click="nextStep">Get Started →</UiButton>
+              <UiButton variant="primary" @click="nextStep">{{ $t('funnel.step1_cta.getStarted') }}</UiButton>
             </div>
           </div>
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
-              Create Your <span class="nma-gradient-text">Account</span>
+              {{ $t('funnel.account.title') }}
             </h2>
             <form @submit.prevent="submitLeadAndContinue" class="space-y-4">
               <div>
-                <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">Full Name</label>
-                <input v-model="form.fullName" type="text" required class="nma-input-glass" placeholder="John Doe" />
+                <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.account.labels.fullName') }}</label>
+                <input v-model="form.fullName" type="text" required class="nma-input-glass" :placeholder="$t('funnel.account.placeholders.fullName')" />
               </div>
               <div>
-                <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">Email Address</label>
-                <input v-model="form.email" type="email" required class="nma-input-glass" placeholder="john@example.com" />
+                <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.account.labels.email') }}</label>
+                <input v-model="form.email" type="email" required class="nma-input-glass" :placeholder="$t('funnel.account.placeholders.email')" />
               </div>
               <div>
-                <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">Phone Number (Optional)</label>
-                <input v-model="form.phone" type="tel" class="nma-input-glass" placeholder="+2348030001111" />
+                <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.account.labels.phone') }}</label>
+                <input v-model="form.phone" type="tel" class="nma-input-glass" :placeholder="$t('funnel.account.placeholders.phone')" />
               </div>
               <label class="flex items-start gap-3 cursor-pointer mt-4">
                 <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
-                <span class="text-xs sm:text-sm text-zinc-650">
-                  By signing up, I agree to receive learning materials, updates, and communications from Network Marketing Academia.
-                </span>
+                <span class="text-xs sm:text-sm text-zinc-650">{{ $t('funnel.account.consent') }}</span>
               </label>
               <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50">
-                <UiButton variant="ghost" @click="prevStep">Back</UiButton>
-                <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">Continue →</UiButton>
+                <UiButton variant="ghost" @click="prevStep">{{ $t('funnel.account.buttons.back') }}</UiButton>
+                <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">{{ $t('funnel.account.buttons.continue') }}</UiButton>
               </div>
             </form>
           </div>
 
           <div v-else-if="currentStepIndex === 3" class="space-y-6">
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
-              Select Your <span class="nma-gradient-text">Country</span>
+              {{ $t('funnel.country.title') }}
             </h2>
-            <p class="text-sm text-zinc-500">We tailor the product prices, currencies, and support mentors based on your location.</p>
+            <p class="text-sm text-zinc-500">{{ $t('funnel.country.description') }}</p>
             <div class="space-y-4">
               <CountrySelect v-model="selectedCountry" />
             </div>
             <div class="flex justify-between pt-4 border-t border-zinc-200/50">
-              <UiButton variant="ghost" @click="prevStep">Back</UiButton>
-              <UiButton variant="primary" @click="saveCountryAndRedirect">Access Presentation →</UiButton>
+                <UiButton variant="ghost" @click="prevStep">{{ $t('funnel.account.buttons.back') }}</UiButton>
+                <UiButton variant="primary" @click="saveCountryAndRedirect">{{ $t('funnel.country.access') }}</UiButton>
             </div>
           </div>
         </div>
@@ -135,23 +121,23 @@
             <p class="text-sm text-zinc-500">Select the challenges you are currently facing in your organization:</p>
             <div class="grid sm:grid-cols-2 gap-3">
               <label 
-                v-for="ch in challengeOptions" 
-                :key="ch" 
+                v-for="chKey in challengeOptions" 
+                :key="chKey" 
                 class="flex items-center gap-3 p-4 bg-white/5 border rounded-xl cursor-pointer hover:border-accent transition"
-                :class="selectedChallenges.includes(ch) ? 'border-accent bg-accent/5' : 'border-zinc-200'"
+                :class="selectedChallenges.includes(chKey) ? 'border-accent bg-accent/5' : 'border-zinc-200'"
               >
                 <input 
                   type="checkbox" 
-                  :value="ch" 
+                  :value="chKey" 
                   v-model="selectedChallenges" 
                   class="rounded text-accent focus:ring-accent border-zinc-300" 
                 />
-                <span class="text-xs sm:text-sm font-semibold">{{ ch }}</span>
+                <span class="text-xs sm:text-sm font-semibold">{{ $t(chKey) }}</span>
               </label>
             </div>
             <div class="flex justify-between pt-4 border-t border-zinc-200/50">
-              <UiButton variant="ghost" @click="prevStep">Back</UiButton>
-              <UiButton variant="primary" :disabled="selectedChallenges.length === 0" @click="nextStep">Next Step →</UiButton>
+              <UiButton variant="ghost" @click="prevStep">{{ $t('funnel.account.buttons.back') }}</UiButton>
+              <UiButton variant="primary" :disabled="selectedChallenges.length === 0" @click="nextStep">{{ $t('funnel.already.nextStep') }}</UiButton>
             </div>
           </div>
 
@@ -184,7 +170,7 @@
               <p class="text-sm font-semibold animate-pulse text-zinc-400">Scanning network leaders matching your profile...</p>
             </div>
 
-            <div v-else class="space-y-6 animate-fade-in">
+              <div v-else class="space-y-6 animate-fade-in">
               <div class="p-6 bg-emerald-50 border rounded-card flex gap-4 items-center" :class="{'border-emerald-300': true}">
                 <div class="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center bg-emerald-100">
                   <img v-if="ownerStore.photoUrl" :src="ownerStore.photoUrl" alt="Coach photo" class="w-full h-full object-cover" />
@@ -194,14 +180,12 @@
                 </div>
                 <div>
                   <h4 class="text-lg font-bold text-emerald-700">{{ ownerStore.name }}</h4>
-                  <p class="text-xs text-emerald-600">{{ ownerStore.intro || 'Your dedicated Academy Coach' }}</p>
+                  <p class="text-xs text-emerald-600">{{ ownerStore.intro || $t('funnel.coach.title') }}</p>
                 </div>
               </div>
               
               <div class="space-y-4">
-                <p class="text-sm leading-relaxed text-zinc-600">
-                  Fill in your details below to schedule your consultation and connect with your coach.
-                </p>
+                <p class="text-sm leading-relaxed text-zinc-600">{{ $t('funnel.coach.bookPrompt') }}</p>
                 <form @submit.prevent="submitLeadAndCompleteFlow" class="space-y-4">
                   <div>
                     <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">Full Name</label>
@@ -221,13 +205,11 @@
                   </div>
                   <label class="flex items-start gap-3 cursor-pointer mt-4">
                     <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
-                    <span class="text-xs sm:text-sm text-zinc-650">
-                      I agree to let NMA match me with an active coach and send me coaching updates.
-                    </span>
+                    <span class="text-xs sm:text-sm text-zinc-650">{{ $t('funnel.coach.agree') }}</span>
                   </label>
                   <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50">
-                    <UiButton variant="ghost" @click="prevStep">Back</UiButton>
-                    <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">Join WhatsApp  Group→ </UiButton>
+                    <UiButton variant="ghost" @click="prevStep">{{ $t('funnel.account.buttons.back') }}</UiButton>
+                    <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">{{ $t('funnel.coach.joinWhatsapp') }}</UiButton>
                   </div>
                 </form>
               </div>
@@ -246,6 +228,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import { getJourney } from '../data/learnerJourneys';
 import { useRoute, useRouter } from 'vue-router';
 import { Play } from 'lucide-vue-next';
 import AppLogo from '../components/ui/AppLogo.vue';
@@ -321,16 +304,27 @@ onMounted(async () => {
   }
   await settingsStore.fetchSettings();
   await ownerStore.fetchProfile();
+  // Debug: log funnel info for inspection
+  try {
+    // funnelId is a computed ref — log its value and resolved journey
+    console.log('DEBUG FunnelPage: route.params=', route.params);
+    console.log('DEBUG FunnelPage: funnelId=', funnelId.value);
+    console.log('DEBUG FunnelPage: journey=', getJourney(funnelId.value));
+  } catch (e) {
+    console.warn('DEBUG FunnelPage: failed to log funnel info', e);
+  }
 });
 
 // Paths specific content
 const challengeOptions = [
-  'Recruiting prospects',
-  'Fear of rejection',
-  'Team members quitting (retention)',
-  'Lack of upline support',
-  'Inconsistent daily habits',
-  'Duplicating a simple presentation system'
+  // translation keys used in template
+  // these are labels drawn from translations.json
+  'funnel.challengeOptions.recruiting',
+  'funnel.challengeOptions.rejection',
+  'funnel.challengeOptions.retention',
+  'funnel.challengeOptions.upline',
+  'funnel.challengeOptions.habits',
+  'funnel.challengeOptions.presentation'
 ];
 const selectedChallenges = ref([]);
 
