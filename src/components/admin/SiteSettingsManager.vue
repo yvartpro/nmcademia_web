@@ -32,11 +32,14 @@
 
     <UiModal
       v-if="showTranslationEditor"
-      v-model="showTranslationEditor"
+      :modelValue="showTranslationEditor"
+      @update:modelValue="showTranslationEditor = $event"
       :title="`Translations: Setting`"
       size="lg"
     >
       <TranslationEditor
+        v-if="showTranslationEditor"
+        :key="translationRecordKey"
         :modelName="'Setting'"
         :recordId="translationRecordKey"
         :fields="['value']"
@@ -146,8 +149,7 @@ import { SETTING_GROUPS, JSON_SETTING_KEYS } from '../../config/settingMeta';
 import MediaPicker from './MediaPicker.vue';
 import JourneysEditor from './JourneysEditor.vue';
 import UiModal from '../ui/UiModal.vue';
-import { defineAsyncComponent } from 'vue';
-const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
+import TranslationEditor from './TranslationEditor.vue';
 
 const props = defineProps({
   activeGroup: { type: String, default: 'contact' },

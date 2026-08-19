@@ -4,7 +4,7 @@
       <select v-model="selectedLanguageId" class="border border-zinc-200 rounded px-3 py-2 text-xs bg-white">
         <option
           v-for="lang in languages"
-          v-if="Number(lang.ownerId ?? 0) === Number(currentUserId)"
+          v-if="Number(lang?.ownerId ?? 0) === Number(currentUserId || 0)"
           :key="lang.id"
           :value="lang.id"
         >
@@ -42,7 +42,7 @@ import DismissibleModal from '../ui/DismissibleModal.vue';
 import { useAuthStore } from '../../stores/auth';
 
 const authStore = useAuthStore();
-const currentUserId = computed(() => Number(authStore.user?.ownerId ?? 0));
+const currentUserId = computed(() => Number(authStore?.user?.ownerId ?? 0));
 
 const props = defineProps({
   modelName: { type: String, required: true },

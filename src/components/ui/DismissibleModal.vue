@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { ref, watch, defineProps } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false },
@@ -28,12 +28,16 @@ const props = defineProps({
   subtitle: { type: String, default: '' }
 });
 
+const emit = defineEmits(['update:modelValue']);
 const visible = ref(props.modelValue);
 
-watch(() => props.modelValue, (v) => visible.value = v);
+watch(() => props.modelValue, (v) => {
+  visible.value = v;
+});
 
 const close = () => {
   visible.value = false;
+  emit('update:modelValue', false);
   const ev = new CustomEvent('dismissible-modal-close');
   window.dispatchEvent(ev);
 };
