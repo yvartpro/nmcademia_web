@@ -2,7 +2,14 @@
   <div class="space-y-3">
     <div class="flex items-center gap-3">
       <select v-model="selectedLanguageId" class="border border-zinc-200 rounded px-3 py-2 text-xs bg-white">
-        <option v-for="lang in languages" :key="lang.id" :value="lang.id">{{ lang.name }} ({{ lang.code }})</option>
+        <option
+          v-for="lang in languages"
+          v-if="Number(lang.ownerId ?? 0) === Number(currentUserId)"
+          :key="lang.id"
+          :value="lang.id"
+        >
+          {{ lang.name }} ({{ lang.code }})
+        </option>
       </select>
       <button @click="loadTranslations" class="text-xs bg-[#008A20] text-white px-3 py-2 rounded">Load</button>
       <button @click="copyFromDefault" class="text-xs border border-zinc-200 px-3 py-2 rounded">Copy from default</button>
@@ -29,9 +36,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import api from '../../api';
 import DismissibleModal from '../ui/DismissibleModal.vue';
+import { useAuthStore } from '../../stores/auth';
+
+const authStore = useAuthStore();
+const currentUserId = computed(() => Number(authStore.user?.ownerId ?? 0));
 
 const props = defineProps({
   modelName: { type: String, required: true },
