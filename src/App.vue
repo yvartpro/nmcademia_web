@@ -22,12 +22,13 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useThemeStore } from './stores/theme';
 import { useOwnerStore } from './stores/owner';
 import { useAlertStore } from './stores/alert';
 import { useLanguagesStore } from './stores/languages';
+import { useTranslationsStore } from './stores/translations';
 import ChatWidget from './components/ChatWidget.vue';
 import VideoPlayerModal from '@/components/VideoPlayerModal.vue';
 import VideoUploadPanel from '@/components/VideoUploadPanel.vue';
@@ -39,7 +40,21 @@ const themeStore = useThemeStore();
 const ownerStore = useOwnerStore();
 const alertStore = useAlertStore();
 const languagesStore = useLanguagesStore();
+const translationsStore = useTranslationsStore();
 const preloader = useVideoSequencePreloader();
+
+watch(
+  () => languagesStore.selectedLanguageId,
+  async (selectedId) => {
+    if (!selectedId) return;
+    try {
+      await translationsStore.loadById(selectedId);
+    } catch (err) {
+      console.warn('Failed to sync translations for selected language:', err);
+    }
+  },
+  { immediate: true }
+);
 
 onMounted(() => {
   themeStore.initTheme();
