@@ -1,6 +1,6 @@
 <template>
   <div class="motion-safe:animate-fade-in space-y-8">
-    <h2 class="text-2xl sm:text-3xl font-display font-black">World-Class Health & Wellness</h2>
+    <h2 class="text-2xl sm:text-3xl font-display font-black">{{ $t('presentation.products.title') }}</h2>
 
     <div
       v-if="presentationVideoSrc"
@@ -25,7 +25,7 @@
       </div>
     </div>
     <div v-else class="aspect-video bg-white rounded-2xl overflow-hidden shadow-glow border border-zinc-200 flex flex-col items-center justify-center text-zinc-500 text-base">
-      Video presentation goes here
+      {{ $t('presentation.products.noVideo') }}
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -54,6 +54,7 @@ import { computed } from 'vue';
 import { getFullMediaUrl } from '../../api';
 import { Play } from 'lucide-vue-next';
 import { useVideoPlayerStore } from '@/stores/videoPlayer';
+import { useTranslationsStore } from '../../stores/translations';
 
 const props = defineProps({
   settings: { type: Object, required: true },
@@ -62,6 +63,7 @@ const props = defineProps({
 });
 
 const videoStore = useVideoPlayerStore();
+const translationsStore = useTranslationsStore();
 
 const presentationVideoSrc = computed(() => {
   if (props.settings['product_video']) {
@@ -86,9 +88,9 @@ const previewImage = computed(() => {
 
 const displayTitle = computed(() => {
   if (props.settings['product_video']) {
-    return 'Product Presentation';
+    return translationsStore.t('presentation.products.displayTitle');
   }
-  return props.presentation?.title || 'Product presentation';
+  return props.presentation?.title || translationsStore.t('presentation.products.displayTitle');
 });
 
 const displayDescription = computed(() => {

@@ -1,11 +1,11 @@
 <template>
   <div class="motion-safe:animate-fade-in space-y-8">
-    <h2 class="text-2xl sm:text-3xl font-display font-black">Answers to Common Questions</h2>
+    <h2 class="text-2xl sm:text-3xl font-display font-black">{{ $t('presentation.faqs.title') }}</h2>
 
     <input
       v-model="searchQuery"
       type="search"
-      placeholder="Search question keywords…"
+      :placeholder="$t('presentation.faqs.searchPlaceholder')"
       class="nma-input-glass"
     />
 
@@ -38,15 +38,15 @@
       <p class="text-base text-zinc-700 max-w-lg mx-auto">{{ finishMessage }}</p>
 
       <div v-if="showOwnerMentor" class="text-left pt-2">
-        <OwnerMentorCard cta-label="Contact Coordinator Coach" />
+        <OwnerMentorCard :cta-label="$t('presentation.faqs.ownerMentorCta')" />
       </div>
 
       <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
         <UiButton variant="primary" @click="$emit('consult', { name: 'Enrollment Request' })">
-          Message Coordinator (WhatsApp)
+          {{ $t('presentation.faqs.messageCoordinator') }}
         </UiButton>
         <UiButton v-if="showTrainingLink" variant="outline" to="/app/training">
-          Continue to Training →
+          {{ $t('presentation.faqs.continueTraining') }}
         </UiButton>
       </div>
     </div>

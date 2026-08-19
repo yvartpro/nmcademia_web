@@ -162,12 +162,12 @@
 
           <div v-else-if="currentStepIndex === 4" class="space-y-6">
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
-              Your Assigned <span class="nma-gradient-text">Coach</span>
+              {{ $t('funnel.coach.assignedTitlePart1') }} <span class="nma-gradient-text">{{ $t('funnel.coach.assignedTitlePart2') }}</span>
             </h2>
             
             <div v-if="matchingAnimation" class="h-48 flex flex-col items-center justify-center gap-4">
               <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent"></div>
-              <p class="text-sm font-semibold animate-pulse text-zinc-400">Scanning network leaders matching your profile...</p>
+              <p class="text-sm font-semibold animate-pulse text-zinc-400">{{ $t('funnel.coach.matching') }}</p>
             </div>
 
               <div v-else class="space-y-6 animate-fade-in">
@@ -221,7 +221,7 @@
 
     <!-- Footer -->
     <footer class="text-center text-xs text-zinc-500">
-      <p>© 2026 Network Marketing Academia • Official Partner: Alliance In Motion Global</p>
+      <p>{{ $t('footer.copyright') }}</p>
     </footer>
   </div>
 </template>
@@ -278,7 +278,7 @@ const introVideoThumbnailUrl = computed(() => {
   return '';
 });
 
-const playIntroVideo = () => openVideo(introVideoSrc.value, 'What is Network Marketing', introVideoThumbnail.value);
+const playIntroVideo = () => openVideo(introVideoSrc.value, translationsStore.t('funnel.videoTitle'), introVideoThumbnail.value);
 
 const catalogStore = useCatalogStore();
 const leadsStore = useLeadsStore();
@@ -332,11 +332,17 @@ const selectedChallenges = ref([]);
 
 const getChallengeSolution = (challenge) => {
   // Resolve solution texts from translations so they're localizable
-  if (challenge.includes('Recruiting')) return translationsStore.t('funnel.solutions.recruiting');
-  if (challenge.includes('rejection')) return translationsStore.t('funnel.solutions.rejection');
-  if (challenge.includes('retention')) return translationsStore.t('funnel.solutions.retention');
-  if (challenge.includes('upline')) return translationsStore.t('funnel.solutions.upline');
-  if (challenge.includes('habits')) return translationsStore.t('funnel.solutions.habits');
+  try {
+    if (typeof challenge === 'string') {
+      if (challenge.endsWith('.recruiting') || challenge.includes('Recruiting')) return translationsStore.t('funnel.solutions.recruiting');
+      if (challenge.endsWith('.rejection') || challenge.includes('rejection')) return translationsStore.t('funnel.solutions.rejection');
+      if (challenge.endsWith('.retention') || challenge.includes('retention')) return translationsStore.t('funnel.solutions.retention');
+      if (challenge.endsWith('.upline') || challenge.includes('upline')) return translationsStore.t('funnel.solutions.upline');
+      if (challenge.endsWith('.habits') || challenge.includes('habits')) return translationsStore.t('funnel.solutions.habits');
+    }
+  } catch (e) {
+    /* ignore and fallback */
+  }
   return translationsStore.t('funnel.solutions.default');
 };
 
@@ -499,14 +505,14 @@ const submitLeadAndCompleteFlow = async () => {
 
 const getSegmentLabel = (fid) => {
   switch (fid) {
-    case 'new-to-nm': return 'I am new to network marketing';
-    case 'already-in-nm': return 'I am already in network marketing';
-    case 'switch-companies': return 'I am in network marketing but not satisfied and want to switch companies';
-    case 'exploring': return 'I am just exploring opportunities';
-    case 'income-diversification': return 'I am tired of depending on one source of income';
-    case 'jobless': return 'I am tired of being jobless';
-    case 'fast-track': return 'I want this business by all means';
-    default: return 'I am just exploring opportunities';
+    case 'new-to-nm': return translationsStore.t('funnel.segment.new-to-nm');
+    case 'already-in-nm': return translationsStore.t('funnel.segment.already-in-nm');
+    case 'switch-companies': return translationsStore.t('funnel.segment.switch-companies');
+    case 'exploring': return translationsStore.t('funnel.segment.exploring');
+    case 'income-diversification': return translationsStore.t('funnel.segment.income-diversification');
+    case 'jobless': return translationsStore.t('funnel.segment.jobless');
+    case 'fast-track': return translationsStore.t('funnel.segment.fast-track');
+    default: return translationsStore.t('funnel.segment.exploring');
   }
 };
 

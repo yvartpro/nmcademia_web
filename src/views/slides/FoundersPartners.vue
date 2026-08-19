@@ -1,7 +1,7 @@
 <template>
   <div class="motion-safe:animate-fade-in space-y-10">
     <div class="space-y-2">
-      <h2 class="text-2xl sm:text-3xl font-display font-black">Visionary Founders</h2>
+      <h2 class="text-2xl sm:text-3xl font-display font-black">{{ $t('presentation.founders.title') }}</h2>
       <p class="text-base text-zinc-600 whitespace-pre-line">{{ settings['partner_company_profile'] }}</p>
     </div>
 
@@ -31,7 +31,7 @@
     </div>
 
     <div class="space-y-4">
-      <h3 class="text-lg font-bold font-display">Global Manufacturing Partners</h3>
+      <h3 class="text-lg font-bold font-display">{{ $t('presentation.partners.title') }}</h3>
       <div class="grid grid-cols-2 gap-4">
         <div
           v-for="partner in partners"

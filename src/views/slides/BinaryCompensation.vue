@@ -1,27 +1,23 @@
 <template>
   <div class="motion-safe:animate-fade-in space-y-8">
-    <h2 class="text-2xl sm:text-3xl font-display font-black">Understanding the Binary Structure</h2>
+    <h2 class="text-2xl sm:text-3xl font-display font-black">{{ $t('presentation.binary.title') }}</h2>
 
     <div class="p-5 bg-white border border-zinc-200 rounded-xl space-y-4">
-      <p class="text-base text-zinc-600 leading-relaxed">
-        A <strong>Binary Structure</strong> means you build only two sides: a <strong>Left Team</strong> and a
-        <strong>Right Team</strong>. Every time you place a package referral on the Left and another on the Right,
-        they pair to generate a <strong>Pairing Match Bonus (MSB)</strong>.
-      </p>
+      <p class="text-base text-zinc-600 leading-relaxed" v-html="$t('presentation.binary.intro')"></p>
 
       <!-- Binary Tree Video Preview -->
       <div v-if="settings?.['binary_tree_video']" class="rounded-3xl border border-zinc-200 bg-zinc-50 overflow-hidden p-5">
         <div class="flex items-start gap-3">
           <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-600 text-sm font-semibold">▶</span>
           <div class="flex-grow">
-            <p class="text-base font-bold text-zinc-900">How the Binary Structure Really Works</p>
-            <p class="text-sm text-zinc-600 mt-1">Watch this short video to understand how the binary structure works and how pairings generate income.</p>
+            <p class="text-base font-bold text-zinc-900">{{ $t('presentation.binary.videoTitle') }}</p>
+            <p class="text-sm text-zinc-600 mt-1">{{ $t('presentation.binary.videoSubtitle') }}</p>
             <button
               type="button"
               @click="openBinaryTreeVideo"
               class="inline-flex items-center justify-center rounded-full bg-blue-600 px-4 py-2 text-sm font-bold text-white hover:bg-blue-700 transition mt-3"
             >
-              Watch Video
+              {{ $t('presentation.binary.watchVideo') }}
             </button>
           </div>
         </div>
@@ -31,9 +27,9 @@
     <!-- Earning Streams -->
     <div class="space-y-4">
       <div class="flex justify-between items-end">
-        <h3 class="text-base font-bold uppercase tracking-wider text-zinc-500">Earning Streams Breakdown</h3>
+        <h3 class="text-base font-bold uppercase tracking-wider text-zinc-500">{{ $t('presentation.binary.earningStreamsTitle') }}</h3>
       </div>
-      <p class="text-sm text-zinc-500">Click on any earning stream to show detailed explanations and dynamic calculators.</p>
+      <p class="text-sm text-zinc-500">{{ $t('presentation.binary.earningStreamsHint') }}</p>
 
       <div class="space-y-3">
         <div
@@ -56,8 +52,8 @@
                 <div class="flex items-start gap-3">
                   <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-red-500/10 text-red-600 text-sm font-semibold">▶</span>
                   <div>
-                    <p class="text-base font-bold text-zinc-900">Video walkthrough available</p>
-                    <p class="text-sm text-zinc-600 mt-1">Open this short explainer video to see the stream in action and learn the payout logic.</p>
+                    <p class="text-base font-bold text-zinc-900">{{ $t('presentation.binary.videoWalkthroughTitle') }}</p>
+                    <p class="text-sm text-zinc-600 mt-1">{{ $t('presentation.binary.videoWalkthroughSubtitle') }}</p>
                   </div>
                 </div>
                 <button
@@ -65,7 +61,7 @@
                   @click.stop="openVideo(stream)"
                   class="inline-flex items-center justify-center rounded-full bg-accent px-4 py-2 text-sm font-bold text-zinc-900 hover:bg-accent-light transition"
                 >
-                  Watch the stream video
+                  {{ $t('presentation.binary.watchStreamVideo') }}
                 </button>
               </div>
             </div>
@@ -79,7 +75,7 @@
                   {{ stream.title }}
                 </h4>
                 <span class="text-[13px] text-zinc-500 font-semibold">
-                  {{ focusedStreamId === stream.id ? 'Hide Details' : 'Show Details' }}
+                  {{ focusedStreamId === stream.id ? $t('presentation.binary.hideDetails') : $t('presentation.binary.showDetails') }}
                 </span>
               </div>
               <p class="text-base text-zinc-900 leading-relaxed mt-1">{{ stream.shortDescription }}</p>
@@ -93,10 +89,10 @@
           <div v-if="focusedStreamId === stream.id" @click.stop class="border-t border-white/5 pt-4 mt-2">
             <!-- DRB Simulator -->
             <div v-if="stream.slug === 'drb'" class="space-y-4">
-              <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Direct Referral Income</h5>
+              <h5 class="text-xs font-bold text-accent uppercase tracking-wider">{{ $t('presentation.binary.directReferralIncome') }}</h5>
               <div class="space-y-3">
                 <div>
-                  <label class="block text-[10px] text-zinc-400 uppercase font-bold mb-1">Select referral package level:</label>
+                  <label class="block text-[10px] text-zinc-400 uppercase font-bold mb-1">{{ $t('presentation.binary.selectReferralPackage') }}</label>
                   <select v-model="drbPkgId" class="w-full bg-white border border-zinc-200 rounded p-2 text-xs text-zinc-900">
                     <option v-for="p in packages" :key="p.id" :value="p.id">
                       {{ p.name }} (Referral bonus: {{ currencySymbol }}{{ getPriceForCountry(p, 'referralBonus') }})
@@ -104,7 +100,7 @@
                   </select>
                 </div>
                 <div class="border-t border-white/5 pt-3 flex justify-between items-center text-xs">
-                  <span class="font-bold text-zinc-600">Total DRB Earnings:</span>
+                  <span class="font-bold text-zinc-600">{{ $t('presentation.binary.totalDrbEarnings') }}</span>
                   <span class="font-mono text-base font-black text-amber-400">{{ currencySymbol }}{{ formatNumber(simulatedDRB) }}</span>
                 </div>
               </div>
@@ -112,10 +108,10 @@
 
             <!-- MSB Simulator -->
             <div v-else-if="stream.slug === 'msb'" class="space-y-4">
-              <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Matched Sales (Pairing) Income</h5>
+              <h5 class="text-xs font-bold text-accent uppercase tracking-wider">{{ $t('presentation.binary.matchedSalesIncome') }}</h5>
               <div class="space-y-3">
                 <div>
-                  <label class="block text-[13px] text-zinc-400 uppercase font-bold mb-1">Select structural package level:</label>
+                  <label class="block text-[13px] text-zinc-400 uppercase font-bold mb-1">{{ $t('presentation.binary.selectStructuralPackage') }}</label>
                   <select v-model="msbPkgId" class="w-full bg-white border border-zinc-200 rounded p-2 text-xs text-zinc-900">
                     <option v-for="p in packages" :key="p.id" :value="p.id">
                       {{ p.name }} (Pair bonus: {{ currencySymbol }}{{ getPriceForCountry(p, 'matchBonus') }})
@@ -123,7 +119,7 @@
                   </select>
                 </div>
                 <div class="border-t border-white/5 pt-3 flex justify-between items-center text-xs">
-                  <span class="font-bold text-zinc-600">Total MSB Earnings:</span>
+                  <span class="font-bold text-zinc-600">{{ $t('presentation.binary.totalMsbEarnings') }}</span>
                   <span class="font-mono text-base font-black text-amber-400">{{ currencySymbol }}{{ formatNumber(simulatedMSB) }}</span>
                 </div>
               </div>
@@ -131,26 +127,26 @@
 
             <!-- Stairstep Matrix -->
             <div v-else-if="stream.slug === 'stairstep'" class="space-y-4">
-              <h5 class="text-xs font-bold text-accent uppercase tracking-wider">Stairstep Rank Promotions Matrix</h5>
+              <h5 class="text-xs font-bold text-accent uppercase tracking-wider">{{ $t('presentation.binary.stairstepTitle') }}</h5>
               <div class="space-y-2 text-[13px]">
                 <div class="flex justify-between items-center p-2 bg-white rounded border border-zinc-200/50">
-                  <span class="font-bold text-zinc-600">Silver Executive</span>
-                  <span class="text-accent font-black">10 Points Required (Get +10% rebate)</span>
+                  <span class="font-bold text-zinc-600">{{ $t('presentation.binary.stair.silver') }}</span>
+                  <span class="text-accent font-black">{{ $t('presentation.binary.stair.silverPoints') }}</span>
                 </div>
                 <div class="flex justify-between items-center p-2 bg-white rounded border border-zinc-200/50">
-                  <span class="font-bold text-zinc-600">Gold Executive</span>
-                  <span class="text-accent font-black">100 Points Required (Get +20% rebate)</span>
+                  <span class="font-bold text-zinc-600">{{ $t('presentation.binary.stair.gold') }}</span>
+                  <span class="text-accent font-black">{{ $t('presentation.binary.stair.goldPoints') }}</span>
                 </div>
                 <div class="flex justify-between items-center p-2 bg-white rounded border border-zinc-200/50">
-                  <span class="font-bold text-zinc-600">Global Ambassador</span>
-                  <span class="text-accent font-black">1,000 Points Required (Get +30% rebate)</span>
+                  <span class="font-bold text-zinc-600">{{ $t('presentation.binary.stair.global') }}</span>
+                  <span class="text-accent font-black">{{ $t('presentation.binary.stair.globalPoints') }}</span>
                 </div>
-                <p class="text-[13px] text-zinc-600 italic mt-2">Points accumulate through group orders with no demotions and no time limit.</p>
+                <p class="text-[13px] text-zinc-600 italic mt-2">{{ $t('presentation.binary.stair.note') }}</p>
               </div>
             </div>
 
             <div v-else class="text-[13px] text-zinc-700 leading-relaxed font-light">
-              This earning stream multiplies your passive income through long-term network duplication and team-wide reorders.
+              {{ $t('presentation.binary.defaultStreamDescription') }}
             </div>
           </div>
         </div>

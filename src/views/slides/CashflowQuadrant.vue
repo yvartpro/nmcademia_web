@@ -1,7 +1,7 @@
 <template>
   <div class="motion-safe:animate-fade-in space-y-8">
     <div class="space-y-2">
-      <h2 class="text-2xl sm:text-3xl font-display font-black">The Cashflow Quadrant</h2>
+      <h2 class="text-2xl sm:text-3xl font-display font-black">{{ $t('presentation.quadrant.title') }}</h2>
       <p class="text-base text-zinc-600 leading-relaxed">{{ settings['cashflow_quadrant_explanation'] }}</p>
     </div>
 
@@ -23,8 +23,8 @@
         >
           <span class="text-3xl font-black text-red-500/80">E</span>
           <div>
-            <h4 class="text-xs font-extrabold text-zinc-300">Employee</h4>
-            <p class="text-[9px] text-zinc-500 mt-0.5">Time for Money</p>
+              <h4 class="text-xs font-extrabold text-zinc-300">{{ $t('presentation.quadrant.E.titleShort') }}</h4>
+              <p class="text-[9px] text-zinc-500 mt-0.5">{{ $t('presentation.quadrant.E.subtitle') }}</p>
           </div>
         </div>
 
@@ -34,8 +34,8 @@
         >
           <span class="text-3xl font-black text-accent">B</span>
           <div>
-            <h4 class="text-xs font-extrabold text-zinc-300">Business Owner</h4>
-            <p class="text-[9px] text-zinc-500 mt-0.5">Leverage Systems</p>
+            <h4 class="text-xs font-extrabold text-zinc-300">{{ $t('presentation.quadrant.B.titleShort') }}</h4>
+            <p class="text-[9px] text-zinc-500 mt-0.5">{{ $t('presentation.quadrant.B.subtitle') }}</p>
           </div>
         </div>
 
@@ -45,8 +45,8 @@
         >
           <span class="text-3xl font-black text-orange-500/80">S</span>
           <div>
-            <h4 class="text-xs font-extrabold text-zinc-300">Self-Employed</h4>
-            <p class="text-[9px] text-zinc-500 mt-0.5">Own Your Job</p>
+            <h4 class="text-xs font-extrabold text-zinc-300">{{ $t('presentation.quadrant.S.titleShort') }}</h4>
+            <p class="text-[9px] text-zinc-500 mt-0.5">{{ $t('presentation.quadrant.S.subtitle') }}</p>
           </div>
         </div>
 
@@ -56,8 +56,8 @@
         >
           <span class="text-3xl font-black text-emerald-500/80">I</span>
           <div>
-            <h4 class="text-xs font-extrabold text-zinc-300">Investor</h4>
-            <p class="text-[9px] text-zinc-500 mt-0.5">Money Works for You</p>
+            <h4 class="text-xs font-extrabold text-zinc-300">{{ $t('presentation.quadrant.I.titleShort') }}</h4>
+            <p class="text-[9px] text-zinc-500 mt-0.5">{{ $t('presentation.quadrant.I.subtitle') }}</p>
           </div>
         </div>
       </div>
@@ -73,7 +73,7 @@
               ? (activeQuadrant === 'E' ? 'bg-red-500/15 border-red-500/50 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)] ring-1 ring-red-500/30 scale-[0.98]' : 'border-transparent hover:bg-red-500/5 hover:border-red-500/20')
               : 'border-transparent'
           ]"
-          aria-label="Select Employee Quadrant"
+          :aria-label="$t('presentation.quadrant.accessibility.employee')"
         >
           <div v-if="settings?.['cashflow_quadrant_image']" class="absolute top-3 left-3 bg-red-950/80 border border-red-500/30 rounded-lg px-2 py-0.5 text-[10px] font-black text-red-400 backdrop-blur-md">E</div>
         </button>
@@ -87,7 +87,7 @@
               ? (activeQuadrant === 'B' ? 'bg-accent/15 border-accent/50 shadow-[inset_0_0_20px_rgba(212,163,89,0.2)] ring-1 ring-accent/30 scale-[0.98]' : 'border-transparent hover:bg-accent/5 hover:border-accent/20')
               : 'border-transparent'
           ]"
-          aria-label="Select Business Owner Quadrant"
+          :aria-label="$t('presentation.quadrant.accessibility.businessOwner')"
         >
           <div v-if="settings?.['cashflow_quadrant_image']" class="absolute top-3 right-3 bg-amber-950/80 border border-accent/30 rounded-lg px-2 py-0.5 text-[10px] font-black text-accent backdrop-blur-md">B</div>
         </button>
@@ -101,7 +101,7 @@
               ? (activeQuadrant === 'S' ? 'bg-orange-500/15 border-orange-500/50 shadow-[inset_0_0_20px_rgba(249,115,22,0.2)] ring-1 ring-orange-500/30 scale-[0.98]' : 'border-transparent hover:bg-orange-500/5 hover:border-orange-500/20')
               : 'border-transparent'
           ]"
-          aria-label="Select Self-Employed Quadrant"
+          :aria-label="$t('presentation.quadrant.accessibility.selfEmployed')"
         >
           <div v-if="settings?.['cashflow_quadrant_image']" class="absolute bottom-3 left-3 bg-orange-950/80 border border-orange-500/30 rounded-lg px-2 py-0.5 text-[10px] font-black text-orange-400 backdrop-blur-md">S</div>
         </button>
@@ -115,7 +115,7 @@
               ? (activeQuadrant === 'I' ? 'bg-emerald-500/15 border-emerald-500/50 shadow-[inset_0_0_20px_rgba(16,185,129,0.2)] ring-1 ring-emerald-500/30 scale-[0.98]' : 'border-transparent hover:bg-emerald-500/5 hover:border-emerald-500/20')
               : 'border-transparent'
           ]"
-          aria-label="Select Investor Quadrant"
+          :aria-label="$t('presentation.quadrant.accessibility.investor')"
         >
           <div v-if="settings?.['cashflow_quadrant_image']" class="absolute bottom-3 right-3 bg-emerald-950/80 border border-emerald-500/30 rounded-lg px-2 py-0.5 text-[10px] font-black text-emerald-400 backdrop-blur-md">I</div>
         </button>
@@ -127,11 +127,11 @@
       <h4 class="font-display font-extrabold text-lg text-accent mb-2">{{ activeQuadrantInfo.title }}</h4>
       <p class="text-base text-zinc-700 mb-4 leading-relaxed">{{ activeQuadrantInfo.description }}</p>
       <div class="flex items-center gap-2 text-sm border-t border-zinc-200/50 pt-3">
-        <span class="text-zinc-500 font-bold uppercase tracking-wider">Leverage Factor:</span>
+        <span class="text-zinc-500 font-bold uppercase tracking-wider">{{ $t('presentation.quadrant.leverageLabel') }}</span>
         <span class="text-zinc-700 font-semibold">{{ activeQuadrantInfo.leverage }}</span>
       </div>
       <p v-if="activeQuadrant === 'B'" class="mt-4 text-sm font-bold text-accent uppercase tracking-wider">
-        ★ Network Marketing = B Quadrant
+        {{ $t('presentation.quadrant.networkMarketingNote') }}
       </p>
     </div>
   </div>
@@ -148,26 +148,30 @@ const props = defineProps({
 
 defineEmits(['update:activeQuadrant']);
 
+import { useTranslationsStore } from '../../stores/translations';
+
+const translationsStore = useTranslationsStore();
+
 const quadrantData = {
   E: {
-    title: 'E - Employee',
-    description: 'You work for a boss and exchange hours directly for a paycheck. Your salary relies entirely on your attendance. If you stop working, your active income ceases.',
-    leverage: 'Zero leverage. Your income is 100% dependent on your personal hourly time exchange.',
+    title: translationsStore.t('presentation.quadrant.E.title'),
+    description: translationsStore.t('presentation.quadrant.E.description'),
+    leverage: translationsStore.t('presentation.quadrant.E.leverage'),
   },
   S: {
-    title: 'S - Self-Employed',
-    description: 'You own a small business or specialization (doctors, lawyers, consultants). If you do not perform, the business closes.',
-    leverage: 'Individual leverage. Highly active, you cannot easily step away without stopping cashflow.',
+    title: translationsStore.t('presentation.quadrant.S.title'),
+    description: translationsStore.t('presentation.quadrant.S.description'),
+    leverage: translationsStore.t('presentation.quadrant.S.leverage'),
   },
   B: {
-    title: 'B - Business Owner',
-    description: 'You build a system and lead a network of people. Cashflow is generated through duplication and leverage, continuing even in your absence.',
-    leverage: 'High leverage. Duplicating networks makes this the lowest risk system to step into the B quadrant.',
+    title: translationsStore.t('presentation.quadrant.B.title'),
+    description: translationsStore.t('presentation.quadrant.B.description'),
+    leverage: translationsStore.t('presentation.quadrant.B.leverage'),
   },
   I: {
-    title: 'I - Investor',
-    description: 'You acquire assets that generate money (real estate, dividends). Your investments act as leverage.',
-    leverage: 'Compound capital leverage. Money works as your ultimate employee.',
+    title: translationsStore.t('presentation.quadrant.I.title'),
+    description: translationsStore.t('presentation.quadrant.I.description'),
+    leverage: translationsStore.t('presentation.quadrant.I.leverage'),
   },
 };
 

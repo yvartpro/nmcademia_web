@@ -1,11 +1,9 @@
 <template>
   <div class="space-y-6">
-    <h3 class="text-lg font-bold font-display">Other Success Stories</h3>
-    <h4 class="text-sm text-zinc-500">Real People. Real Results. Across Africa and Beyond.</h4>
+    <h3 class="text-lg font-bold font-display">{{ $t('presentation.testimonials.title') }}</h3>
+    <h4 class="text-sm text-zinc-500">{{ $t('presentation.testimonials.subtitle') }}</h4>
     
-    <p class="text-sm text-zinc-600">
-      Discover inspiring stories from ambassadors who have transformed their lives by leveraging our simple, proven, and duplicatable business-building system. See how ordinary people are achieving extraordinary results and creating lasting income through the power of network marketing.
-    </p>
+    <p class="text-sm text-zinc-600">{{ $t('presentation.testimonials.intro') }}</p>
 
     <!-- Grille des témoignages textuels -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -32,7 +30,7 @@
         v-if="textTestimonials.length === 0" 
         class="col-span-full p-8 text-center text-zinc-400 bg-zinc-50 rounded"
       >
-        No text testimonials available.
+        {{ $t('presentation.testimonials.empty') }}
       </div>
     </div>
   </div>

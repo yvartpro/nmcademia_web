@@ -2,10 +2,10 @@
   <div class="motion-safe:animate-fade-in space-y-8">
     <div class="space-y-3">
       <h2 class="text-3xl sm:text-4xl font-display font-black text-zinc-900 leading-tight">
-        Entry Packages for {{ selectedCountryCode }}
+        {{ $t('presentation.packages.title', 'Entry Packages for ') + selectedCountryCode }}
       </h2>
       <p class="text-base text-zinc-600 leading-relaxed max-w-xl">
-        Select the tier that fits your goals. Each package unlocks binary positioning and sets your referral reward level.
+        {{ $t('presentation.packages.subtitle') }}
       </p>
     </div>
 
@@ -18,7 +18,7 @@
       >
         <div v-if="pkg.featured" class="absolute top-3 right-3 z-10">
           <span class="text-[10px] font-black uppercase tracking-wide bg-accent text-white px-2.5 py-1 rounded-full shadow-sm">
-            Popular
+            {{ $t('presentation.packages.popular') }}
           </span>
         </div>
 
@@ -50,13 +50,13 @@
 
           <div class="grid grid-cols-2 gap-3">
             <div class="rounded-xl bg-zinc-50 border border-zinc-100 p-3">
-              <span class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wide mb-1">Direct Bonus</span>
+              <span class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wide mb-1">{{ $t('presentation.packages.directBonus') }}</span>
               <strong class="text-sm font-extrabold text-zinc-900">
                 {{ currencySymbol }}{{ getPriceForCountry(pkg, 'referralBonus') }}
               </strong>
             </div>
             <div class="rounded-xl bg-zinc-50 border border-zinc-100 p-3">
-              <span class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wide mb-1">Match Bonus</span>
+              <span class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wide mb-1">{{ $t('presentation.packages.matchBonus') }}</span>
               <strong class="text-sm font-extrabold text-zinc-900">
                 {{ currencySymbol }}{{ getPriceForCountry(pkg, 'matchBonus') }}
               </strong>
@@ -65,10 +65,10 @@
 
           <div class="mt-auto flex flex-col sm:flex-row gap-2 pt-1">
             <UiButton variant="primary" class="flex-1" @click="$emit('consult', pkg)">
-              Order now
+              {{ $t('presentation.packages.orderNow') }}
             </UiButton>
             <UiButton variant="outline" class="flex-1" @click="$emit('details', pkg.slug)">
-              Details
+              {{ $t('presentation.packages.details') }}
             </UiButton>
           </div>
         </div>
@@ -77,8 +77,8 @@
 
     <div v-else class="text-center py-16 text-zinc-400">
       <div class="text-5xl mb-4">🌍</div>
-      <p class="font-semibold text-zinc-500">No entry packages for <strong>{{ selectedCountryCode }}</strong>.</p>
-      <p class="text-sm mt-1">Switch country in the top bar or contact your coordinator.</p>
+      <p class="font-semibold text-zinc-500">{{ $t('presentation.packages.nonePrefix') }} <strong>{{ selectedCountryCode }}</strong>.</p>
+      <p class="text-sm mt-1">{{ $t('presentation.packages.noneHint') }}</p>
     </div>
   </div>
 </template>

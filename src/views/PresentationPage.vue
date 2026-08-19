@@ -188,7 +188,7 @@ const prevSlide = () => {
 const selectedCountryCode = ref(localStorage.getItem('selected_country') || 'NG');
 
 const currencySymbol = computed(() => catalogStore.selectedCountry?.currencySymbol || '₦');
-const selectedCountryName = computed(() => catalogStore.selectedCountry?.name || 'Your Country');
+const selectedCountryName = computed(() => catalogStore.selectedCountry?.name || translationsStore.t('presentation.yourCountry'));
 
 const conversionRate = computed(() => {
   const code = selectedCountryCode.value;
@@ -224,9 +224,14 @@ const goToDetails = (slug) => {
 
 const consultTrainerPackage = (pkg) => {
   const number = catalogStore.selectedCountry?.whatsappNumber || settingsStore.settings['whatsapp_number'] || '+2348030001111';
-  const text = encodeURIComponent(
-    `Hello Trainer, I am reviewing the ${pkg.name} (${currencySymbol.value}${getPriceForCountry(pkg, 'price')}) in ${selectedCountryName.value}. Please guide me on binary slot positioning.`
-  );
+  const price = `${currencySymbol.value}${getPriceForCountry(pkg, 'price')}`;
+  let message = translationsStore.t('presentation.consult.whatsappMessageTemplate');
+  if (!message || message === 'presentation.consult.whatsappMessageTemplate') {
+    // fallback to a sensible English message when translation missing
+    message = `Hello Trainer, I am reviewing the {pkgName} ({price}) in {country}. Please guide me on binary slot positioning.`;
+  }
+  message = message.replace('{pkgName}', pkg.name).replace('{price}', price).replace('{country}', selectedCountryName.value);
+  const text = encodeURIComponent(message);
   window.open(`https://wa.me/${number.replace(/\+/g, '')}?text=${text}`, '_blank');
 };
 

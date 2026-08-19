@@ -1,12 +1,9 @@
 <template>
   <div class="space-y-6">
-    <h3 class="text-lg font-bold font-display">Other Success Stories</h3>
-    <h4 class="text-sm text-zinc-500">Real People. Real Results. Across Africa and Beyond.</h4>
-    <!-- add a short introduction paragraph -->
+    <h3 class="text-lg font-bold font-display">{{ $t('presentation.testimonials.title') }}</h3>
+    <h4 class="text-sm text-zinc-500">{{ $t('presentation.testimonials.subtitle') }}</h4>
     <p class="text-sm text-zinc-600">
-      Discover inspiring stories from ambassadors who have transformed their lives by leveraging our simple, proven, 
-      and duplicatable business-building system. See how ordinary people are achieving extraordinary results and
-       creating lasting income through the power of network marketing.
+      {{ $t('presentation.testimonials.intro') }}
     </p>
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
       <div class="lg:col-span-2 bg-white p-4 rounded shadow-sm">
@@ -28,18 +25,18 @@
               <Play :size="28" class="text-white ml-1" />
             </div>
           </div>
-          <div v-else class="w-full aspect-video bg-black rounded overflow-hidden flex items-center justify-center text-white">No video available</div>
+          <div v-else class="w-full aspect-video bg-black rounded overflow-hidden flex items-center justify-center text-white">{{ $t('presentation.testimonials.noVideo') }}</div>
 
           <div>
             <h4 class="text-xl font-extrabold">{{ featured.name }}</h4>
             <p class="text-sm text-zinc-600 mt-1">{{ featured.quote }}</p>
           </div>
         </div>
-        <div v-else class="p-8 text-center text-zinc-400">No featured testimonial with video.</div>
+        <div v-else class="p-8 text-center text-zinc-400">{{ $t('presentation.testimonials.noFeatured') }}</div>
       </div>
 
       <div class="bg-white p-4 rounded shadow-sm">
-        <h5 class="text-sm font-bold mb-3">Other videos</h5>
+        <h5 class="text-sm font-bold mb-3">{{ $t('presentation.testimonials.otherVideos') }}</h5>
         <div class="space-y-3">
           <button v-for="t in others" :key="t.id" @click="select(t)" class="w-full flex items-center gap-3 p-2 rounded hover:bg-zinc-50 text-left">
             <img v-if="t.video && t.video.thumbnailPath" :src="mediaResolve(t.video.thumbnailPath)" class="w-16 h-12 object-cover rounded" />
@@ -48,7 +45,7 @@
               <div class="text-[12px] text-zinc-500 truncate">{{ t.lifestyleTag }} — {{ t.quote }}</div>
             </div>
           </button>
-          <div v-if="others.length === 0" class="text-zinc-400 text-sm">No other video testimonials.</div>
+          <div v-if="others.length === 0" class="text-zinc-400 text-sm">{{ $t('presentation.testimonials.noOtherVideos') }}</div>
         </div>
       </div>
     </div>
