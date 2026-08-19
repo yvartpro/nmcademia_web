@@ -4,7 +4,10 @@ import { useLanguagesStore } from './languages';
 
 const getLanguageParams = () => {
   const languagesStore = useLanguagesStore();
-  const selectedId = Number(localStorage.getItem('nma.selectedLanguageId') ?? languagesStore.selectedLanguageId ?? 0);
+  const ownerId = localStorage.getItem('nma.currentOwnerId') || sessionStorage.getItem('nma.currentOwnerId');
+  const host = typeof window !== 'undefined' ? window.location.hostname : 'default';
+  const scopeKey = ownerId ? `nma.selectedLanguageId.owner.${ownerId}` : `nma.selectedLanguageId.host.${host}`;
+  const selectedId = Number(localStorage.getItem(scopeKey) ?? localStorage.getItem('nma.selectedLanguageId') ?? languagesStore.selectedLanguageId ?? 0);
   const language = languagesStore.languages.find((item) => item.id === selectedId)
     || languagesStore.languages.find((item) => item.isDefault)
     || languagesStore.languages[0];
