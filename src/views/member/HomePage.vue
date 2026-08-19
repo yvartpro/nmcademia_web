@@ -56,8 +56,8 @@
       <!-- Continue learning -->
       <section>
         <div class="flex items-center justify-between mb-3">
-          <h2 class="font-display font-semibold text-lg">Continue Learning</h2>
-          <router-link to="/app/learn" class="text-sm text-brand hover:text-brand-dark">See all</router-link>
+            <h2 class="font-display font-semibold text-lg">{{ $t('member.home.continueLearning') }}</h2>
+            <router-link to="/app/learn" class="text-sm text-brand hover:text-brand-dark">{{ $t('member.home.seeAll') }}</router-link>
         </div>
         <router-link
           :to="`/app/learn/${continueCourse.id}`"
@@ -84,8 +84,8 @@
       <!-- Daily quests -->
       <section>
         <div class="flex items-center justify-between mb-3">
-          <h2 class="font-display font-semibold text-lg">Today's Quest</h2>
-          <span class="text-xs font-bold text-accent">+XP</span>
+            <h2 class="font-display font-semibold text-lg">{{ $t('member.home.todaysQuest') }}</h2>
+            <span class="text-xs font-bold text-accent">+XP</span>
         </div>
         <div class="nma-card divide-y divide-zinc-200/80">
           <button
@@ -110,8 +110,8 @@
       <!-- Community pulse -->
       <section>
         <div class="flex items-center justify-between mb-3">
-          <h2 class="font-display font-semibold text-lg">Community Pulse</h2>
-          <router-link to="/app/community" class="text-sm text-brand">Join</router-link>
+            <h2 class="font-display font-semibold text-lg">{{ $t('member.home.communityPulse') }}</h2>
+            <router-link to="/app/community" class="text-sm text-brand">{{ $t('member.home.join') }}</router-link>
         </div>
         <div class="space-y-2">
           <div
@@ -133,7 +133,7 @@
 
       <!-- Recommended -->
       <section>
-        <h2 class="font-display font-semibold text-lg mb-3">Recommended For You</h2>
+          <h2 class="font-display font-semibold text-lg mb-3">{{ $t('member.home.recommended') }}</h2>
         <div class="flex gap-3 overflow-x-auto pb-2 nma-scrollbar -mx-1 px-1">
           <router-link
             v-for="course in recommended"

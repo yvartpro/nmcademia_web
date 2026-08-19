@@ -18,6 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
 
       localStorage.setItem('admin_token', token.value);
       localStorage.setItem('admin_user', JSON.stringify(user.value));
+      localStorage.setItem('nma.currentOwnerId', String(response.data.ownerId));
 
       // Setup default auth header
       api.defaults.headers.common['Authorization'] = `Bearer ${token.value}`;
@@ -35,12 +36,16 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null;
     localStorage.removeItem('admin_token');
     localStorage.removeItem('admin_user');
+    localStorage.removeItem('nma.currentOwnerId');
     delete api.defaults.headers.common['Authorization'];
   };
 
   // Restore token on init
   if (token.value) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token.value}`;
+    if (user.value?.ownerId) {
+      localStorage.setItem('nma.currentOwnerId', String(user.value.ownerId));
+    }
   }
 
   return {

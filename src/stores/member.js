@@ -89,7 +89,9 @@ export const useMemberStore = defineStore('member', {
           ['Beginner', 'Mindset', 'Skills'].includes(c.category)
         );
       }
-      return [];
+      // New / explore users should still see the learning catalog so the Home page
+      // can present a journey list and the “start journey” flow is useful.
+      return COURSES;
     },
     continueProgress(state) {
       const course = this.continueCourse;

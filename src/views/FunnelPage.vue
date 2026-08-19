@@ -98,27 +98,27 @@
         <div v-else class="space-y-6">
           <div v-if="currentStepIndex === 1" class="space-y-6">
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
-              Accelerate Your <span class="nma-gradient-text">Leadership</span>
+              {{ $t('funnel.already.step1.title') }}
             </h2>
             <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
-              Congratulations on building in the Network Marketing industry. You have stepped into a business that rewards courage, vision, and duplication.
+              {{ $t('funnel.already.step1.blurb') }}
             </p>
             <div class="p-5 bg-accent/5 border border-accent/20 rounded-xl space-y-2">
-              <h4 class="font-bold text-accent text-sm">Why Professional Training Matters:</h4>
+              <h4 class="font-bold text-accent text-sm">{{ $t('funnel.already.whyTrainingTitle') }}</h4>
               <p class="text-xs text-zinc-650">
-                Excitement alone isn't enough. Success in duplication requires modern lead generation systems, high-ticket mentoring, and team leadership.
+                {{ $t('funnel.already.whyTrainingText') }}
               </p>
             </div>
             <div class="flex justify-end">
-              <UiButton variant="primary" @click="nextStep">Analyze Challenges →</UiButton>
+              <UiButton variant="primary" @click="nextStep">{{ $t('funnel.already.analyzeCta') }}</UiButton>
             </div>
           </div>
 
           <div v-else-if="currentStepIndex === 2" class="space-y-6">
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
-              What is <span class="nma-gradient-text">Holding You Back</span>?
+              {{ $t('funnel.already.step2.title') }}
             </h2>
-            <p class="text-sm text-zinc-500">Select the challenges you are currently facing in your organization:</p>
+            <p class="text-sm text-zinc-500">{{ $t('funnel.already.challengesPrompt') }}</p>
             <div class="grid sm:grid-cols-2 gap-3">
               <label 
                 v-for="chKey in challengeOptions" 
@@ -143,10 +143,10 @@
 
           <div v-else-if="currentStepIndex === 3" class="space-y-6">
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
-              Elite Academy <span class="nma-gradient-text">Coaching Track</span>
+              {{ $t('funnel.already.eliteTitle') }}
             </h2>
             <p class="text-sm sm:text-base leading-relaxed text-zinc-650">
-              We provide tailored mentorship modules to solve the exact bottlenecks you selected:
+              {{ $t('funnel.already.eliteDesc') }}
             </p>
             <div class="space-y-3">
               <div v-for="ch in selectedChallenges" :key="ch" class="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-center gap-3">
@@ -155,8 +155,8 @@
               </div>
             </div>
             <div class="flex justify-between pt-4 border-t border-zinc-200/50">
-              <UiButton variant="ghost" @click="prevStep">Back</UiButton>
-              <UiButton variant="primary" @click="nextStep">Match with Mentor →</UiButton>
+              <UiButton variant="ghost" @click="prevStep">{{ $t('funnel.account.buttons.back') }}</UiButton>
+              <UiButton variant="primary" @click="nextStep">{{ $t('funnel.already.matchWithMentor') }}</UiButton>
             </div>
           </div>
 
@@ -185,34 +185,34 @@
               </div>
               
               <div class="space-y-4">
-                <p class="text-sm leading-relaxed text-zinc-600">{{ $t('funnel.coach.bookPrompt') }}</p>
-                <form @submit.prevent="submitLeadAndCompleteFlow" class="space-y-4">
-                  <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">Full Name</label>
-                    <input v-model="form.fullName" type="text" required class="nma-input-glass" placeholder="John Doe" />
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">Email Address</label>
-                    <input v-model="form.email" type="email" required class="nma-input-glass" placeholder="john@example.com" />
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">Phone / WhatsApp Number</label>
-                    <input v-model="form.phone" type="tel" required class="nma-input-glass" placeholder="+2348030001111" />
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">Country</label>
-                    <CountrySelect v-model="selectedCountry" />
-                  </div>
-                  <label class="flex items-start gap-3 cursor-pointer mt-4">
-                    <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
-                    <span class="text-xs sm:text-sm text-zinc-650">{{ $t('funnel.coach.agree') }}</span>
-                  </label>
-                  <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50">
-                    <UiButton variant="ghost" @click="prevStep">{{ $t('funnel.account.buttons.back') }}</UiButton>
-                    <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">{{ $t('funnel.coach.joinWhatsapp') }}</UiButton>
-                  </div>
-                </form>
-              </div>
+                  <p class="text-sm leading-relaxed text-zinc-600">{{ $t('funnel.coach.bookPrompt') }}</p>
+                  <form @submit.prevent="submitLeadAndCompleteFlow" class="space-y-4">
+                    <div>
+                      <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.account.labels.fullName') }}</label>
+                      <input v-model="form.fullName" type="text" required class="nma-input-glass" :placeholder="$t('funnel.account.placeholders.fullName')" />
+                    </div>
+                    <div>
+                      <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.account.labels.email') }}</label>
+                      <input v-model="form.email" type="email" required class="nma-input-glass" :placeholder="$t('funnel.account.placeholders.email')" />
+                    </div>
+                    <div>
+                      <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.account.labels.phone') }}</label>
+                      <input v-model="form.phone" type="tel" required class="nma-input-glass" :placeholder="$t('funnel.account.placeholders.phone')" />
+                    </div>
+                    <div>
+                      <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.country.title') }}</label>
+                      <CountrySelect v-model="selectedCountry" />
+                    </div>
+                    <label class="flex items-start gap-3 cursor-pointer mt-4">
+                      <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
+                      <span class="text-xs sm:text-sm text-zinc-650">{{ $t('funnel.coach.agree') }}</span>
+                    </label>
+                    <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50">
+                      <UiButton variant="ghost" @click="prevStep">{{ $t('funnel.account.buttons.back') }}</UiButton>
+                      <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">{{ $t('funnel.coach.joinWhatsapp') }}</UiButton>
+                    </div>
+                  </form>
+                </div>
             </div>
           </div>
         </div>
@@ -243,12 +243,14 @@ import { getFullMediaUrl } from '../api';
 
 import CountrySelect from '../components/ui/CountrySelect.vue';
 import { useOwnerStore } from '../stores/owner';
+import { useTranslationsStore } from '../stores/translations';
 
 import { joinGroup } from '../utils/whatsapp';
 const route = useRoute();
 const router = useRouter();
 
 const ownerStore = useOwnerStore();
+const translationsStore = useTranslationsStore();
 
 const videoStore = useVideoPlayerStore();
 const settingsStore = useSettingsStore();
@@ -329,12 +331,13 @@ const challengeOptions = [
 const selectedChallenges = ref([]);
 
 const getChallengeSolution = (challenge) => {
-  if (challenge.includes('Recruiting')) return 'Social Media Lead Generation systems.';
-  if (challenge.includes('rejection')) return 'Mindset Coaching & Sorting methods.';
-  if (challenge.includes('retention')) return 'Duplicating training materials.';
-  if (challenge.includes('upline')) return 'Assigned Elite Academia Coach matching.';
-  if (challenge.includes('habits')) return 'Daily Quests and Streaks trackers.';
-  return 'Interactive presentation slides.';
+  // Resolve solution texts from translations so they're localizable
+  if (challenge.includes('Recruiting')) return translationsStore.t('funnel.solutions.recruiting');
+  if (challenge.includes('rejection')) return translationsStore.t('funnel.solutions.rejection');
+  if (challenge.includes('retention')) return translationsStore.t('funnel.solutions.retention');
+  if (challenge.includes('upline')) return translationsStore.t('funnel.solutions.upline');
+  if (challenge.includes('habits')) return translationsStore.t('funnel.solutions.habits');
+  return translationsStore.t('funnel.solutions.default');
 };
 
 const exploreQs = ref({

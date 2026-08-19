@@ -7,16 +7,16 @@
         <AppLogo size="sm" />
         <div class="flex items-center gap-4">
             <router-link v-if="memberStore.isRegistered && countryHasOffice" :to="memberStore.journey?.defaultRoute || '/presentation'" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-50 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
-            Continue presentation
+            {{ $t('landing.nav.continuePresentation') }}
           </router-link>
           <a v-else-if="memberStore.isRegistered && !countryHasOffice && whatsappJoinLink !== '#'" :href="whatsappJoinLink" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
-            Join WhatsApp
+            {{ $t('landing.nav.joinWhatsApp') }}
           </a>
           <a v-else href="#journeys" class="hidden sm:inline-flex bg-accent hover:bg-accent-dark text-slate-50 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition shadow-md">
-            Start Journey
+            {{ $t('landing.nav.startJourney') }}
           </a>
           <select v-model="headerSelected" @change="onLangChange" :disabled="languagesStore.loading || !headerLanguages.length" class="text-xs bg-white border border-accent/20 text-accent rounded-md px-3 py-1 shadow-sm hover:shadow-md transition-shadow duration-150 appearance-none pr-6 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent-dark">
-              <option v-if="!headerLanguages.length" disabled value="">{{ languagesStore.loading ? 'Loading languages...' : 'No languages' }}</option>
+              <option v-if="!headerLanguages.length" disabled value="">{{ languagesStore.loading ? $t('landing.nav.loadingLanguages') : $t('landing.nav.noLanguages') }}</option>
               <option v-for="l in headerLanguages" :key="l.id" :value="l.id">{{ l.name }}</option>
             </select>
         </div>
@@ -32,11 +32,11 @@
 
       <div class="space-y-4 max-w-4xl mx-auto">
         <h1 class="text-2xl sm:text-5xl font-display font-extrabold tracking-tight leading-[1.1] text-zinc-950 text-justify">
-          Network Marketing Academia is not here to entertain you—
-          <span class="text-accent">it is here to challenge your thinking and elevate your mindset.</span>
+          {{ $t('landing.hero.title') }}
+          <span class="text-accent">{{ $t('landing.hero.titleAccent') }}</span>
         </h1>
         <p class="text-base sm:text-xl text-zinc-550 max-w-3xl mx-auto leading-relaxed pt-2 text-justify">
-          The world we were prepared for is no longer the world we are living in. Jobs are shrinking, inflation is rising, and the promise that traditional education alone guarantees freedom is collapsing.
+          {{ $t('landing.hero.subtitle') }}
         </p>
       </div>
 
@@ -57,16 +57,16 @@
 
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
         <router-link v-if="memberStore.isRegistered && countryHasOffice" :to="memberStore.journey?.defaultRoute || '/presentation'" class="w-full sm:w-auto text-white bg-gradient-to-r from-accent to-accent-dark hover:text-zinc-900 hover:from-accent-light hover:to-accent text-slate-950 font-black px-8 py-4 rounded-xl text-sm uppercase tracking-wide transition-all shadow-glow hover:scale-[1.02] text-center">
-          Continue presentation
+          {{ $t('landing.nav.continuePresentation') }}
         </router-link>
         <a v-else-if="memberStore.isRegistered && !countryHasOffice && whatsappJoinLink !== '#'" :href="whatsappJoinLink" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-black px-8 py-4 rounded-xl text-sm uppercase tracking-wide transition-all shadow-glow hover:scale-[1.02] text-center">
-          Join WhatsApp
+          {{ $t('landing.nav.joinWhatsApp') }}
         </a>
         <a v-else href="#journeys" class="w-full sm:w-auto text-white bg-gradient-to-r from-accent to-accent-dark hover:text-zinc-900 hover:from-accent-light hover:to-accent text-slate-950 font-black px-8 py-4 rounded-xl text-sm uppercase tracking-wide transition-all shadow-glow hover:scale-[1.02] text-center">
-          Start Your Journey
+          {{ $t('landing.nav.startJourney') }}
         </a>
         <a href="#why-nm" class="w-full sm:w-auto bg-white/5 border border-zinc-350 hover:bg-white/10 text-zinc-900 font-bold px-8 py-4 rounded-xl text-sm transition text-center">
-          Watch Introduction
+          {{ $t('landing.nav.watchIntroduction') }}
         </a>
       </div>
     </header>
@@ -86,33 +86,33 @@
     <!-- Mission Section -->
     <section class="max-w-6xl mx-auto px-4 sm:px-6 py-20 space-y-12">
       <div class="text-center space-y-3">
-        <h2 class="text-3xl sm:text-4xl font-display font-black">A Wake-Up Call for a New Economy</h2>
+        <h2 class="text-3xl sm:text-4xl font-display font-black">{{ $t('landing.mission.title') }}</h2>
       </div>
 
       <div class="grid md:grid-cols-2 gap-10 items-center">
         <div class="space-y-6">
-          <h3 class="text-xl font-bold text-accent">Power belongs to those who build networks.</h3>
+          <h3 class="text-xl font-bold text-accent">{{ $t('landing.mission.powerTitle') }}</h3>
           <p class="text-zinc-650 leading-relaxed text-justify">
-            Network Marketing Academia exists to educate a new generation of thinkers, leaders, and builders who understand that the future belongs to those who can create networks, influence people, and build communities in the digital age.
+            {{ $t('landing.mission.powerText1') }}
           </p>
           <p class="text-zinc-650 leading-relaxed text-justify">
-            This is more than selling products. It is the science of human connection, leadership multiplied through team duplication, and entrepreneurship powered by networks.
+            {{ $t('landing.mission.powerText2') }}
           </p>
         </div>
         <div class="nma-card p-6 sm:p-8 space-y-4 bg-gradient-to-br from-indigo-950/20 to-accent/5">
-          <h4 class="font-display font-extrabold text-lg">In the Modern Digital Economy:</h4>
+          <h4 class="font-display font-extrabold text-lg">{{ $t('landing.mission.modernEconomyTitle') }}</h4>
           <ul class="space-y-3">
             <li class="flex items-start gap-3">
               <span class="text-accent text-lg">✦</span>
-              <p class="text-sm text-zinc-700"><strong>Leverage is power:</strong> Turn relationships into global economic ecosystems.</p>
+              <p class="text-sm text-zinc-700"><strong>{{ $t('landing.mission.modernEconomy.leverageLabel') }}</strong> {{ $t('landing.mission.modernEconomy.leverageText') }}</p>
             </li>
             <li class="flex items-start gap-3">
               <span class="text-accent text-lg">✦</span>
-              <p class="text-sm text-zinc-700"><strong>Mobile independence:</strong> Direct your global team from a single smartphone.</p>
+              <p class="text-sm text-zinc-700"><strong>{{ $t('landing.mission.modernEconomy.mobileLabel') }}</strong> {{ $t('landing.mission.modernEconomy.mobileText') }}</p>
             </li>
             <li class="flex items-start gap-3">
               <span class="text-accent text-lg">✦</span>
-              <p class="text-sm text-zinc-700"><strong>Pioneer advantage:</strong> Position yourself early in expanding markets.</p>
+              <p class="text-sm text-zinc-700"><strong>{{ $t('landing.mission.modernEconomy.pioneerLabel') }}</strong> {{ $t('landing.mission.modernEconomy.pioneerText') }}</p>
             </li>
           </ul>
         </div>
@@ -123,10 +123,10 @@
     <section id="why-nm" class="border-t border-zinc-200/80 bg-zinc-50/50 py-20">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         <div class="text-center space-y-3">
-          <h2 class="text-3xl sm:text-4xl font-display font-black">What Is Network Marketing ?</h2>
-          <p class="text-sm text-zinc-500 max-w-xl mx-auto text-justify">A network marketing company is a business that sells its products or services through a network of independent distributors rather than through traditional retail stores. These companies outsource their entire sales and marketing function to individual representatives who earn commissions on personal sales and on the sales of their recruited teams. Network marketing companies operate across many industries: health supplements, skincare, nutrition, financial services, travel, and technology.</p>
-          <h3 class="text-xl font-bold text-accent">How a Network Marketing Company Operates</h3>
-          <p class="max-w-xl mx-auto text-justify">The company handles product development, manufacturing, shipping, and commission payments. Distributors handle customer acquisition, product promotion, and team recruitment.</p>
+          <h2 class="text-3xl sm:text-4xl font-display font-black">{{ $t('landing.why.title') }}</h2>
+          <p class="text-sm text-zinc-500 max-w-xl mx-auto text-justify">{{ $t('landing.why.description') }}</p>
+          <h3 class="text-xl font-bold text-accent">{{ $t('landing.why.howTitle') }}</h3>
+          <p class="max-w-xl mx-auto text-justify">{{ $t('landing.why.howDescription') }}</p>
         </div>
 
         <div 
@@ -151,9 +151,9 @@
     <section v-if="!memberStore.isRegistered" id="journeys" class="border-t border-zinc-200/80 bg-gradient-to-b from-transparent to-zinc-950/20 py-24 scroll-mt-16">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         <div class="text-center space-y-4">
-          <h2 class="text-3xl sm:text-5xl font-display font-black">Which Best Describes You?</h2>
+          <h2 class="text-3xl sm:text-5xl font-display font-black">{{ $t('landing.journeySelection.title') }}</h2>
           <p class="text-zinc-600 max-w-xl mx-auto text-sm sm:text-base text-justify">
-            Your selection determines your entire user journey. We do not believe in one-size-fits-all presentation plans.
+            {{ $t('landing.journeySelection.subtitle') }}
           </p>
         </div>
 
@@ -189,8 +189,8 @@
     <!-- Footer -->
     <footer class="border-t border-zinc-200/80 bg-surface-1 py-8 px-4 text-center">
       <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
-        <p>© 2026 Network Marketing Academia • All Rights Reserved</p>
-        <p>Partner Company: Alliance In Motion Global</p>
+        <p>{{ $t('landing.footer.copyright') }}</p>
+        <p>{{ $t('landing.footer.partner') }}</p>
       </div>
     </footer>
 
@@ -209,6 +209,7 @@ import { useLanguagesStore } from '../stores/languages';
 import { useContentStore } from '../stores/content';
 import { Play } from 'lucide-vue-next';
 import { getFullMediaUrl } from '../api';
+import { useTranslationsStore } from '../stores/translations';
 
 const memberStore = useMemberStore();
 const ownerStore = useOwnerStore();
@@ -216,6 +217,7 @@ const settingsStore = useSettingsStore();
 const catalogStore = useCatalogStore();
 const languagesStore = useLanguagesStore();
 const contentStore = useContentStore();
+const translationsStore = useTranslationsStore();
 const headerLanguages = ref([]);
 const headerSelected = ref(null);
 const videoStore = useVideoPlayerStore();
@@ -301,66 +303,66 @@ const journeys = computed(() => {
     {
       id: 'new-to-nm',
       icon: '🌱',
-      title: 'New to Network Marketing',
-      desc: 'Learn the fundamentals of duplication, binary systems, and digital lead generation from the ground up.',
-      ctaLabel: 'Onboarding',
+      title: translationsStore.t('landing.journeys.newToNm.title'),
+      desc: translationsStore.t('landing.journeys.newToNm.desc'),
+      ctaLabel: translationsStore.t('landing.journeys.newToNm.ctaLabel'),
       image: ''
     },
     {
       id: 'already-in-nm',
       icon: '📈',
-      title: 'Already in Network Marketing',
-      desc: 'Skip basic definitions. Supercharge your coaching, team retention, upline support, and global recruiting.',
-      ctaLabel: 'Assessment',
+      title: translationsStore.t('landing.journeys.alreadyInNm.title'),
+      desc: translationsStore.t('landing.journeys.alreadyInNm.desc'),
+      ctaLabel: translationsStore.t('landing.journeys.alreadyInNm.ctaLabel'),
       image: ''
     },
     {
       id: 'switch-companies',
       icon: '🔄',
-      title: 'Want to Switch Companies',
-      desc: 'Evaluate key company choices, group points accumulation, and position early inside pioneer nodes.',
-      ctaLabel: 'Evaluation',
+      title: translationsStore.t('landing.journeys.switchCompanies.title'),
+      desc: translationsStore.t('landing.journeys.switchCompanies.desc'),
+      ctaLabel: translationsStore.t('landing.journeys.switchCompanies.ctaLabel'),
       image: ''
     },
     {
       id: 'exploring',
       icon: '🔍',
-      title: 'Just Exploring Opportunities',
-      desc: 'Take a short, visual presentation of the company plan and explore the network economy at your own pace.',
-      ctaLabel: 'Qualifications',
+      title: translationsStore.t('landing.journeys.exploring.title'),
+      desc: translationsStore.t('landing.journeys.exploring.desc'),
+      ctaLabel: translationsStore.t('landing.journeys.exploring.ctaLabel'),
       image: ''
     },
     {
       id: 'income-diversification',
       icon: '💰',
-      title: 'Tired of Depending on Single Income',
-      desc: 'Learn how side network leverage works without quitting your job, and buffer yourself against inflation.',
-      ctaLabel: 'Benefits',
+      title: translationsStore.t('landing.journeys.incomeDiversification.title'),
+      desc: translationsStore.t('landing.journeys.incomeDiversification.desc'),
+      ctaLabel: translationsStore.t('landing.journeys.incomeDiversification.ctaLabel'),
       image: ''
     },
     {
       id: 'jobless',
       icon: '🎯',
-      title: 'Tired of Being Jobless',
-      desc: 'Gain high-demand marketing, digital leadership, and communication skills with a zero-risk startup model.',
-      ctaLabel: 'Hope Flow',
+      title: translationsStore.t('landing.journeys.jobless.title'),
+      desc: translationsStore.t('landing.journeys.jobless.desc'),
+      ctaLabel: translationsStore.t('landing.journeys.jobless.ctaLabel'),
       image: ''
     },
     {
       id: 'fast-track',
       icon: '🔥',
-      title: 'I Want This Business By All Means',
-      desc: 'Compare entry packages immediately, get assigned a direct mentor, and secure WhatsApp registration assistance.',
-      ctaLabel: 'Fast Track',
+      title: translationsStore.t('landing.journeys.fastTrack.title'),
+      desc: translationsStore.t('landing.journeys.fastTrack.desc'),
+      ctaLabel: translationsStore.t('landing.journeys.fastTrack.ctaLabel'),
       image: ''
     }
   ];
 });
 
 const proofStats = [
-  { value: '50,000+', label: 'Active Learners' },
-  { value: '40+', label: 'Countries Represented' },
-  { value: '25,000+', label: 'Success Stories' },
+  { value: '50,000+', label: translationsStore.t('landing.proofStats.activeLearners') },
+  { value: '40+', label: translationsStore.t('landing.proofStats.countriesRepresented') },
+  { value: '25,000+', label: translationsStore.t('landing.proofStats.successStories') },
 ];
 
 const testimonials = [

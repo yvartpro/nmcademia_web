@@ -2,6 +2,12 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import api from '../api';
 
+const getScopeKey = (ownerIdOverride = null) => {
+  const ownerId = ownerIdOverride || localStorage.getItem('nma.currentOwnerId') || sessionStorage.getItem('nma.currentOwnerId');
+  const host = typeof window !== 'undefined' ? window.location.hostname : 'default';
+  return ownerId ? `nma.selectedLanguageId.owner.${ownerId}` : `nma.selectedLanguageId.host.${host}`;
+};
+
 export const useLanguagesStore = defineStore('languages', () => {
   const languages = ref([]);
   const loading = ref(false);
@@ -12,13 +18,18 @@ export const useLanguagesStore = defineStore('languages', () => {
     try {
       const response = await api.get('/languages');
       languages.value = response.data || [];
-      // initialize selected language if not set
+
+      // initialize selected language for the current owner/domain, not globally
       if (!selectedLanguageId.value) {
-        const saved = localStorage.getItem('nma.selectedLanguageId');
+        const scopeKey = getScopeKey();
+        const saved = localStorage.getItem(scopeKey) ?? localStorage.getItem('nma.selectedLanguageId');
         if (saved) selectedLanguageId.value = Number(saved);
         else {
           const def = languages.value.find(l => l.isDefault) || languages.value[0];
           if (def) selectedLanguageId.value = def.id;
+        }
+        if (selectedLanguageId.value) {
+          localStorage.setItem(scopeKey, String(selectedLanguageId.value));
         }
       }
       return response.data || [];
@@ -65,9 +76,11 @@ export const useLanguagesStore = defineStore('languages', () => {
     }
   };
 
-  const setSelectedLanguage = (id) => {
+  const setSelectedLanguage = (id, ownerIdOverride = null) => {
     selectedLanguageId.value = id;
-    try { localStorage.setItem('nma.selectedLanguageId', String(id)); } catch (e) {}
+    try {
+      localStorage.setItem(getScopeKey(ownerIdOverride), String(id));
+    } catch (e) {}
   };
 
   return {
