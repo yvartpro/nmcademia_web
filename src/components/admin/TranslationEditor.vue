@@ -3,8 +3,7 @@
     <div class="flex items-center gap-3">
       <select v-model="selectedLanguageId" class="border border-zinc-200 rounded px-3 py-2 text-xs bg-white">
         <option
-          v-for="lang in languages"
-          v-if="Number(lang?.ownerId ?? 0) === Number(currentUserId || 0)"
+          v-for="lang in visibleLanguages"
           :key="lang.id"
           :value="lang.id"
         >
@@ -42,7 +41,16 @@ import DismissibleModal from '../ui/DismissibleModal.vue';
 import { useAuthStore } from '../../stores/auth';
 
 const authStore = useAuthStore();
-const currentUserId = computed(() => Number(authStore?.user?.ownerId ?? 0));
+const currentOwnerId = computed(() => String(authStore?.user?.ownerId ?? localStorage.getItem('nma.currentOwnerId') ?? '').trim());
+const visibleLanguages = computed(() => {
+  const ownerId = currentOwnerId.value;
+  if (!ownerId) return languages.value;
+
+  return languages.value.filter((lang) => {
+    const langOwnerId = String(lang?.ownerId ?? lang?.owner_id ?? lang?.owner?.id ?? '').trim();
+    return !langOwnerId || langOwnerId === ownerId;
+  });
+});
 
 const props = defineProps({
   modelName: { type: String, required: true },
@@ -70,7 +78,12 @@ const loadLanguages = async () => {
   try {
     const res = await api.get('/admin/languages');
     languages.value = res.data || [];
-    if (languages.value.length) selectedLanguageId.value = languages.value[0].id;
+    const nextVisible = visibleLanguages.value;
+    if (nextVisible.length) {
+      selectedLanguageId.value = nextVisible[0].id;
+    } else {
+      selectedLanguageId.value = null;
+    }
   } catch (err) {
     console.error('Load languages failed', err);
   }
