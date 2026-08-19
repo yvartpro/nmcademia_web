@@ -15,7 +15,7 @@ const getLanguageParams = () => {
 export const useOwnerStore = defineStore('owner', {
   state: () => ({
     name: 'Network Marketing Professional',
-    bio: 'Welcome to the platform.',
+    bio: null,
     intro: null,
     whatsappNumber: '',
     whatsappGroupLink: '',
@@ -32,8 +32,8 @@ export const useOwnerStore = defineStore('owner', {
         if (response.data) {
           const link = response.data.whatsappGroupLink ?? response.data.whatsapp_group_link ?? this.whatsappGroupLink;
           this.name = response.data.name || this.name;
-          this.bio = response.data.bio || this.bio;
-          this.intro = response.data.intro || this.intro;
+          this.bio = response.data.bio ?? null;
+          this.intro = response.data.intro ?? null;
           this.whatsappNumber = response.data.whatsappNumber || this.whatsappNumber;
           this.whatsappGroupLink = link || this.whatsappGroupLink;
           this.domainName = response.data.domainName || this.domainName;
