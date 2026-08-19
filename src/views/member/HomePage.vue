@@ -9,17 +9,40 @@
             {{ memberStore.displayName }}
           </h1>
           <p class="text-sm text-zinc-500 mt-1">
-            Level {{ memberStore.level }} · {{ memberStore.levelTitle }}
+            {{ $t('member.home.level') }} {{ memberStore.level }} · {{ memberStore.levelTitle }}
           </p>
         </div>
         <div class="flex items-center gap-2 px-3 py-2 rounded-2xl bg-streak/10 border border-streak/20">
           <Flame :size="20" class="text-streak" />
           <div class="text-right">
             <p class="text-lg font-bold text-streak leading-none">{{ memberStore.streak }}</p>
-            <p class="text-[10px] text-zinc-500">day streak</p>
+            <p class="text-[10px] text-zinc-500">{{ $t('member.home.dayStreak') }}</p>
           </div>
         </div>
       </div>
+
+      <section v-if="journeyOptions.length" class="nma-card p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-display font-semibold text-lg">{{ $t('member.home.funnelOptions.title') }}</h2>
+        </div>
+        <div class="grid gap-3 sm:grid-cols-3">
+          <router-link
+            v-for="option in journeyOptions"
+            :key="option.id"
+            :to="option.route"
+            class="group rounded-2xl border border-zinc-200 bg-gradient-to-br p-4 text-left transition hover:border-accent hover:shadow-glow"
+            :class="option.accent"
+          >
+            <div class="mb-3 flex items-center justify-between">
+              <span class="inline-flex rounded-full bg-white/70 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-700">
+                {{ option.badge }}
+              </span>
+            </div>
+            <h3 class="text-base font-bold text-zinc-900">{{ option.title }}</h3>
+            <p class="mt-2 text-sm text-zinc-700">{{ option.description }}</p>
+          </router-link>
+        </div>
+      </section>
 
       <!-- XP ring -->
       <div class="nma-card p-5">
@@ -45,9 +68,9 @@
             <p class="text-sm font-medium">{{ memberStore.xp.toLocaleString() }} XP</p>
             <p class="text-xs text-zinc-500 mt-0.5">
               <template v-if="memberStore.levelInfo.next">
-                {{ memberStore.levelInfo.xpForNext - memberStore.levelInfo.xpInLevel }} XP to Level {{ memberStore.levelInfo.next.level }}
+                {{ memberStore.levelInfo.xpForNext - memberStore.levelInfo.xpInLevel }} {{ $t('member.home.xpToLevel') }} {{ memberStore.levelInfo.next.level }}
               </template>
-              <template v-else>Max level reached</template>
+              <template v-else>{{ $t('member.home.maxLevelReached') }}</template>
             </p>
           </div>
         </div>
@@ -75,7 +98,7 @@
             <div class="mt-3 h-1.5 bg-zinc-200 rounded-full overflow-hidden">
               <div class="h-full nma-gradient-gold rounded-full transition-all" :style="{ width: `${continueProgress}%` }" />
             </div>
-            <p class="text-xs text-zinc-500 mt-1">{{ continueProgress }}% complete</p>
+            <p class="text-xs text-zinc-500 mt-1">{{ continueProgress }}% {{ $t('member.home.complete') }}</p>
           </div>
           <Play :size="20" class="text-accent shrink-0 self-center" />
         </router-link>
@@ -158,17 +181,50 @@ import { computed, onMounted } from 'vue';
 import { Flame, BookOpen, Play, Check } from 'lucide-vue-next';
 import MemberLayout from '../../layouts/MemberLayout.vue';
 import { useMemberStore } from '../../stores/member';
+import { useTranslationsStore } from '../../stores/translations';
 import { COMMUNITY_POSTS } from '../../data/learning';
 
 const memberStore = useMemberStore();
+const translationsStore = useTranslationsStore();
 
 onMounted(() => memberStore.checkDailyStreak());
 
 const greeting = computed(() => {
   const h = new Date().getHours();
-  if (h < 12) return 'Good morning,';
-  if (h < 17) return 'Good afternoon,';
-  return 'Good evening,';
+  if (h < 12) return translationsStore.t('member.home.greetings.morning');
+  if (h < 17) return translationsStore.t('member.home.greetings.afternoon');
+  return translationsStore.t('member.home.greetings.evening');
+});
+
+const journeyOptions = computed(() => {
+  const options = [
+    {
+      id: 'explore',
+      badge: translationsStore.t('member.home.funnelOptions.explore.badge'),
+      title: translationsStore.t('member.home.funnelOptions.explore.title'),
+      description: translationsStore.t('member.home.funnelOptions.explore.description'),
+      route: '/presentation',
+      accent: 'from-amber-50 to-orange-100 border-amber-200'
+    },
+    {
+      id: 'learn',
+      badge: translationsStore.t('member.home.funnelOptions.learn.badge'),
+      title: translationsStore.t('member.home.funnelOptions.learn.title'),
+      description: translationsStore.t('member.home.funnelOptions.learn.description'),
+      route: '/app/training',
+      accent: 'from-indigo-50 to-blue-100 border-indigo-200'
+    },
+    {
+      id: 'build',
+      badge: translationsStore.t('member.home.funnelOptions.build.badge'),
+      title: translationsStore.t('member.home.funnelOptions.build.title'),
+      description: translationsStore.t('member.home.funnelOptions.build.description'),
+      route: '/presentation',
+      accent: 'from-emerald-50 to-teal-100 border-emerald-200'
+    }
+  ];
+
+  return options.filter((option) => option.id !== memberStore.journeyId);
 });
 
 const continueCourse = computed(() => memberStore.continueCourse);

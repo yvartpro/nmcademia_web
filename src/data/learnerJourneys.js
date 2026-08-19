@@ -37,16 +37,18 @@ export function resolveJourneyId(profileType) {
   const lower = t.toLowerCase();
 
   if (SEGMENT_EXPLORE.some((s) => s === t)) return JOURNEY_IDS.EXPLORE;
-  if (SEGMENT_BUILD.some((s) => s === t)) return JOURNEY_IDS.EXPLORE;
-  if (SEGMENT_LEARN.some((s) => s === t)) return JOURNEY_IDS.EXPLORE;
+  if (SEGMENT_BUILD.some((s) => s === t)) return JOURNEY_IDS.BUILD;
+  if (SEGMENT_LEARN.some((s) => s === t)) return JOURNEY_IDS.LEARN;
 
   // Fuzzy match when CMS option text differs slightly
-  if (lower.includes('exploring opportunit') || lower.includes('new to network marketing')) return JOURNEY_IDS.EXPLORE;
-  if (lower.includes('already in network marketing') || lower.includes('not satisfied') || lower.includes('by all means')) {
+  if (lower.includes('exploring opportunit') || lower.includes('new to network marketing') || lower.includes('exploring')) {
     return JOURNEY_IDS.EXPLORE;
   }
-  if (lower.includes('tired of') || lower.includes('jobless')) {
-    return JOURNEY_IDS.EXPLORE;
+  if (lower.includes('already in network marketing') || lower.includes('switch companies') || lower.includes('not satisfied') || lower.includes('by all means')) {
+    return JOURNEY_IDS.BUILD;
+  }
+  if (lower.includes('tired of') || lower.includes('jobless') || lower.includes('income diversification') || lower.includes('fast-track') || lower.includes('fast track')) {
+    return JOURNEY_IDS.LEARN;
   }
 
   return JOURNEY_IDS.EXPLORE;
