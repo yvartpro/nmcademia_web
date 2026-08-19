@@ -564,11 +564,13 @@ import { useCatalogStore } from '../../stores/catalog';
 import { useContentStore } from '../../stores/content';
 
 import { useLanguagesStore } from '../../stores/languages';
+import { useTranslationsStore } from '../../stores/translations';
 import FoundersManager from '../../components/admin/FoundersManager.vue';
 import TestimonialsManager from '../../components/admin/TestimonialsManager.vue';
 import PartnersManager from '../../components/admin/PartnersManager.vue';
 import EarningsManager from '../../components/admin/EarningsManager.vue';
 const languagesStore = useLanguagesStore();
+const translationsStore = useTranslationsStore();
 import WaysManager from '../../components/admin/WaysManager.vue';
 import FAQsManager from '../../components/admin/FAQsManager.vue';
 import LanguagesManager from '../../components/admin/LanguagesManager.vue';
@@ -647,16 +649,18 @@ const selectSettingsSection = (section) => {
   closeSidebar();
 };
 
+const onLangChange = async () => {
+  if (!languagesStore.selectedLanguageId) return;
+  languagesStore.setSelectedLanguage(languagesStore.selectedLanguageId);
+  await translationsStore.loadById(languagesStore.selectedLanguageId);
+};
+
 // Only allow toggling on small screens. On large screens the sidebar remains visible.
 const toggleSidebar = () => {
   if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
     isSidebarOpen.value = true; // keep visible on large screens
     return;
   }
-  const onLangChange = () => {
-    languagesStore.setSelectedLanguage(languagesStore.selectedLanguageId);
-    window.location.reload();
-  };
   isSidebarOpen.value = !isSidebarOpen.value;
 };
 
