@@ -100,7 +100,7 @@
         </div>
 
         <!-- Prices section -->
-        <div class="border border-zinc-200 rounded-xl overflow-hidden">
+        <div class="border border-zinc-200 rounded-xl overflow-visible">
           <div class="flex items-center justify-between p-3 bg-[#F4F6F5] border-b border-zinc-200">
             <h5 class="text-[#008A20] font-bold uppercase tracking-wider text-[10px]">Prices per country</h5>
             <button type="button" @click="addPriceRow" class="text-[#008A20] text-[10px] font-bold hover:text-[#006616] transition">
@@ -108,8 +108,8 @@
             </button>
           </div>
 
-          <div class="divide-y divide-zinc-100">
-            <div v-for="(row, idx) in form.prices" :key="idx" class="p-3 grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto] gap-2 items-end overflow-visible">
+          <div class="divide-y divide-zinc-100 overflow-visible">
+            <div v-for="(row, idx) in form.prices" :key="idx" class="p-3 grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto] gap-2 items-end overflow-visible relative">
               <div class="adm-field min-w-0">
                 <label class="adm-label">Country</label>
                 <CountrySelect
