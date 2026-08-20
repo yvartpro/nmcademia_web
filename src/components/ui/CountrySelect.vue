@@ -26,7 +26,7 @@
 
     <div
       v-if="open"
-      class="absolute z-50 mt-1 w-full min-w-[220px] max-h-60 overflow-y-auto nma-scrollbar rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-lg py-1"
+      class="absolute z-[60] left-0 mt-1 w-full min-w-[220px] max-w-[min(22rem,calc(100vw-2rem))] max-h-60 overflow-y-auto nma-scrollbar rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-lg py-1"
       role="listbox"
     >
       <button
@@ -72,6 +72,7 @@ const props = defineProps({
   showCurrency: { type: Boolean, default: false },
   showAllOption: { type: Boolean, default: false },
   allLabel: { type: String, default: 'All countries' },
+  officeOnly: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(['update:modelValue', 'change']);
@@ -80,7 +81,11 @@ const catalogStore = useCatalogStore();
 const open = ref(false);
 const root = ref(null);
 
-const countryList = computed(() => props.countries || catalogStore.countries);
+const countryList = computed(() => {
+  const source = props.countries || catalogStore.countries;
+  if (!props.officeOnly) return source;
+  return source.filter((c) => c && c.hasOffice !== false);
+});
 
 const selected = computed(() =>
   countryList.value.find((c) => c.code === props.modelValue) || null

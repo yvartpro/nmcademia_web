@@ -109,13 +109,15 @@
           </div>
 
           <div class="divide-y divide-zinc-100">
-            <div v-for="(row, idx) in form.prices" :key="idx" class="p-3 grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-2 items-end">
-              <div class="adm-field">
+            <div v-for="(row, idx) in form.prices" :key="idx" class="p-3 grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto] gap-2 items-end overflow-visible">
+              <div class="adm-field min-w-0">
                 <label class="adm-label">Country</label>
                 <CountrySelect
                   v-model="row.countryCode"
                   compact
                   :full-width="true"
+                  office-only
+                  :countries="officeCountries"
                 />
               </div>
               <div class="adm-field">
@@ -168,7 +170,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineAsyncComponent } from 'vue';
+import { ref, onMounted, computed, defineAsyncComponent } from 'vue';
 import { useCatalogStore } from '../../stores/catalog';
 import { getFullMediaUrl } from '../../api';
 import UiModal from '../ui/UiModal.vue';
@@ -179,6 +181,7 @@ import CountryLabel from '../ui/CountryLabel.vue';
 const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
 
 const catalogStore = useCatalogStore();
+const officeCountries = computed(() => (catalogStore.countries || []).filter((country) => country && country.hasOffice !== false));
 const isModalOpen = ref(false);
 const editingId = ref(null);
 const confirmOpen = ref(false);
@@ -208,11 +211,11 @@ const autoSlug = () => {
 };
 
 const addPriceRow = () => {
-  const code = catalogStore.countries[0]?.code || 'NG';
-  const country = catalogStore.countries.find(c => c.code === code);
+  const country = officeCountries.value[0] || catalogStore.countries[0] || { code: 'NG', currency: 'NGN' };
+  const code = country.code || 'NG';
   form.value.prices.push({
     countryCode: code,
-    currency: country?.currency || 'NGN',
+    currency: country.currency || 'NGN',
     price: 0,
     referralBonus: 0,
     matchBonus: 0
