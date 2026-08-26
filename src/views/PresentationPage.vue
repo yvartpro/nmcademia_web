@@ -176,7 +176,11 @@ const rawFAQs = ref([]);
 const presentation = ref(null);
 
 const nextSlide = () => {
-  if (currentSlide.value < totalSlides) currentSlide.value++;
+  if (currentSlide.value == totalSlides){
+    router.push('/');
+  } else {
+    currentSlide.value++;
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 const prevSlide = () => {
