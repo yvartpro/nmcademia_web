@@ -71,18 +71,6 @@
       </div>
     </header>
 
-    <!-- Social Proof Section -->
-    <section class="border-y border-zinc-200/80 bg-zinc-50/50 py-12">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div v-for="stat in proofStats" :key="stat.label" class="text-center space-y-1">
-            <p class="text-4xl sm:text-5xl font-display font-black text-accent">{{ stat.value }}</p>
-            <p class="text-sm text-zinc-500 font-semibold uppercase tracking-wider">{{ stat.label }}</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Mission Section -->
     <section class="max-w-6xl mx-auto px-4 sm:px-6 py-20 space-y-12">
       <div class="text-center space-y-3">
@@ -358,12 +346,6 @@ const journeys = computed(() => {
     }
   ];
 });
-
-const proofStats = [
-  { value: '50,000+', label: translationsStore.t('landing.proofStats.activeLearners') },
-  { value: '40+', label: translationsStore.t('landing.proofStats.countriesRepresented') },
-  { value: '25,000+', label: translationsStore.t('landing.proofStats.successStories') },
-];
 
 const testimonials = [
   {
