@@ -8,6 +8,7 @@ const routes = [
   { path: '/presentation', name: 'presentation', component: () => import('../views/PresentationPage.vue') },
   { path: '/join-whatsapp-group', name: 'join-whatsapp-group', component: () => import('../views/JoinWhatsAppGroup.vue') },
   { path: '/package-details/:slug', name: 'package-details', component: () => import('../views/PackageDetails.vue') },
+  { path: '/product-details/:slug', name: 'product-details', component: () => import('../views/ProductDetails.vue') },
   { path: '/app/training', name: 'training', component: () => import('../views/member/TrainingPage.vue'), meta: { requiresLearner: true } },
   { path: '/app/learn/:courseId', name: 'member-course', component: () => import('../views/member/CoursePage.vue'), meta: { requiresLearner: true } },
   { path: '/app/learn/:courseId/:lessonId', name: 'member-lesson', component: () => import('../views/member/LessonPage.vue'), meta: { requiresLearner: true } },

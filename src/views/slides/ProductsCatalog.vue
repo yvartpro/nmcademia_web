@@ -32,7 +32,8 @@
       <div
         v-for="product in products"
         :key="product.id"
-        class="nma-card p-5 flex flex-col items-center text-center hover:border-accent transition duration-300"
+        @click="goToProduct(product.slug)"
+        class="nma-card p-5 flex flex-col items-center text-center cursor-pointer hover:border-accent hover:shadow-lg hover:-translate-y-0.5 transition duration-300 group"
       >
         <div class="w-20 h-20 bg-zinc-50 rounded-2xl p-2 border border-zinc-250/20 mb-3 flex items-center justify-center">
           <img
@@ -44,6 +45,9 @@
         </div>
         <h4 class="font-extrabold text-base text-zinc-900">{{ product.name }}</h4>
         <p class="text-sm text-zinc-600 line-clamp-2 mt-2">{{ product.description }}</p>
+        <span class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-accent opacity-0 group-hover:opacity-100 transition">
+          View Details
+        </span>
       </div>
     </div>
   </div>
@@ -51,6 +55,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { getFullMediaUrl } from '../../api';
 import { Play } from 'lucide-vue-next';
 import { useVideoPlayerStore } from '@/stores/videoPlayer';
@@ -108,5 +113,11 @@ const openVideo = () => {
       thumbnail: previewImage.value || null,
     });
   }
+};
+
+const router = useRouter();
+const goToProduct = (slug) => {
+  sessionStorage.setItem('presentation_slide', '3');
+  router.push(`/product-details/${slug}`);
 };
 </script>

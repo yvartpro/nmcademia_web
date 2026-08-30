@@ -158,7 +158,8 @@
             <div
               v-for="product in catalogStore.products"
               :key="product.id"
-              class="flex items-center gap-4 p-4 bg-white border border-zinc-200 rounded-xl shadow-sm hover:border-accent/30 transition"
+              @click="goToProduct(product.slug)"
+              class="flex items-center gap-4 p-4 bg-white border border-zinc-200 rounded-xl shadow-sm hover:border-accent/30 hover:shadow-md hover:-translate-y-0.5 cursor-pointer transition"
             >
               <div class="w-16 h-16 rounded-xl overflow-hidden bg-zinc-50 border border-zinc-100 shrink-0 flex items-center justify-center">
                 <img
@@ -169,10 +170,11 @@
                 />
                 <span v-else class="text-zinc-400 font-bold text-xs">{{ product.name.substring(0, 2) }}</span>
               </div>
-              <div class="min-w-0">
+              <div class="min-w-0 flex-1">
                 <h4 class="font-bold text-sm text-zinc-900">{{ product.name }}</h4>
                 <p v-if="product.description" class="text-xs text-zinc-500 mt-0.5 line-clamp-2">{{ product.description }}</p>
               </div>
+              <span class="shrink-0 text-accent font-bold text-xs opacity-70">View details →</span>
             </div>
           </div>
         </div>
@@ -268,6 +270,13 @@ const goBack = () => {
     sessionStorage.setItem('presentation_slide', '9');
   }
   router.push('/presentation');
+};
+
+const goToProduct = (slug) => {
+  if (!sessionStorage.getItem('presentation_slide')) {
+    sessionStorage.setItem('presentation_slide', '9');
+  }
+  router.push(`/product-details/${slug}`);
 };
 
 const consultTrainer = () => {
