@@ -50,6 +50,7 @@
           <div>
             <h5 class="font-bold text-base">{{ partner.name }}</h5>
             <p class="text-sm text-zinc-500">{{ partner.country }}</p>
+            <p class="text-sm text-zinc-350">{{ partner.description }}</p>
           </div>
         </div>
       </div>
