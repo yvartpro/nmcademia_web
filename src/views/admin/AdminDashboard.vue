@@ -14,8 +14,8 @@
         'lg:relative lg:translate-x-0 lg:w-64'
       ]"
     >
-      <div>
-        <div class="p-4 sm:p-6 border-b border-zinc-200 flex items-center justify-between gap-3">
+      <div class="flex-1 min-h-0 flex flex-col">
+        <div class="p-4 sm:p-6 border-b border-zinc-200 flex items-center justify-between gap-3 shrink-0">
           <div class="flex items-center gap-3 min-w-0">
             <AppLogo size="sm" :show-text="false" />
             <div>
@@ -33,7 +33,7 @@
           </button>
         </div>
 
-        <nav class="p-3 sm:p-4 space-y-1 max-h-none lg:max-h-[calc(100vh-10rem)] overflow-y-auto custom-scrollbar">
+        <nav class="p-3 sm:p-4 space-y-1 flex-1 min-h-0 overflow-y-auto custom-scrollbar">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
           <button 
             @click="activeTab = 'profile'"
@@ -360,7 +360,12 @@
         <div v-else-if="activeTab === 'chats'" class="h-[calc(100vh-12rem)] min-h-[450px] border border-zinc-200 rounded-xl overflow-hidden flex bg-white animate-fade-in shadow-sm">
           
           <!-- Chats Sessions Left List -->
-          <div class="w-80 border-r border-zinc-200 flex flex-col justify-between shrink-0 bg-[#F4F6F5]/50">
+          <div
+            :class="[
+              'border-r border-zinc-200 flex flex-col justify-between shrink-0 bg-[#F4F6F5]/50',
+              isMobile ? (mobileChatThreadOpen ? 'hidden' : 'w-full border-r-0') : 'w-80'
+            ]"
+          >
             <header class="p-4 border-b border-zinc-200 bg-white flex items-center justify-between">
               <span class="text-xs font-bold text-[#0A0F0D]">Active Inquiries</span>
               <button @click="chatStore.adminFetchSessions()" class="text-[10px] text-[#008A20] hover:underline font-semibold">
@@ -409,17 +414,29 @@
           </div>
 
           <!-- Chat Conversation Area -->
-          <div class="flex-grow flex flex-col justify-between bg-white">
+          <div
+            :class="[
+              'flex-grow flex flex-col justify-between bg-white',
+              isMobile ? (mobileChatThreadOpen ? 'flex' : 'hidden') : ''
+            ]"
+          >
             <!-- Header -->
-            <header v-if="chatStore.selectedSessionId" class="p-4 border-b border-zinc-200 bg-[#F4F6F5]/40 flex items-center justify-between">
-              <div class="flex items-center gap-3 text-xs">
-                <span class="font-bold text-[#008A20]">
-                  {{ activeChatSessionDetails?.visitorName }}
-                </span>
-                <span class="text-zinc-400">•</span>
-                <span class="text-zinc-500">
-                  {{ activeChatSessionDetails?.phone || 'No phone' }}
-                </span>
+            <header v-if="chatStore.selectedSessionId" class="p-4 border-b border-zinc-200 bg-[#F4F6F5]/40 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3 text-xs min-w-0">
+                <button
+                  v-if="isMobile"
+                  @click="mobileChatThreadOpen = false"
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-zinc-200 bg-white text-[#0A0F0D] shadow-sm transition hover:border-[#008A20] hover:text-[#008A20] shrink-0"
+                  aria-label="Back to chat list"
+                >‹</button>
+                <div class="min-w-0">
+                  <span class="font-bold text-[#008A20] block truncate">
+                    {{ activeChatSessionDetails?.visitorName }}
+                  </span>
+                  <span class="text-zinc-500 block truncate">
+                    {{ activeChatSessionDetails?.phone || 'No phone' }}
+                  </span>
+                </div>
               </div>
               <button 
                 @click="closeSession(chatStore.selectedSessionId)"
@@ -609,6 +626,8 @@ const leadsFilter = ref({ country: '', status: '' });
 const adminReplyText = ref('');
 const chatMessagesContainer = ref(null);
 const isSidebarOpen = ref(true);
+const isMobile = ref(false);
+const mobileChatThreadOpen = ref(false);
 
 // Details Modal state
 const detailsModal = ref({
@@ -672,6 +691,7 @@ const closeSidebar = () => {
 // Keep sidebar open on large screens and responsive to resizes.
 const handleResize = () => {
   if (typeof window === 'undefined') return;
+  isMobile.value = window.innerWidth < 1024;
   if (window.innerWidth >= 1024) {
     isSidebarOpen.value = true;
   }
@@ -772,6 +792,7 @@ const formatDate = (isoString) => {
 // Chat operations
 const selectSession = async (sessionUuid) => {
   await chatStore.adminFetchSessionMessages(sessionUuid);
+  if (isMobile.value) mobileChatThreadOpen.value = true;
   scrollToBottom();
 };
 
@@ -787,6 +808,7 @@ const sendAdminReply = async () => {
 const closeSession = async (sessionUuid) => {
   if (confirm('Close this support session?')) {
     await chatStore.adminCloseSession(sessionUuid);
+    if (isMobile.value) mobileChatThreadOpen.value = false;
   }
 };
 
@@ -806,6 +828,16 @@ const scrollToBottom = async () => {
 // Auto scroll on new messages
 watch(() => chatStore.messages.length, () => {
   scrollToBottom();
+});
+
+// Return to the chat rows (list view) on mobile when the selected session is closed
+watch(() => chatStore.selectedSessionId, (id) => {
+  if (!id && isMobile.value) mobileChatThreadOpen.value = false;
+});
+
+// Reset to chat rows list whenever the admin re-opens the chat tab on mobile
+watch(() => activeTab.value, (tab) => {
+  if (tab === 'chats') mobileChatThreadOpen.value = false;
 });
 </script>
 
