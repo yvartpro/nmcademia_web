@@ -38,14 +38,14 @@
           :key="partner.id"
           class="p-5 bg-white border border-zinc-200 hover:border-accent rounded-xl flex items-center gap-4 transition"
         >
-          <div class="w-12 h-12 bg-white rounded-lg p-1.5 flex items-center justify-center border border-zinc-200 shrink-0">
+          <div class="w-18 h-16 bg-white rounded-lg p-1.5 flex items-center justify-center border border-zinc-200 shrink-0">
             <img
               v-if="partner.logo"
               :src="getFullMediaUrl(partner.logo)"
               :alt="partner.name"
               class="w-full h-full object-contain"
             />
-            <span v-else class="text-slate-800 font-bold text-xs">{{ partner.name.substring(0, 3) }}</span>
+            <span v-else class="text-slate-800 font-bold text-xs">{{ partner.name.substring(0, 3).toUpperCase() }}</span>
           </div>
           <div>
             <h5 class="font-bold text-base">{{ partner.name }}</h5>
