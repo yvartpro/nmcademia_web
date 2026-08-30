@@ -54,8 +54,8 @@
           </div>
 
           <div class="flex gap-3 pt-2">
-            <button type="submit" class="flex-1 bg-[#008A20] hover:bg-[#006616] text-white font-bold px-4 py-2.5 rounded-lg text-xs transition">
-              {{ editingId ? 'Save changes' : 'Create language' }}
+            <button type="submit" :disabled="saving" class="flex-1 bg-[#008A20] hover:bg-[#006616] text-white font-bold px-4 py-2.5 rounded-lg text-xs transition disabled:opacity-50 disabled:cursor-not-allowed">
+              {{ saving ? 'Please wait…' : (editingId ? 'Save changes' : 'Create language') }}
             </button>
             <button type="button" @click="resetForm" class="border border-zinc-200 bg-white text-zinc-600 hover:text-[#0A0F0D] px-4 py-2.5 rounded-lg text-xs font-semibold transition">
               Clear
@@ -148,6 +148,7 @@ import DismissibleModal from '../../components/ui/DismissibleModal.vue';
 
 const languagesStore = useLanguagesStore();
 const editingId = ref(null);
+const saving = ref(false);
 
 const defaultForm = () => ({
   code: '',
@@ -180,16 +181,18 @@ const editLanguage = (language) => {
 const saveLanguage = async () => {
   if (!form.value.code || !form.value.name) return;
 
-  const payload = {
-    ...form.value,
-    code: form.value.code.trim(),
-    name: form.value.name.trim(),
-    nativeName: form.value.nativeName ? form.value.nativeName.trim() : null,
-    isDefault: !!form.value.isDefault,
-    isActive: form.value.isActive !== false
-  };
+  saving.value = true;
 
-    try {
+  try {
+    const payload = {
+      ...form.value,
+      code: form.value.code.trim(),
+      name: form.value.name.trim(),
+      nativeName: form.value.nativeName ? form.value.nativeName.trim() : null,
+      isDefault: !!form.value.isDefault,
+      isActive: form.value.isActive !== false
+    };
+
       if (editingId.value) {
         await languagesStore.updateLanguage(editingId.value, payload);
       } else {
@@ -202,6 +205,8 @@ const saveLanguage = async () => {
       console.error('Save language failed:', error);
       modalMessage.value = error?.response?.data?.message || 'Unable to save language.';
       showErrorModal.value = true;
+    } finally {
+      saving.value = false;
     }
 };
 

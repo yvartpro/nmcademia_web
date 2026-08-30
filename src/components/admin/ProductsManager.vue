@@ -73,9 +73,9 @@
         <MediaPicker v-model="form.mediaAssetId" assetType="image" label="Product image" />
       </form>
       <template #footer>
-        <button type="button" class="adm-btn-ghost" @click="isModalOpen = false">Cancel</button>
-        <button type="submit" form="product-form" class="adm-btn-primary">
-          {{ editingId ? 'Save Changes' : 'Create Product' }}
+        <button type="button" class="adm-btn-ghost" :disabled="saving" @click="isModalOpen = false">Cancel</button>
+        <button type="submit" form="product-form" class="adm-btn-primary" :disabled="saving">
+          {{ saving ? 'Please wait…' : (editingId ? 'Save Changes' : 'Create Product') }}
         </button>
       </template>
     </UiModal>
@@ -106,6 +106,7 @@ const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor
 
 const catalogStore = useCatalogStore();
 const isModalOpen = ref(false);
+const saving = ref(false);
 const editingId = ref(null);
 const slugTouched = ref(false);
 const confirmOpen = ref(false);
@@ -164,11 +165,16 @@ const openTranslations = (item) => {
 };
 
 const saveItem = async () => {
-  const payload = { ...form.value, mediaAssetId: form.value.mediaAssetId || null };
-  if (editingId.value) await catalogStore.adminUpdateProduct(editingId.value, payload);
-  else await catalogStore.adminCreateProduct(payload);
-  await catalogStore.fetchProducts();
-  isModalOpen.value = false;
+  saving.value = true;
+  try {
+    const payload = { ...form.value, mediaAssetId: form.value.mediaAssetId || null };
+    if (editingId.value) await catalogStore.adminUpdateProduct(editingId.value, payload);
+    else await catalogStore.adminCreateProduct(payload);
+    await catalogStore.fetchProducts();
+    isModalOpen.value = false;
+  } finally {
+    saving.value = false;
+  }
 };
 
 const requestDelete = (id) => {
@@ -189,6 +195,7 @@ const executeDelete = async () => {
 .adm-input:focus { border-color: #008A20; }
 .adm-btn-ghost { font-size: 0.75rem; font-weight: 700; color: #6b7280; background: transparent; border: 1px solid #e4e4e7; cursor: pointer; padding: 0.5rem 0.875rem; border-radius: 0.5rem; transition: color 0.15s, border-color 0.15s; }
 .adm-btn-ghost:hover { color: #0A0F0D; border-color: #a1a1aa; }
+.adm-btn-ghost:disabled, .adm-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 .adm-btn-primary { font-size: 0.75rem; font-weight: 800; background: #008A20; color: #fff; padding: 0.55rem 1.25rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: filter 0.15s; }
 .adm-btn-primary:hover { filter: brightness(1.1); }
 </style>

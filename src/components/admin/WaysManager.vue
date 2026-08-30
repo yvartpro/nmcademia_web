@@ -104,9 +104,9 @@
         </div>
       </form>
       <template #footer>
-        <button type="button" class="adm-btn-ghost" @click="isModalOpen = false">Cancel</button>
-        <button type="submit" form="ways-form" class="adm-btn-primary">
-          {{ editingId ? 'Save Changes' : 'Create Way' }}
+        <button type="button" class="adm-btn-ghost" :disabled="saving" @click="isModalOpen = false">Cancel</button>
+        <button type="submit" form="ways-form" class="adm-btn-primary" :disabled="saving">
+          {{ saving ? 'Please wait…' : (editingId ? 'Save Changes' : 'Create Way') }}
         </button>
       </template>
     </UiModal>
@@ -135,6 +135,7 @@ const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor
 
 const contentStore = useContentStore();
 const isModalOpen = ref(false);
+const saving = ref(false);
 const editingId = ref(null);
 const form = ref({
   title: '',
@@ -206,31 +207,36 @@ const openModal = (item = null) => {
   };
 
   const saveItem = async () => {
-    const payload = {
-      title: form.value.title,
-      slug: form.value.slug,
-      subtitle: form.value.subtitle,
-      image: form.value.image || null,
-      mediaType: form.value.mediaType,
-      mediaUrl: form.value.mediaUrl || null,
-      body: {
-        description: form.value.bodyDescription,
-        bullets: form.value.bodyBullets
-          .split('\n')
-          .map(line => line.trim())
-          .filter(Boolean)
-      },
-      order: form.value.order,
-      active: form.value.active
-    };
+    saving.value = true;
+    try {
+      const payload = {
+        title: form.value.title,
+        slug: form.value.slug,
+        subtitle: form.value.subtitle,
+        image: form.value.image || null,
+        mediaType: form.value.mediaType,
+        mediaUrl: form.value.mediaUrl || null,
+        body: {
+          description: form.value.bodyDescription,
+          bullets: form.value.bodyBullets
+            .split('\n')
+            .map(line => line.trim())
+            .filter(Boolean)
+        },
+        order: form.value.order,
+        active: form.value.active
+      };
 
-    if (editingId.value) {
-      await contentStore.adminUpdateWay(editingId.value, payload);
-    } else {
-      await contentStore.adminCreateWay(payload);
+      if (editingId.value) {
+        await contentStore.adminUpdateWay(editingId.value, payload);
+      } else {
+        await contentStore.adminCreateWay(payload);
+      }
+      await contentStore.fetchWaysAdmin();
+      isModalOpen.value = false;
+    } finally {
+      saving.value = false;
     }
-    await contentStore.fetchWaysAdmin();
-    isModalOpen.value = false;
   };
 </script>
 
@@ -241,6 +247,7 @@ const openModal = (item = null) => {
 .adm-input:focus { border-color: #008A20; }
 .adm-btn-ghost { font-size: 0.75rem; font-weight: 700; color: #6b7280; background: transparent; border: 1px solid #e4e4e7; cursor: pointer; padding: 0.5rem 0.875rem; border-radius: 0.5rem; transition: color 0.15s, border-color 0.15s; }
 .adm-btn-ghost:hover { color: #0A0F0D; border-color: #a1a1aa; }
+.adm-btn-ghost:disabled, .adm-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 .adm-btn-primary { font-size: 0.75rem; font-weight: 800; background: #008A20; color: #fff; padding: 0.55rem 1.25rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: filter 0.15s; }
 .adm-btn-primary:hover { filter: brightness(1.1); }
 </style>

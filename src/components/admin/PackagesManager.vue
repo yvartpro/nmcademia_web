@@ -118,6 +118,7 @@
                   :full-width="true"
                   office-only
                   :countries="officeCountries"
+                  @change="autoSlug"
                 />
               </div>
               <div class="adm-field">
@@ -134,7 +135,7 @@
               </div>
               <button
                 type="button"
-                @click="form.prices.splice(idx, 1)"
+                @click="form.prices.splice(idx, 1); autoSlug()"
                 class="pb-1 text-red-400 hover:text-red-600 transition text-base leading-none self-end"
                 title="Remove row"
               >×</button>
@@ -146,9 +147,9 @@
         </div>
       </form>
       <template #footer>
-        <button type="button" class="adm-btn-ghost" @click="isModalOpen = false">Cancel</button>
-        <button type="submit" form="package-form" class="adm-btn-primary">
-          {{ editingId ? 'Save Changes' : 'Create Package' }}
+        <button type="button" class="adm-btn-ghost" :disabled="saving" @click="isModalOpen = false">Cancel</button>
+        <button type="submit" form="package-form" class="adm-btn-primary" :disabled="saving">
+          {{ saving ? 'Please wait…' : (editingId ? 'Save Changes' : 'Create Package') }}
         </button>
       </template>
     </UiModal>
@@ -183,6 +184,7 @@ const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor
 const catalogStore = useCatalogStore();
 const officeCountries = computed(() => (catalogStore.countries || []).filter((country) => country && country.hasOffice !== false));
 const isModalOpen = ref(false);
+const saving = ref(false);
 const editingId = ref(null);
 const confirmOpen = ref(false);
 const pendingDeleteId = ref(null);
@@ -201,13 +203,17 @@ onMounted(async () => {
   await catalogStore.fetchPackages();
 });
 
+const slugify = (value) =>
+  value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 const autoSlug = () => {
-  if (!editingId.value) {
-    form.value.slug = form.value.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '');
-  }
+  if (editingId.value) return;
+  const base = slugify(form.value.name);
+  if (!base) return;
+  const countryCodes = [...new Set(form.value.prices
+    .map((p) => (p.countryCode || '').trim().toLowerCase())
+    .filter(Boolean))];
+  form.value.slug = [base, ...countryCodes].join('-');
 };
 
 const addPriceRow = () => {
@@ -220,6 +226,7 @@ const addPriceRow = () => {
     referralBonus: 0,
     matchBonus: 0
   });
+  autoSlug();
 };
 
 const openModal = (item = null) => {
@@ -242,24 +249,29 @@ const openModal = (item = null) => {
 };
 
 const saveItem = async () => {
-  const payload = {
-    name: form.value.name,
-    slug: form.value.slug,
-    description: form.value.description,
-    featured: form.value.featured,
-    mediaAssetId: form.value.mediaAssetId || null,
-    prices: form.value.prices.map(p => ({
-      countryCode: p.countryCode,
-      currency: catalogStore.countries.find(c => c.code === p.countryCode)?.currency || p.currency,
-      price: p.price,
-      referralBonus: p.referralBonus,
-      matchBonus: p.matchBonus
-    }))
-  };
-  if (editingId.value) await catalogStore.adminUpdatePackage(editingId.value, payload);
-  else await catalogStore.adminCreatePackage(payload);
-  await catalogStore.fetchPackages();
-  isModalOpen.value = false;
+  saving.value = true;
+  try {
+    const payload = {
+      name: form.value.name,
+      slug: form.value.slug,
+      description: form.value.description,
+      featured: form.value.featured,
+      mediaAssetId: form.value.mediaAssetId || null,
+      prices: form.value.prices.map(p => ({
+        countryCode: p.countryCode,
+        currency: catalogStore.countries.find(c => c.code === p.countryCode)?.currency || p.currency,
+        price: p.price,
+        referralBonus: p.referralBonus,
+        matchBonus: p.matchBonus
+      }))
+    };
+    if (editingId.value) await catalogStore.adminUpdatePackage(editingId.value, payload);
+    else await catalogStore.adminCreatePackage(payload);
+    await catalogStore.fetchPackages();
+    isModalOpen.value = false;
+  } finally {
+    saving.value = false;
+  }
 };
 
 const requestDelete = (id) => {
@@ -298,6 +310,7 @@ const openTranslations = (pkg) => {
 .adm-select { appearance: auto; cursor: pointer; }
 .adm-btn-ghost { font-size: 0.75rem; font-weight: 700; color: #6b7280; background: transparent; border: 1px solid #e4e4e7; cursor: pointer; padding: 0.5rem 0.875rem; border-radius: 0.5rem; transition: color 0.15s, border-color 0.15s; }
 .adm-btn-ghost:hover { color: #0A0F0D; border-color: #a1a1aa; }
+.adm-btn-ghost:disabled, .adm-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 .adm-btn-primary { font-size: 0.75rem; font-weight: 800; background: #008A20; color: #fff; padding: 0.55rem 1.25rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: filter 0.15s; }
 .adm-btn-primary:hover { filter: brightness(1.1); }
 </style>

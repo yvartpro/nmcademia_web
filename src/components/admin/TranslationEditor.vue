@@ -24,7 +24,7 @@
     </div>
 
     <div class="flex gap-2 justify-end">
-      <button @click="saveTranslations" class="text-xs bg-[#008A20] text-white px-3 py-2 rounded">Save translations</button>
+      <button @click="saveTranslations" :disabled="saving" class="text-xs bg-[#008A20] text-white px-3 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed">{{ saving ? 'Please wait…' : 'Save translations' }}</button>
       <button @click="$emit('cancel')" class="text-xs border border-zinc-200 px-3 py-2 rounded">Close</button>
     </div>
   </div>
@@ -61,6 +61,7 @@ const props = defineProps({
 const languages = ref([]);
 const selectedLanguageId = ref(null);
 const loading = ref(false);
+const saving = ref(false);
 const values = ref({});
 const showNotice = ref(false);
 const noticeTitle = ref('Notice');
@@ -110,6 +111,7 @@ const loadTranslations = async () => {
 
 const saveTranslations = async () => {
   if (!selectedLanguageId.value) return;
+  saving.value = true;
   const payload = {
     modelName: props.modelName,
     recordId: String(props.recordId),
@@ -123,6 +125,8 @@ const saveTranslations = async () => {
   } catch (err) {
     console.error('Save translations failed', err);
     showNotification('Save failed', err?.response?.data?.message || 'Unable to save the translations.');
+  } finally {
+    saving.value = false;
   }
 };
 

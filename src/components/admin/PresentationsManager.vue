@@ -101,9 +101,9 @@
       </form>
 
       <template #footer>
-        <button type="button" class="adm-btn-ghost" @click="isModalOpen = false">Cancel</button>
-        <button type="submit" form="presentation-form" class="adm-btn-primary">
-          {{ editingId ? 'Save Changes' : 'Create Presentation' }}
+        <button type="button" class="adm-btn-ghost disabled:opacity-50 disabled:cursor-not-allowed" :disabled="saving" @click="isModalOpen = false">Cancel</button>
+        <button type="submit" form="presentation-form" class="adm-btn-primary disabled:opacity-50 disabled:cursor-not-allowed" :disabled="saving">
+          {{ saving ? 'Please wait…' : (editingId ? 'Save Changes' : 'Create Presentation') }}
         </button>
       </template>
     </UiModal>
@@ -145,6 +145,7 @@ const alertStore = useAlertStore();
 
 const presentations = ref([]);
 const isModalOpen = ref(false);
+const saving = ref(false);
 const confirmOpen = ref(false);
 const editingId = ref(null);
 
@@ -214,6 +215,7 @@ const openModal = (presentation = null) => {
 
 
 const saveItem = async () => {
+  saving.value = true;
   try {
     if (!form.value.mediaId) {
       alertStore.showError('Please select a video');
@@ -235,6 +237,8 @@ const saveItem = async () => {
   } catch (err) {
     console.error('Error saving presentation:', err);
     alertStore.showError('Failed to save presentation');
+  } finally {
+    saving.value = false;
   }
 };
 

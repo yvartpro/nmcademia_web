@@ -142,14 +142,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue';
 import { useSettingsStore } from '../../stores/settings';
 import { useAlertStore } from '../../stores/alert';
 import { SETTING_GROUPS, JSON_SETTING_KEYS } from '../../config/settingMeta';
 import MediaPicker from './MediaPicker.vue';
 import JourneysEditor from './JourneysEditor.vue';
 import UiModal from '../ui/UiModal.vue';
-import TranslationEditor from './TranslationEditor.vue';
+const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
 
 const props = defineProps({
   activeGroup: { type: String, default: 'contact' },
