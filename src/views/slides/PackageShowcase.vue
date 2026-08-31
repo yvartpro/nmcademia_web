@@ -13,6 +13,7 @@
       <div
         v-for="pkg in countryPackages"
         :key="pkg.id"
+        @click="$router.push({ name: 'PackageDetails', params: { packageId: pkg.id } })"
         class="flex flex-col rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-sm"
       >
         <div v-if="pkg.image" class="h-36 overflow-hidden bg-zinc-100">
