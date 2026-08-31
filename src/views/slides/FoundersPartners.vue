@@ -32,13 +32,13 @@
 
     <div class="space-y-4">
       <h3 class="text-lg font-bold font-display">{{ $t('presentation.partners.title') }}</h3>
-      <div class="grid grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div
           v-for="partner in partners"
           :key="partner.id"
-          class="p-5 bg-white border border-zinc-200 hover:border-accent rounded-xl flex items-center gap-4 transition"
+          class="p-5 bg-white border border-zinc-200 hover:border-accent rounded-xl flex flex-col sm:flex-row items-start sm:items-center gap-4 transition"
         >
-          <div class="w-18 h-16 bg-white rounded-lg p-1.5 flex items-center justify-center border border-zinc-200 shrink-0">
+          <div class="w-18 h-16 bg-white rounded-lg p-1.5 flex items-center justify-center border border-zinc-200 shrink-0 self-center sm:self-auto">
             <img
               v-if="partner.logo"
               :src="getFullMediaUrl(partner.logo)"
@@ -47,7 +47,7 @@
             />
             <span v-else class="text-slate-800 font-bold text-xs">{{ partner.name.substring(0, 3).toUpperCase() }}</span>
           </div>
-          <div>
+          <div class="text-center sm:text-left">
             <h5 class="font-bold text-base">{{ partner.name }}</h5>
             <p class="text-sm text-zinc-500">{{ partner.country }}</p>
             <p class="text-sm text-zinc-350">{{ partner.description }}</p>

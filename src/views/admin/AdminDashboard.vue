@@ -149,14 +149,6 @@
             <span>Earning Streams</span>
           </button>
 
-          <button 
-            @click="activeTab = 'ways'"
-            :class="tabClass('ways')"
-          >
-            <span>🧭</span>
-            <span>Ways of Earning</span>
-          </button>
-
           <button @click="activeTab = 'faqs'" :class="tabClass('faqs')">
             <span>❓</span>
             <span>FAQs</span>
@@ -499,7 +491,6 @@
         <TestimonialsManager v-else-if="activeTab === 'testimonials'" />
         <PartnersManager v-else-if="activeTab === 'partners'" />
         <EarningsManager v-else-if="activeTab === 'earnings'" />
-        <WaysManager v-else-if="activeTab === 'ways'" />
         <FAQsManager v-else-if="activeTab === 'faqs'" />
         <LanguagesManager v-else-if="activeTab === 'languages'" />
         <ProductsManager v-else-if="activeTab === 'products'" />
@@ -588,7 +579,6 @@ import PartnersManager from '../../components/admin/PartnersManager.vue';
 import EarningsManager from '../../components/admin/EarningsManager.vue';
 const languagesStore = useLanguagesStore();
 const translationsStore = useTranslationsStore();
-import WaysManager from '../../components/admin/WaysManager.vue';
 import FAQsManager from '../../components/admin/FAQsManager.vue';
 import LanguagesManager from '../../components/admin/LanguagesManager.vue';
 import ProductsManager from '../../components/admin/ProductsManager.vue';
@@ -644,7 +634,6 @@ const activeTabTitle = computed(() => {
   if (activeTab.value === 'testimonials') return 'Client Testimonials';
   if (activeTab.value === 'partners') return 'Manufacturing Partners';
   if (activeTab.value === 'earnings') return 'Compensation Earning Streams';
-  if (activeTab.value === 'ways') return 'Ways of Earning';
   if (activeTab.value === 'faqs') return 'Frequently Asked Questions';
   if (activeTab.value === 'languages') return 'Languages & Locale Management';
   if (activeTab.value === 'products') return 'Product Catalog';

@@ -54,6 +54,13 @@
           </button>
           <button
             type="button"
+            @click="openTranslations(j)"
+            class="text-[#006699] hover:text-[#004466] font-bold text-[10px] px-2 py-1 transition"
+          >
+            Translations
+          </button>
+          <button
+            type="button"
             @click="remove(idx)"
             class="text-red-500 hover:text-red-700 font-bold text-[10px] px-2 py-1 transition"
           >
@@ -156,15 +163,27 @@
         </button>
       </template>
     </UiModal>
+
+    <UiModal v-model="translationsModalOpen" :title="`Translations: ${translationTarget?.title || translationTarget?.id || ''}`" size="lg">
+      <template v-if="translationTarget">
+        <TranslationEditor
+          :modelName="'Setting'"
+          :recordId="`landing_journeys.${translationTarget.id}`"
+          :fields="['title', 'desc', 'ctaLabel']"
+          @cancel="translationsModalOpen = false"
+        />
+      </template>
+    </UiModal>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, defineAsyncComponent } from 'vue';
 import { getFullMediaUrl } from '../../api';
 import UiModal from '../ui/UiModal.vue';
 import MediaPicker from './MediaPicker.vue';
 import { useAlertStore } from '../../stores/alert';
+const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
 
 const props = defineProps({
   modelValue: { type: String, default: '' }
@@ -176,6 +195,12 @@ const alertStore = useAlertStore();
 const list = ref([]);
 const modalOpen = ref(false);
 const editingIndex = ref(null);
+const translationsModalOpen = ref(false);
+const translationTarget = ref(null);
+const openTranslations = (card) => {
+  translationTarget.value = card;
+  translationsModalOpen.value = true;
+};
 
 // Canonical default journey slugs — pre-populated so admin sees them immediately.
 // Title/desc/image are intentionally blank so the admin fills them in.

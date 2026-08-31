@@ -21,7 +21,6 @@ export const useContentStore = defineStore('content', () => {
   const founders = ref([]);
   const manufacturingPartners = ref([]);
   const earningStreams = ref([]);
-  const ways = ref([]);
   const faqs = ref([]);
   const loading = ref(false);
 
@@ -70,24 +69,6 @@ export const useContentStore = defineStore('content', () => {
     }
   };
 
-  const fetchWays = async () => {
-    try {
-      const res = await api.get('/ways', getLanguageParams());
-      ways.value = res.data;
-    } catch (err) {
-      console.error('fetchWays failed:', err);
-    }
-  };
-
-  const fetchWaysAdmin = async () => {
-    try {
-      const res = await api.get('/admin/ways');
-      ways.value = res.data;
-    } catch (err) {
-      console.error('fetchWaysAdmin failed:', err);
-    }
-  };
-
   const fetchFAQs = async () => {
     try {
       const res = await api.get('/faqs', getLanguageParams());
@@ -104,7 +85,6 @@ export const useContentStore = defineStore('content', () => {
       fetchFounders(),
       fetchManufacturingPartners(),
       fetchEarningStreams(),
-      fetchWays(),
       fetchFAQs()
     ]);
     loading.value = false;
@@ -117,7 +97,6 @@ export const useContentStore = defineStore('content', () => {
       fetchFounders(),
       fetchManufacturingPartners(),
       fetchEarningStreamsAdmin(),
-      fetchWaysAdmin(),
       fetchFAQs()
     ]);
     loading.value = false;
@@ -197,24 +176,6 @@ export const useContentStore = defineStore('content', () => {
     earningStreams.value = earningStreams.value.filter(s => s.id !== id);
   };
 
-  const adminCreateWay = async (data) => {
-    const res = await api.post('/admin/ways', data);
-    ways.value.push(res.data);
-    return res.data;
-  };
-
-  const adminUpdateWay = async (id, data) => {
-    const res = await api.put(`/admin/ways/${id}`, data);
-    const idx = ways.value.findIndex(w => w.id === id);
-    if (idx !== -1) ways.value[idx] = res.data;
-    return res.data;
-  };
-
-  const adminDeleteWay = async (id) => {
-    await api.delete(`/admin/ways/${id}`);
-    ways.value = ways.value.filter(w => w.id !== id);
-  };
-
   const adminCreateFAQ = async (data) => {
     const res = await api.post('/admin/faqs', data);
     faqs.value.push(res.data);
@@ -240,7 +201,6 @@ export const useContentStore = defineStore('content', () => {
     founders,
     manufacturingPartners,
     earningStreams,
-    ways,
     faqs,
     loading,
     fetchTestimonials,
@@ -263,9 +223,6 @@ export const useContentStore = defineStore('content', () => {
     adminCreateEarningStream,
     adminUpdateEarningStream,
     adminDeleteEarningStream,
-    adminCreateWay,
-    adminUpdateWay,
-    adminDeleteWay,
     adminCreateFAQ,
     adminUpdateFAQ,
     adminDeleteFAQ
