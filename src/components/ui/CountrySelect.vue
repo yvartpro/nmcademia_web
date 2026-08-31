@@ -54,6 +54,18 @@
         <CountryFlag :flag-icon="c.flagIcon" :code="c.code" :name="c.name" size="sm" />
         <span class="flex-1 truncate">{{ optionLabel(c) }}</span>
       </button>
+      <button
+        v-if="otherOption"
+        type="button"
+        class="w-full flex items-center gap-2 px-3 py-2.5 text-left text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors border-t border-zinc-100 dark:border-zinc-800"
+        :class="modelValue === OTHER_VALUE ? 'bg-accent/10 text-accent-dark dark:text-accent-light' : 'text-zinc-700 dark:text-zinc-300'"
+        role="option"
+        :aria-selected="modelValue === OTHER_VALUE"
+        @click="pick(OTHER_VALUE)"
+      >
+        <span class="w-5 h-4 shrink-0" />
+        <span class="flex-1 truncate">{{ otherLabel }}</span>
+      </button>
     </div>
   </div>
 </template>
@@ -64,6 +76,8 @@ import { ChevronDown } from 'lucide-vue-next';
 import CountryFlag from './CountryFlag.vue';
 import { useCatalogStore } from '../../stores/catalog';
 
+const OTHER_VALUE = 'other';
+
 const props = defineProps({
   modelValue: { type: String, default: '' },
   countries: { type: Array, default: null },
@@ -73,6 +87,8 @@ const props = defineProps({
   showAllOption: { type: Boolean, default: false },
   allLabel: { type: String, default: 'All countries' },
   officeOnly: { type: Boolean, default: false },
+  otherOption: { type: Boolean, default: false },
+  otherLabel: { type: String, default: 'Other' },
 });
 
 const emit = defineEmits(['update:modelValue', 'change']);
@@ -93,6 +109,7 @@ const selected = computed(() =>
 
 const triggerLabel = computed(() => {
   if (props.showAllOption && !props.modelValue) return props.allLabel;
+  if (props.otherOption && props.modelValue === OTHER_VALUE) return props.otherLabel;
   if (!selected.value) return 'Select country';
   if (props.compact) {
     return props.showCurrency

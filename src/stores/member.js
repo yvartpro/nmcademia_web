@@ -111,13 +111,14 @@ export const useMemberStore = defineStore('member', {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.profile));
     },
 
-    registerFromLead({ fullName, email, country, profileType }) {
+    registerFromLead({ fullName, email, country, company, profileType }) {
       const journeyId = resolveJourneyId(profileType);
       const journey = getJourney(journeyId);
       this.profile.registered = true;
       this.profile.fullName = fullName;
       this.profile.email = email;
       this.profile.country = country;
+      this.profile.company = company || country;
       this.profile.profileType = profileType;
       this.profile.journeyId = journeyId;
       sessionStorage.setItem('nma_post_signup_journey', journeyId);

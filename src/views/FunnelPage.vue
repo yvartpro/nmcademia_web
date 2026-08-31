@@ -85,7 +85,7 @@
             </h2>
             <p class="text-sm text-zinc-500">{{ $t('funnel.country.description') }}</p>
             <div class="space-y-4">
-              <CountrySelect v-model="selectedCountry" />
+              <CountrySelect v-model="selectedCountry" :countries="officeCountries" office-only other-option other-label="Other" />
             </div>
             <div class="flex justify-between pt-4 border-t border-zinc-200/50">
                 <UiButton variant="ghost" @click="prevStep">{{ $t('funnel.account.buttons.back') }}</UiButton>
@@ -201,7 +201,7 @@
                     </div>
                     <div>
                       <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.country.title') }}</label>
-                      <CountrySelect v-model="selectedCountry" />
+                      <CountrySelect v-model="selectedCountry" :countries="officeCountries" office-only other-option other-label="Other" />
                     </div>
                     <label class="flex items-start gap-3 cursor-pointer mt-4">
                       <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
@@ -289,7 +289,22 @@ const funnelId = computed(() => route.params.funnelId);
 
 const currentStepIndex = ref(1);
 const submitting = ref(false);
-const selectedCountry = ref('NG');
+const selectedCountry = ref('other');
+
+// Countries where the company operates (has an office), shown to the client.
+// Any other selection falls back to "other" and is routed straight to the
+// WhatsApp group instead of the presentation.
+const officeCountries = computed(() => (catalogStore.countries || []).filter((c) => c && c.hasOffice !== false));
+
+// A user belongs to the company only if they picked one of the listed office
+// countries. Everyone else (including "other") is treated as company = "other"
+// and is brought directly into the WhatsApp group without the presentation.
+const isCompanySelectedCountry = () => {
+  const code = selectedCountry.value;
+  if (!code || code === 'other') return false;
+  const countryData = catalogStore.countryByCode(code);
+  return !!(countryData && countryData.hasOffice);
+};
 
 const form = ref({
   fullName: '',
@@ -301,8 +316,12 @@ const form = ref({
 onMounted(async () => {
   await catalogStore.fetchCountries();
   const saved = localStorage.getItem('selected_country');
-  if (saved) {
+  if (saved === 'other') {
+    selectedCountry.value = 'other';
+  } else if (saved && catalogStore.countryByCode(saved)?.hasOffice) {
     selectedCountry.value = saved;
+  } else {
+    selectedCountry.value = 'other';
   }
   await settingsStore.fetchSettings();
   await ownerStore.fetchProfile();
@@ -439,12 +458,13 @@ const saveCountryAndRedirect = () => {
     fullName: form.value.fullName || 'Explorer',
     email: form.value.email || `explore-${Date.now()}@nma.bi`,
     country: selectedCountry.value,
+    company: isCompanySelectedCountry() ? selectedCountry.value : 'other',
     profileType: segmentLabel
   });
-  
-  // Check if country has office
-  const countryData = catalogStore.countryByCode(selectedCountry.value);
-  if (countryData && !countryData.hasOffice) {
+
+  // Users not in a company country (including "other") skip the presentation
+  // and are brought directly into the WhatsApp group.
+  if (!isCompanySelectedCountry()) {
     router.push('/join-whatsapp-group');
   } else {
     router.push(journey.afterSignupRoute);
@@ -486,12 +506,13 @@ const submitLeadAndCompleteFlow = async () => {
       fullName: form.value.fullName,
       email: form.value.email,
       country: selectedCountry.value,
+      company: isCompanySelectedCountry() ? selectedCountry.value : 'other',
       profileType: segmentLabel
     });
-    
-    // Check if country has office
-    const countryData = catalogStore.countryByCode(selectedCountry.value);
-    if (countryData && !countryData.hasOffice) {
+
+    // Users not in a company country (including "other") skip the presentation
+    // and are brought directly into the WhatsApp group.
+    if (!isCompanySelectedCountry()) {
       router.push('/join-whatsapp-group');
     } else {
       // Redirect to join group page after registration
