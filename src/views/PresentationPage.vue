@@ -5,17 +5,6 @@
     <header class="sticky top-0 z-50 border-b border-zinc-200/80 bg-surface-1/90 backdrop-blur-xl">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <AppLogo size="sm" />
-        <div class="flex items-center gap-3">
-          <div class="flex items-center gap-2 bg-white rounded-xl px-3 py-1.5 border border-zinc-200">
-            <CountrySelect
-              v-model="selectedCountryCode"
-              compact
-              show-currency
-              :full-width="false"
-              @change="changeCountry"
-            />
-          </div>
-        </div>
       </div>
       <div class="max-w-4xl mx-auto px-4 sm:px-6 pb-3">
         <UiProgress :current="currentSlide" :total="totalSlides" :show-label="false" />
@@ -130,7 +119,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import CountrySelect from '../components/ui/CountrySelect.vue';
 import { JOURNEY_IDS } from '../data/learnerJourneys';
 
 import AppLogo from '../components/ui/AppLogo.vue';
@@ -189,7 +177,14 @@ const prevSlide = () => {
 };
 
 // ── Country / currency ───────────────────────────────────────────────────────
-const selectedCountryCode = ref(localStorage.getItem('selected_country') || 'NG');
+// The country is no longer chosen on this page. Registered learners use the
+// country captured from their DB registration; unregistered visitors fall back
+// to the country they previously selected in the onboarding funnel.
+const selectedCountryCode = ref(
+  (memberStore.isRegistered && memberStore.profile.country)
+    || localStorage.getItem('selected_country')
+    || 'NG'
+);
 
 const currencySymbol = computed(() => catalogStore.selectedCountry?.currencySymbol || '₦');
 const selectedCountryName = computed(() => catalogStore.selectedCountry?.name || translationsStore.t('presentation.yourCountry'));
@@ -201,12 +196,6 @@ const conversionRate = computed(() => {
   if (code === 'US') return 0.00075;
   return 1.0;
 });
-
-const changeCountry = async () => {
-  catalogStore.selectCountry(selectedCountryCode.value);
-  localStorage.setItem('selected_country', selectedCountryCode.value);
-  await fetchPresentation();
-};
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 const getPriceForCountry = (pkg, field) => {
@@ -287,6 +276,8 @@ onMounted(async () => {
   if (catalogStore.countries.length > 0 && !catalogStore.countries.some(c => c.code === selectedCountryCode.value)) {
     selectedCountryCode.value = catalogStore.countries[0].code;
   }
+
+  catalogStore.selectCountry(selectedCountryCode.value);
 
   await fetchPresentation();
 });

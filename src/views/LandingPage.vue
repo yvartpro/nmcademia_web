@@ -279,7 +279,10 @@ const parseJourneySettings = () => {
 };
 
 const journeys = computed(() => {
-  const configured = parseJourneySettings();
+  const configured = parseJourneySettings().filter((journey) =>
+    journey && (journey.id != null && journey.id !== '') && (journey.title != null && journey.title !== '')
+  );
+
   if (configured.length > 0) {
     return configured.map((journey) => ({
       ...journey,

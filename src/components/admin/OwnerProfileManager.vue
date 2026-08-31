@@ -84,7 +84,7 @@
     </div>
   </div>
   <UiModal v-if="showOwnerTranslationEditor" v-model="showOwnerTranslationEditor" :title="`Translations: Owner`" size="lg">
-    <TranslationEditor modelName="Owner" :recordId="'profile'" :fields="['bio','intro']" @cancel="closeOwnerTranslations" />
+    <TranslationEditor modelName="Owner" :recordId="ownerId" :fields="['bio','intro']" @cancel="closeOwnerTranslations" />
   </UiModal>
 </template>
 
@@ -118,6 +118,7 @@ onMounted(async () => {
   try {
     const res = await api.get('/admin/owner/profile');
     if (res.data) {
+      ownerId.value = res.data.id || ownerId.value;
       form.value = {
         name: res.data.name || '',
         bio: res.data.bio || '',
@@ -170,6 +171,7 @@ const saveProfile = async () => {
 };
 
 const showOwnerTranslationEditor = ref(false);
+const ownerId = ref('');
 const openOwnerTranslations = () => {
   showOwnerTranslationEditor.value = true;
 };
