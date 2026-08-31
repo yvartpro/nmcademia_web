@@ -38,18 +38,9 @@
 import { ref, onMounted, computed } from 'vue';
 import api from '../../api';
 import DismissibleModal from '../ui/DismissibleModal.vue';
-import { useAuthStore } from '../../stores/auth';
 
-const authStore = useAuthStore();
-const currentOwnerId = computed(() => String(authStore?.user?.ownerId ?? localStorage.getItem('nma.currentOwnerId') ?? '').trim());
 const visibleLanguages = computed(() => {
-  const ownerId = currentOwnerId.value;
-  if (!ownerId) return languages.value;
-
-  return languages.value.filter((lang) => {
-    const langOwnerId = String(lang?.ownerId ?? lang?.owner_id ?? lang?.owner?.id ?? '').trim();
-    return !langOwnerId || langOwnerId === ownerId;
-  });
+  return languages.value.filter((lang) => lang.isActive !== false);
 });
 
 const props = defineProps({

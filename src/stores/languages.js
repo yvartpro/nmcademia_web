@@ -16,7 +16,10 @@ export const useLanguagesStore = defineStore('languages', () => {
   const fetchLanguages = async () => {
     loading.value = true;
     try {
-      const response = await api.get('/languages');
+      // When an admin is signed in, fetch the full shared catalog with their
+      // per-owner active/default settings; otherwise fetch the public active list.
+      const authed = Boolean(localStorage.getItem('admin_token'));
+      const response = await api.get(authed ? '/admin/languages' : '/languages');
       languages.value = response.data || [];
 
       // initialize selected language for the current owner/domain, not globally
