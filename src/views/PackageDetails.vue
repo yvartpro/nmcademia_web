@@ -230,15 +230,8 @@ const selectedCountryName = computed(() => catalogStore.selectedCountry?.name ||
 const currencySymbol = computed(() => catalogStore.selectedCountry?.currencySymbol || '₦');
 
 const headsCount = computed(() => {
-  if (!pkg.value) return 1;
-  const s = pkg.value.slug.toLowerCase();
-  if (s.includes('entriverse') || s.includes('global')) return 1;
-  if (s.includes('neoverse')) return 3;
-  if (s.includes('technoverse')) return 7;
-  if (s.includes('digiverse')) return 15;
-  if (s.includes('megaverse')) return 31;
-  if (s.includes('maxiverse')) return 63;
-  return 1;
+  const n = Number(pkg.value?.heads ?? 3);
+  return Number.isInteger(n) && n > 0 ? n : 3;
 });
 
 const potentialCycleEarnings = computed(() => {

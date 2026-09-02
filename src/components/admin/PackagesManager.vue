@@ -30,6 +30,9 @@
             <h4 class="font-bold text-[#0A0F0D]">{{ pkg.name }}</h4>
             <p class="text-zinc-400 text-[10px] font-mono mt-0.5">{{ pkg.slug }}</p>
             <p class="text-zinc-500 text-xs mt-2 line-clamp-2">{{ pkg.description }}</p>
+            <p class="text-[10px] font-bold text-[#008A20] mt-1 uppercase tracking-wider">
+              {{ pkg.heads || 3 }} heads
+            </p>
           </div>
           <div class="flex gap-2 shrink-0">
             <button @click="openModal(pkg)" class="text-[#008A20] text-xs font-bold hover:text-[#006616] transition">Edit</button>
@@ -80,6 +83,10 @@
               <input v-model="form.featured" type="checkbox" class="rounded accent-[#008A20]" />
               <span>Featured package</span>
             </label>
+            <div class="flex items-center gap-2">
+              <label class="adm-label">Heads / Slots</label>
+              <input v-model.number="form.heads" type="number" min="1" class="adm-input w-20" />
+            </div>
           </div>
         </div>
 
@@ -194,6 +201,7 @@ const form = ref({
   slug: '',
   description: '',
   featured: false,
+  heads: 3,
   mediaAssetId: null,
   prices: []
 });
@@ -237,12 +245,13 @@ const openModal = (item = null) => {
       slug: item.slug,
       description: item.description || '',
       featured: !!item.featured,
+      heads: item.heads || 3,
       mediaAssetId: item.mediaAssetId || null,
       prices: (item.prices || []).map(p => ({ ...p }))
     };
   } else {
     editingId.value = null;
-    form.value = { name: '', slug: '', description: '', featured: false, mediaAssetId: null, prices: [] };
+    form.value = { name: '', slug: '', description: '', featured: false, heads: 3, mediaAssetId: null, prices: [] };
     addPriceRow();
   }
   isModalOpen.value = true;
@@ -256,6 +265,7 @@ const saveItem = async () => {
       slug: form.value.slug,
       description: form.value.description,
       featured: form.value.featured,
+      heads: form.value.heads,
       mediaAssetId: form.value.mediaAssetId || null,
       prices: form.value.prices.map(p => ({
         countryCode: p.countryCode,
