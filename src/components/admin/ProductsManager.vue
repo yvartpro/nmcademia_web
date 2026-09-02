@@ -23,9 +23,9 @@
             <td class="p-4">{{ p.category }}</td>
             <td class="p-4 font-mono">{{ p.price }}</td>
             <td class="p-4 text-right space-x-2">
-              <button @click="openModal(p)" class="text-[#008A20] hover:text-[#006616] transition font-semibold">Edit</button>
-              <button @click="openTranslations(p)" class="text-[#006699] hover:text-[#004466] transition font-semibold">Translations</button>
-              <button @click="requestDelete(p.id)" class="text-red-500 hover:text-red-700 transition font-semibold">Delete</button>
+              <EditIcon @click="openModal(p)" class="inline-block w-4 h-4 text-[#008A20]" />
+              <Languages @click="openTranslations(p)" class="inline-block w-4 h-4 text-[#006699]" />
+              <TrashIcon @click="requestDelete(p.id)" class="inline-block w-4 h-4 text-red-500" />
             </td>
           </tr>
           <tr v-if="catalogStore.products.length === 0">
@@ -103,6 +103,7 @@ import MediaPicker from './MediaPicker.vue';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
 const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
+import { EditIcon, TrashIcon, Languages } from 'lucide-vue-next';
 
 const catalogStore = useCatalogStore();
 const isModalOpen = ref(false);

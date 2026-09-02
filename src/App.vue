@@ -3,7 +3,7 @@
     <router-view />
 
     <VideoPlayerModal />
-    <VideoUploadPanel v-if="showUploadPanel" />
+    <!-- <VideoUploadPanel v-if="showUploadPanel" /> -->
     <ChatWidget v-if="showChatWidget" />
 
     <!-- Global alert & confirmation modal -->

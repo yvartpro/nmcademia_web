@@ -35,9 +35,9 @@
             </p>
           </div>
           <div class="flex gap-2 shrink-0">
-            <button @click="openModal(pkg)" class="text-[#008A20] text-xs font-bold hover:text-[#006616] transition">Edit</button>
-            <button @click="openTranslations(pkg)" class="text-[#006699] text-xs font-bold hover:text-[#004466] transition">Translations</button>
-            <button @click="requestDelete(pkg.id)" class="text-red-500 text-xs font-bold hover:text-red-700 transition">Delete</button>
+            <EditIcon @click="openModal(pkg)" class="inline-block w-4 h-4 text-[#008A20]" />
+            <Languages @click="openTranslations(pkg)" class="inline-block w-4 h-4 text-[#006699]" />
+            <TrashIcon @click="requestDelete(pkg.id)" class="inline-block w-4 h-4 text-red-500" />
           </div>
         </div>
         <div class="mt-4 overflow-x-auto">
@@ -187,6 +187,7 @@ import MediaPicker from './MediaPicker.vue';
 import CountrySelect from '../ui/CountrySelect.vue';
 import CountryLabel from '../ui/CountryLabel.vue';
 const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
+import { EditIcon, TrashIcon, Languages } from 'lucide-vue-next';
 
 const catalogStore = useCatalogStore();
 const officeCountries = computed(() => (catalogStore.countries || []).filter((country) => country && country.hasOffice !== false));
