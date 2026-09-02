@@ -61,6 +61,7 @@
         :selected-country-code="selectedCountryCode"
         :currency-symbol="currencySymbol"
         :get-price-for-country="getPriceForCountry"
+        :slide-index="currentSlide"
       />
       <BinaryCompensation
         v-else-if="currentSlide === 7"

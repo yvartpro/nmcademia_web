@@ -61,7 +61,6 @@ onMounted(() => {
   ownerStore.fetchProfile();
   // Ensure available languages are loaded for the whole app
   languagesStore.fetchLanguages().then((langs) => {
-    console.log('App mounted - languages loaded:', langs && langs.length ? langs.map(l => l.code) : langs);
   }).catch((err) => {
     console.error('Failed to load languages on app mount:', err);
   });

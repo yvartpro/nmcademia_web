@@ -218,7 +218,6 @@ onMounted(async () => {
   // Load languages for the landing header and initialize select
   try {
     const langs = await languagesStore.fetchLanguages();
-    console.log('LandingPage loaded languages:', langs);
     headerLanguages.value = langs;
     headerSelected.value = languagesStore.selectedLanguageId;
   } catch (err) {

@@ -13,7 +13,7 @@
       <div
         v-for="pkg in countryPackages"
         :key="pkg.id"
-        @click="$router.push({ name: 'PackageDetails', params: { packageId: pkg.id } })"
+        @click="clickPackage(pkg)"
         class="flex flex-col rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-sm"
       >
         <div v-if="pkg.image" class="h-36 overflow-hidden bg-zinc-100">
@@ -31,6 +31,12 @@
             {{ currencySymbol }}{{ getPriceForCountry(pkg, 'price') }}
           </p>
         </div>
+        <div 
+          class="flex items-center justify-end p-4 border-t border-zinc-200 bg-zinc-50 text-sm font-semibold text-accent hoever:bg-accent/10 transition-colors cursor-pointer"
+          @click="clickPackage(pkg)"
+        >
+          Details
+        </div>
       </div>
     </div>
 
@@ -45,12 +51,14 @@
 <script setup>
 import { computed } from 'vue';
 import { getFullMediaUrl } from '../../api';
+import router from '@/router';
 
 const props = defineProps({
   packages: { type: Array, default: () => [] },
   selectedCountryCode: { type: String, default: 'NG' },
   currencySymbol: { type: String, default: '₦' },
   getPriceForCountry: { type: Function, required: true },
+  slideIndex: { type: Number, default: 6 },
 });
 
 const countryPackages = computed(() =>
@@ -58,4 +66,10 @@ const countryPackages = computed(() =>
     pkg.prices?.some(p => p.countryCode === props.selectedCountryCode)
   )
 );
+
+const clickPackage = (pkg) => {
+  sessionStorage.setItem('presentation_slide', String(props.slideIndex));
+  router.push(`/package-details/${pkg.slug}`);
+};
+defineEmits(['details']);
 </script>
