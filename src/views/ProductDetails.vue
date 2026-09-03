@@ -30,12 +30,12 @@
         <!-- Hero: image + summary -->
         <div class="nma-card-glass overflow-hidden border border-zinc-200/50">
           <div class="grid md:grid-cols-2 gap-0">
-            <div class="relative aspect-[4/3] md:aspect-auto md:min-h-[320px] bg-zinc-100">
+            <div class="relative bg-zinc-100 flex items-center justify-center">
               <img
                 v-if="product.image"
                 :src="getFullMediaUrl(product.image)"
                 :alt="product.name"
-                class="w-full h-full object-cover"
+                class="w-full h-auto object-contain"
               />
               <div v-else class="w-full h-full min-h-[240px] flex items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200">
                 <span class="text-7xl opacity-30">📦</span>

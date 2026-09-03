@@ -28,7 +28,7 @@
             v-if="pkg.image"
             :src="getFullMediaUrl(pkg.image)"
             :alt="pkg.name"
-            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
           />
           <div v-else class="w-full h-full flex items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200">
             <span class="text-5xl opacity-40">📦</span>

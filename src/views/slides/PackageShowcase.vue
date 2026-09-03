@@ -20,7 +20,7 @@
           <img
             :src="getFullMediaUrl(pkg.image)"
             :alt="pkg.name"
-            class="w-full h-full object-cover"
+            class="w-full h-full object-contain"
           />
         </div>
 
