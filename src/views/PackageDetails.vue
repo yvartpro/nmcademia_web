@@ -72,7 +72,7 @@
         <!-- Compensation metrics -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="p-5 bg-white border border-zinc-200 rounded-2xl shadow-sm space-y-1">
-            <span class="text-[10px] text-zinc-400 uppercase font-bold tracking-wider">Direct Referral</span>
+            <span class="text-[10px] text-green-700 uppercase font-bold tracking-wider">Sponsorship Bonus</span>
             <p class="text-xl font-black text-zinc-950">
               {{ currencySymbol }}{{ formatNumber(currentPrice.referralBonus) }}
             </p>
@@ -80,7 +80,7 @@
           </div>
 
           <div class="p-5 bg-white border border-zinc-200 rounded-2xl shadow-sm space-y-1">
-            <span class="text-[10px] text-zinc-400 uppercase font-bold tracking-wider">Pairing Match</span>
+            <span class="text-[10px] text-green-700 uppercase font-bold tracking-wider">Pairing Bonus</span>
             <p class="text-xl font-black text-zinc-950">
               {{ currencySymbol }}{{ formatNumber(currentPrice.matchBonus) }}
             </p>
@@ -88,7 +88,7 @@
           </div>
 
           <div class="p-5 bg-white border border-accent/20 rounded-2xl shadow-sm space-y-1 bg-accent/[0.03]">
-            <span class="text-[10px] text-zinc-400 uppercase font-bold tracking-wider">Account Slots</span>
+            <span class="text-[10px] text-green-700 uppercase font-bold tracking-wider">Account Slots</span>
             <p class="text-xl font-black text-accent">
               {{ headsCount }} {{ headsCount === 1 ? 'Head' : 'Heads' }}
             </p>

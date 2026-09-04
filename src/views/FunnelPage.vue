@@ -30,7 +30,7 @@
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900 leading-tight">
               {{ $t('funnel.step1.title') }}
             </h2>
-            <p class="text-sm sm:text-base leading-relaxed text-zinc-650" v-html="$t('funnel.step1.intro').replace(/\n/g, '<br /><br />')"></p>
+            <p class="text-sm sm:text-base leading-relaxed text-zinc-650" v-html="$t('funnel.step1.intro').replace(/\n/g, '<br/>')"></p>
             <div 
               @click="playIntroVideo"
               class="aspect-video bg-zinc-900 rounded-xl overflow-hidden shadow-glow relative cursor-pointer group flex items-center justify-center"
