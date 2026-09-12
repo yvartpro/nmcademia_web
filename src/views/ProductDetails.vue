@@ -61,17 +61,6 @@
                   {{ product.name }}
                 </h1>
               </div>
-
-              <p class="text-sm text-zinc-600 leading-relaxed whitespace-pre-line">
-                {{ product.description || 'Part of the curated product assortment included in your entry package.' }}
-              </p>
-
-              <div class="pt-2 border-t border-zinc-200/60">
-                <span class="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Display price in {{ selectedCountryCode }}</span>
-                <p class="text-3xl sm:text-4xl font-black text-accent mt-1">
-                  {{ currencySymbol }}{{ formatNumber(product.price) }}
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -86,11 +75,6 @@
           <div class="p-5 bg-white border border-zinc-200 rounded-2xl shadow-sm space-y-1">
             <span class="text-[10px] text-zinc-400 uppercase font-bold tracking-wider">Scientific name</span>
             <p class="text-lg font-black text-zinc-950">{{ product.scientificName || '—' }}</p>
-          </div>
-
-          <div class="p-5 bg-white border border-accent/20 rounded-2xl shadow-sm space-y-1 bg-accent/[0.03]">
-            <span class="text-[10px] text-zinc-400 uppercase font-bold tracking-wider">Display price</span>
-            <p class="text-lg font-black text-accent">{{ currencySymbol }}{{ formatNumber(product.price) }}</p>
           </div>
         </div>
 
@@ -177,7 +161,7 @@ const consultTrainer = () => {
   if (!product.value) return;
   const number = catalogStore.selectedCountry?.whatsappNumber || settingsStore.settings['whatsapp_number'] || '+2348030001111';
   const text = encodeURIComponent(
-    `Hello Trainer, I am interested in the ${product.value.name} (${currencySymbol.value}${formatNumber(product.value.price)}) in ${selectedCountryName.value}. Please guide me on how to get it.`
+    `Hello Trainer, I am interested in the ${product.value.name} in ${selectedCountryName.value}. Please guide me on how to get it.`
   );
   window.open(`https://wa.me/${number.replace(/\+/g, '')}?text=${text}`, '_blank');
 };
