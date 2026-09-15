@@ -71,28 +71,28 @@ const videoStore = useVideoPlayerStore();
 const translationsStore = useTranslationsStore();
 
 const presentationVideoSrc = computed(() => {
-  if (props.presentation?.media) {
-    return getFullMediaUrl(props.presentation.media);
-  }
-
   if (props.settings['product_video']) {
     return getFullMediaUrl(props.settings['product_video']);
+  }
+
+  if (props.presentation?.media) {
+    return getFullMediaUrl(props.presentation.media);
   }
 
   return props.settings['video_url'] || '';
 });
 
 const previewImage = computed(() => {
-  if (props.presentation?.media?.thumbnailPath) {
-    return getFullMediaUrl(props.presentation.media.thumbnailPath);
-  }
-
   if (props.settings['product_video_thumbnail']) {
     return getFullMediaUrl(props.settings['product_video_thumbnail']);
   }
 
   if (props.settings['video_url_thumbnail']) {
     return getFullMediaUrl(props.settings['video_url_thumbnail']);
+  }
+
+  if (props.presentation?.media?.thumbnailPath) {
+    return getFullMediaUrl(props.presentation.media.thumbnailPath);
   }
 
   if (props.settings['presentation_cover_image']) {
