@@ -51,6 +51,8 @@ const presentationVideoSrc = computed(() => {
 
 const previewImage = computed(() => {
   if (props.presentation?.media?.thumbnailPath) return getFullMediaUrl(props.presentation.media.thumbnailPath);
+  if (props.settings['product_video_thumbnail']) return getFullMediaUrl(props.settings['product_video_thumbnail']);
+  if (props.settings['video_url_thumbnail']) return getFullMediaUrl(props.settings['video_url_thumbnail']);
   return props.settings['presentation_cover_image'] ? getFullMediaUrl(props.settings['presentation_cover_image']) : '';
 });
 
