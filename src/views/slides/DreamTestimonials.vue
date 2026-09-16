@@ -13,10 +13,22 @@
         class="bg-white p-5 rounded-xl border border-zinc-100 shadow-sm flex flex-col justify-between"
       >
         <div class="space-y-3">
-          <!-- Icône avec les initiales -->
-          <div class="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0 text-accent font-bold text-xs">
-            {{ getInitials(test.name) }}
-          </div>
+              <!-- Photo si disponible, sinon initiales -->
+              <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center shrink-0"
+                   :class="test.photo && test.photo.filePath ? 'border-2 border-green-200' : 'bg-accent/10 border border-accent/20'">
+                <img
+                  v-if="test.photo && test.photo.filePath"
+                  :src="mediaStore.resolveUrl(test.photo.filePath)"
+                  alt="avatar"
+                  class="w-full h-full object-cover"
+                />
+                <div
+                  v-else
+                  class="w-full h-full flex items-center justify-center text-accent font-bold text-xs"
+                >
+                  {{ getInitials(test.name) }}
+                </div>
+              </div>
           <p class="text-base text-zinc-700 italic">"{{ test.quote }}"</p>
         </div>
         <div class="mt-4 pt-3 border-t border-zinc-50">
@@ -39,8 +51,10 @@
 <script setup>
 import { computed } from 'vue';
 import { useContentStore } from '../../stores/content';
+import { useMediaStore } from '../../stores/media';
 
 const contentStore = useContentStore();
+const mediaStore = useMediaStore();
 
 // Solution : Filtrer pour exclure les vidéos et la propriété hasVideo
 const textTestimonials = computed(() => {

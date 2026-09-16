@@ -23,7 +23,7 @@
             <td class="p-4">
               <div class="w-16 h-12 rounded overflow-hidden bg-zinc-100 flex items-center justify-center">
                 <img v-if="item.video && item.video.thumbnailPath" :src="mediaStore.resolveUrl(item.video.thumbnailPath)" class="w-full h-full object-cover" />
-                <img v-else-if="item.photo && item.photo.thumbnailPath" :src="mediaStore.resolveUrl(item.photo.thumbnailPath)" class="w-full h-full object-cover" />
+                <img v-else-if="item.photo && item.photo.filePath" :src="mediaStore.resolveUrl(item.photo.filePath)" class="w-full h-full object-contain" />
                 <div v-else class="text-sm">—</div>
               </div>
             </td>
