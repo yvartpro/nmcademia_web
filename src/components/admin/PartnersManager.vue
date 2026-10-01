@@ -7,6 +7,7 @@
       </button>
     </div>
 
+    <PaginatedList :items="contentStore.manufacturingPartners" v-slot="{ pageItems }">
     <div class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
       <table class="w-full text-left text-xs">
         <thead class="bg-[#F4F6F5] text-[10px] text-[#0A0F0D] font-bold uppercase tracking-widest border-b border-zinc-200">
@@ -18,7 +19,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-zinc-100 text-zinc-600">
-          <tr v-for="item in contentStore.manufacturingPartners" :key="item.id" class="hover:bg-[#F4F6F5]/60 transition">
+          <tr v-for="item in pageItems" :key="item.id" class="hover:bg-[#F4F6F5]/60 transition">
             <td class="p-4 font-bold text-[#0A0F0D]">{{ item.name }}</td>
             <td class="p-4 text-[#008A20] font-mono font-semibold">{{ item.country }}</td>
             <td class="p-4 truncate max-w-xs">{{ item.description }}</td>
@@ -34,6 +35,7 @@
         </tbody>
       </table>
     </div>
+    </PaginatedList>
 
     <!-- Form Modal -->
     <UiModal v-model="isModalOpen" :title="editingId ? 'Edit Partner' : 'New Partner'" subtitle="Global Partners">
@@ -82,6 +84,7 @@ import { useContentStore } from '../../stores/content';
 import MediaPicker from './MediaPicker.vue';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
+import PaginatedList from '../ui/PaginatedList.vue';
 const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
 
 const contentStore = useContentStore();

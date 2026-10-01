@@ -145,10 +145,11 @@
       :subtitle="assetType === 'video' ? 'Select a media asset' : 'Select an image asset'"
       size="lg"
     >
+      <PaginatedList :items="filteredAssets" v-slot="{ pageItems }">
       <div class="space-y-4">
         <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 max-h-[60vh] overflow-y-auto p-1 custom-scrollbar">
           <button
-            v-for="asset in filteredAssets"
+            v-for="asset in pageItems"
             :key="asset.id"
             type="button"
             @click="select(asset)"
@@ -183,6 +184,7 @@
           </p>
         </div>
       </div>
+      </PaginatedList>
     </UiModal>
   </div>
 </template>
@@ -192,6 +194,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useMediaStore } from '../../stores/media';
 import { useAlertStore } from '../../stores/alert';
 import UiModal from '../ui/UiModal.vue';
+import PaginatedList from '../ui/PaginatedList.vue';
 
 const props = defineProps({
   modelValue: {

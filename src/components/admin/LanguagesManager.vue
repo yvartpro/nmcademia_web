@@ -65,6 +65,7 @@
       </section>
 
       <section class="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
+        <PaginatedList :items="languagesStore.languages" v-slot="{ pageItems }">
         <div class="admin-scroll-table">
           <table class="w-full text-left border-collapse">
             <thead class="bg-[#F4F6F5] text-[10px] uppercase tracking-wider text-[#0A0F0D] font-bold">
@@ -78,7 +79,7 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-zinc-100 text-xs text-[#0A0F0D]">
-              <tr v-for="language in languagesStore.languages" :key="language.id" class="hover:bg-[#F4F6F5]/60 transition">
+              <tr v-for="language in pageItems" :key="language.id" class="hover:bg-[#F4F6F5]/60 transition">
                 <td class="p-4">
                   <span class="inline-flex items-center rounded-full border border-[#008A20]/20 bg-[#008A20]/5 px-2 py-1 font-bold text-[#008A20] uppercase tracking-wide">
                     {{ language.code }}
@@ -133,6 +134,7 @@
             </tbody>
           </table>
         </div>
+        </PaginatedList>
       </section>
     </div>
   </div>
@@ -145,6 +147,7 @@
 import { onMounted, ref } from 'vue';
 import { useLanguagesStore } from '../../stores/languages';
 import DismissibleModal from '../../components/ui/DismissibleModal.vue';
+import PaginatedList from '../ui/PaginatedList.vue';
 
 const languagesStore = useLanguagesStore();
 const editingId = ref(null);

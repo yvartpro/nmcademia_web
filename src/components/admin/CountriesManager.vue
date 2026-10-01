@@ -7,6 +7,7 @@
       </button>
     </div>
 
+    <PaginatedList :items="catalogStore.countries" v-slot="{ pageItems }">
     <div class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
       <table class="w-full text-left text-xs">
         <thead class="bg-[#F4F6F5] text-[10px] text-[#0A0F0D] font-bold uppercase tracking-widest border-b border-zinc-200">
@@ -20,7 +21,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-zinc-100 text-zinc-600">
-          <tr v-for="c in catalogStore.countries" :key="c.id" class="hover:bg-[#F4F6F5]/60 transition">
+          <tr v-for="c in pageItems" :key="c.id" class="hover:bg-[#F4F6F5]/60 transition">
             <td class="p-4">
               <CountryFlag :flag-icon="c.flagIcon" :code="c.code" :name="c.name" size="md" />
             </td>
@@ -36,6 +37,7 @@
         </tbody>
       </table>
     </div>
+    </PaginatedList>
 
     <UiModal v-model="isModalOpen" :title="editingId ? 'Edit Country' : 'New Country'" subtitle="Markets &amp; Pricing Regions">
       <form id="country-form" @submit.prevent="saveItem" class="space-y-4 text-xs">
@@ -110,6 +112,7 @@ import { useCatalogStore } from '../../stores/catalog';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
 import CountryFlag from '../ui/CountryFlag.vue';
+import PaginatedList from '../ui/PaginatedList.vue';
 import { defaultFlagIcon, FLAG_ICON_EXAMPLE, normalizeFlagIcon } from '../../utils/countryFlag';
 
 const catalogStore = useCatalogStore();

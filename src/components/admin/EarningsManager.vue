@@ -7,6 +7,7 @@
       </button>
     </div>
 
+    <PaginatedList :items="contentStore.earningStreams" v-slot="{ pageItems }">
     <div class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
       <table class="w-full text-left text-xs">
         <thead class="bg-[#F4F6F5] text-[10px] text-[#0A0F0D] font-bold uppercase tracking-widest border-b border-zinc-200">
@@ -20,7 +21,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-zinc-100 text-zinc-600">
-          <tr v-for="item in contentStore.earningStreams" :key="item.id" class="hover:bg-[#F4F6F5]/60 transition">
+          <tr v-for="item in pageItems" :key="item.id" class="hover:bg-[#F4F6F5]/60 transition">
             <td class="p-4 text-xl">{{ item.icon }}</td>
             <td class="p-4 font-bold text-[#0A0F0D]">{{ item.title }}</td>
             <td class="p-4 font-mono text-zinc-400">{{ item.slug }}</td>
@@ -40,6 +41,7 @@
         </tbody>
       </table>
     </div>
+    </PaginatedList>
 
     <UiModal v-model="showTranslationEditor" :title="`Translations: ${translationTarget?.title || ''}`" size="lg">
       <TranslationEditor
@@ -124,6 +126,7 @@ import { useContentStore } from '../../stores/content';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
 import MediaPicker from './MediaPicker.vue';
+import PaginatedList from '../ui/PaginatedList.vue';
 const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
 
 const contentStore = useContentStore();

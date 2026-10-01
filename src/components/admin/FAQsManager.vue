@@ -15,6 +15,7 @@
       </div>
     </div>
 
+    <PaginatedList :items="filtered" v-slot="{ pageItems }">
     <div class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
       <table class="w-full text-left text-xs">
         <thead class="bg-[#F4F6F5] text-[10px] text-[#0A0F0D] font-bold uppercase tracking-widest border-b border-zinc-200">
@@ -26,7 +27,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-zinc-100 text-zinc-600">
-          <tr v-for="item in filtered" :key="item.id" class="hover:bg-[#F4F6F5]/60 transition">
+          <tr v-for="item in pageItems" :key="item.id" class="hover:bg-[#F4F6F5]/60 transition">
             <td class="p-4 font-mono text-[#008A20] font-bold">{{ item.order }}</td>
             <td class="p-4">
               <p class="font-bold text-[#0A0F0D]">{{ item.question }}</p>
@@ -45,6 +46,7 @@
         </tbody>
       </table>
     </div>
+    </PaginatedList>
 
     <!-- Form Modal -->
     <UiModal v-model="isModalOpen" :title="editingId ? 'Edit FAQ' : 'New FAQ'" subtitle="Knowledge Base">
@@ -98,6 +100,7 @@ import { useContentStore } from '../../stores/content';
 import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
 const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
+import PaginatedList from '../ui/PaginatedList.vue';
 
 const contentStore = useContentStore();
 const search = ref('');

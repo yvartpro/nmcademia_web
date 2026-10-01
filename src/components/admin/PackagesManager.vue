@@ -9,9 +9,10 @@
 
     <p class="text-zinc-500 text-xs">Set entry price, referral bonus, and match bonus for each country where you operate.</p>
 
+    <PaginatedList :items="catalogStore.packages" v-slot="{ pageItems }">
     <div class="space-y-4">
       <div
-        v-for="pkg in catalogStore.packages"
+        v-for="pkg in pageItems"
         :key="pkg.id"
         class="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm"
       >
@@ -64,6 +65,7 @@
         </div>
       </div>
     </div>
+    </PaginatedList>
 
     <!-- Form Modal -->
     <UiModal v-model="isModalOpen" :title="editingId ? 'Edit Package' : 'New Package'" subtitle="Entry Level Catalog" size="xl">
@@ -188,6 +190,7 @@ import CountrySelect from '../ui/CountrySelect.vue';
 import CountryLabel from '../ui/CountryLabel.vue';
 const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
 import { EditIcon, TrashIcon, Languages } from 'lucide-vue-next';
+import PaginatedList from '../ui/PaginatedList.vue';
 
 const catalogStore = useCatalogStore();
 const officeCountries = computed(() => (catalogStore.countries || []).filter((country) => country && country.hasOffice !== false));

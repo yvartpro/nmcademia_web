@@ -46,15 +46,17 @@
     </div>
 
     <!-- Grid -->
-    <div v-else-if="filteredAssets.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+    <PaginatedList v-else-if="filteredAssets.length > 0" :items="filteredAssets" v-slot="{ pageItems }">
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
       <MediaCard
-        v-for="asset in filteredAssets"
+        v-for="asset in pageItems"
         :key="asset.id"
         :asset="asset"
         :selected="selectable && modelValue === asset.id"
         @click="handleCardClick(asset)"
       />
     </div>
+    </PaginatedList>
 
     <!-- Empty -->
     <div v-else class="flex flex-col items-center justify-center py-16 text-center">
@@ -83,6 +85,7 @@ import { useMediaStore } from '../../stores/media';
 import MediaPicker from './MediaPicker.vue';
 import MediaCard from './MediaCard.vue';
 import MediaDetail from './MediaDetail.vue';
+import PaginatedList from '../ui/PaginatedList.vue';
 
 const props = defineProps({
   selectable: { type: Boolean, default: false },

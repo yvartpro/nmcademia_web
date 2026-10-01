@@ -7,6 +7,7 @@
       </button>
     </div>
 
+    <PaginatedList :items="presentations" v-slot="{ pageItems }">
     <div class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
       <table class="w-full text-left text-xs">
         <thead class="bg-[#F4F6F5] text-[10px] text-[#0A0F0D] font-bold uppercase tracking-widest border-b border-zinc-200">
@@ -19,7 +20,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-zinc-100 text-zinc-600">
-          <tr v-for="p in presentations" :key="p.id" class="hover:bg-[#F4F6F5]/60 transition">
+          <tr v-for="p in pageItems" :key="p.id" class="hover:bg-[#F4F6F5]/60 transition">
             <td class="p-4 font-semibold text-[#0A0F0D]">{{ p.title }}</td>
             <td class="p-4 text-xs">
               <span v-if="p.media" class="inline-flex items-center gap-1 px-2 py-1 rounded bg-zinc-100">
@@ -53,6 +54,7 @@
         No presentations created yet.
       </div>
     </div>
+    </PaginatedList>
 
     <!-- Form Modal -->
     <UiModal v-model="isModalOpen" :title="editingId ? 'Edit Presentation' : 'New Presentation'" subtitle="Select video and associate countries">
@@ -135,6 +137,7 @@ import { useCatalogStore } from '../../stores/catalog';
 import { useMediaStore } from '../../stores/media';
 import { useAlertStore } from '../../stores/alert';
 import MediaPicker from './MediaPicker.vue';
+import PaginatedList from '../ui/PaginatedList.vue';
 import CountryFlag from '../ui/CountryFlag.vue';
 import CountryLabel from '../ui/CountryLabel.vue';
 const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));

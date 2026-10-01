@@ -284,6 +284,7 @@
           </div>
 
           <!-- Leads Data Table -->
+          <PaginatedList :items="leadsStore.leads" v-slot="{ pageItems }">
           <div class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
             <div class="overflow-x-auto">
               <table class="w-full border-collapse text-left">
@@ -299,7 +300,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-zinc-100 text-xs">
-                  <tr v-for="lead in leadsStore.leads" :key="lead.id" class="hover:bg-[#F4F6F5]/60 transition">
+                  <tr v-for="lead in pageItems" :key="lead.id" class="hover:bg-[#F4F6F5]/60 transition">
                     <td class="p-4 font-semibold text-[#0A0F0D]">{{ lead.fullName }}</td>
                     <td class="p-4 text-zinc-500">{{ lead.email }}</td>
                     <td class="p-4">
@@ -346,6 +347,7 @@
               </table>
             </div>
           </div>
+          </PaginatedList>
         </div>
 
         <!-- Tab 2: Live Chat Center (Split Pane) -->
@@ -365,9 +367,10 @@
               </button>
             </header>
 
+            <PaginatedList :items="chatStore.activeSessions" class="flex-1 min-h-0 flex flex-col" v-slot="{ pageItems }">
             <div class="flex-grow overflow-y-auto divide-y divide-zinc-100 custom-scrollbar">
               <div 
-                v-for="session in chatStore.activeSessions" 
+                v-for="session in pageItems"
                 :key="session.id"
                 @click="selectSession(session.id)"
                 :class="[
@@ -382,7 +385,7 @@
                     {{ session.visitorName }}
                   </h6>
                   <span class="text-[9px] text-zinc-400">
-                    {{ formatTime(session.lastMessageAt) }}
+                    {{ formatChatPreviewDate(session.lastMessageAt) }}
                   </span>
                 </div>
                 <div class="flex items-center justify-between">
@@ -403,6 +406,7 @@
                 No chat sessions found.
               </div>
             </div>
+            </PaginatedList>
           </div>
 
           <!-- Chat Conversation Area -->
@@ -446,21 +450,27 @@
               </div>
 
               <div v-else class="space-y-4">
-                <div 
-                  v-for="msg in chatStore.messages" 
-                  :key="msg.id"
-                  :class="[
-                    'max-w-[70%] p-3.5 rounded-xl text-xs leading-relaxed break-words',
-                    msg.sender === 'trainer'
-                      ? 'self-end ml-auto bg-[#008A20]/10 border border-[#008A20]/20 text-[#0A0F0D] rounded-br-none'
-                      : 'self-start mr-auto bg-[#F4F6F5] border border-zinc-200 text-[#0A0F0D] rounded-bl-none'
-                  ]"
-                >
-                  <p>{{ msg.message }}</p>
-                  <span class="text-[8px] text-zinc-400 block text-right mt-1.5">
-                    {{ formatTime(msg.createdAt) }}
-                  </span>
-                </div>
+                <template v-for="(msg, index) in chatStore.messages" :key="msg.id">
+                  <div
+                    v-if="index === 0 || !isSameChatDay(chatStore.messages[index - 1].createdAt, msg.createdAt)"
+                    class="mx-auto rounded-full border border-zinc-200 bg-white px-3 py-1 text-[10px] font-semibold text-zinc-500 shadow-sm"
+                  >
+                    {{ formatChatDate(msg.createdAt) }}
+                  </div>
+                  <div
+                    :class="[
+                      'max-w-[70%] p-3.5 rounded-xl text-xs leading-relaxed break-words',
+                      msg.sender === 'trainer'
+                        ? 'self-end ml-auto bg-[#008A20]/10 border border-[#008A20]/20 text-[#0A0F0D] rounded-br-none'
+                        : 'self-start mr-auto bg-[#F4F6F5] border border-zinc-200 text-[#0A0F0D] rounded-bl-none'
+                    ]"
+                  >
+                    <p>{{ msg.message }}</p>
+                    <span class="text-[8px] text-zinc-400 block text-right mt-1.5">
+                      {{ formatTime(msg.createdAt) }}
+                    </span>
+                  </div>
+                </template>
               </div>
             </div>
 
@@ -591,7 +601,9 @@ import { SETTING_GROUPS } from '../../config/settingMeta';
 import OwnerProfileManager from '../../components/admin/OwnerProfileManager.vue';
 import CountrySelect from '../../components/ui/CountrySelect.vue';
 import AppLogo from '../../components/ui/AppLogo.vue';
+import PaginatedList from '../../components/ui/PaginatedList.vue';
 import { useMediaStore } from '../../stores/media';
+import { formatChatDate, formatChatPreviewDate, isSameChatDay } from '../../utils/chatDates';
 
 const router = useRouter();
 const authStore = useAuthStore();

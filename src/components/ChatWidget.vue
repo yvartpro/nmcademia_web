@@ -103,21 +103,27 @@
             >
               Welcome back, {{ chatStore.visitorName }}. Ask your trainer anything below.
             </p>
-            <div 
-              v-for="msg in chatStore.messages" 
-              :key="msg.id"
-              :class="[
-                'max-w-[75%] p-3 rounded-xl text-xs leading-relaxed break-words',
-                msg.sender === 'guest'
-                  ? 'self-end bg-accent/10 border border-accent/20 text-zinc-800 rounded-br-none'
-                  : 'self-start bg-white border border-zinc-200 text-zinc-700 rounded-bl-none shadow-sm'
-              ]"
-            >
-              <p>{{ msg.message }}</p>
-              <span class="text-[8px] text-zinc-400 block text-right mt-1.5">
-                {{ formatTime(msg.createdAt) }}
-              </span>
-            </div>
+            <template v-for="(msg, index) in chatStore.messages" :key="msg.id">
+              <div
+                v-if="index === 0 || !isSameChatDay(chatStore.messages[index - 1].createdAt, msg.createdAt)"
+                class="self-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-[10px] font-semibold text-zinc-500 shadow-sm"
+              >
+                {{ formatChatDate(msg.createdAt) }}
+              </div>
+              <div
+                :class="[
+                  'max-w-[75%] p-3 rounded-xl text-xs leading-relaxed break-words',
+                  msg.sender === 'guest'
+                    ? 'self-end bg-accent/10 border border-accent/20 text-zinc-800 rounded-br-none'
+                    : 'self-start bg-white border border-zinc-200 text-zinc-700 rounded-bl-none shadow-sm'
+                ]"
+              >
+                <p>{{ msg.message }}</p>
+                <span class="text-[8px] text-zinc-400 block text-right mt-1.5">
+                  {{ formatTime(msg.createdAt) }}
+                </span>
+              </div>
+            </template>
 
             <div
               v-if="chatStore.messages.length === 0 && !chatStore.hasRegisteredVisitor()"
@@ -159,6 +165,7 @@ import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useChatStore } from '../stores/chat';
 import { useOwnerStore } from '../stores/owner';
+import { formatChatDate, isSameChatDay } from '../utils/chatDates';
 
 const route = useRoute();
 const chatStore = useChatStore();

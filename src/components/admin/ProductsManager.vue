@@ -7,6 +7,7 @@
       </button>
     </div>
 
+    <PaginatedList :items="catalogStore.products" v-slot="{ pageItems }">
     <div class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
       <table class="w-full text-left text-xs">
         <thead class="bg-[#F4F6F5] text-[10px] text-[#0A0F0D] font-bold uppercase tracking-widest border-b border-zinc-200">
@@ -18,7 +19,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-zinc-100 text-zinc-600">
-          <tr v-for="p in catalogStore.products" :key="p.id" class="hover:bg-[#F4F6F5]/60 transition">
+          <tr v-for="p in pageItems" :key="p.id" class="hover:bg-[#F4F6F5]/60 transition">
             <td class="p-4 font-bold text-[#0A0F0D]">{{ p.name }}</td>
             <td class="p-4">{{ p.category }}</td>
             <td class="p-4 font-mono">{{ p.price }}</td>
@@ -34,6 +35,7 @@
         </tbody>
       </table>
     </div>
+    </PaginatedList>
 
     <!-- Form Modal -->
     <UiModal v-model="isModalOpen" :title="editingId ? 'Edit Product' : 'New Product'" subtitle="Catalog" size="lg">
@@ -104,6 +106,7 @@ import UiModal from '../ui/UiModal.vue';
 import UiConfirmModal from '../ui/UiConfirmModal.vue';
 const TranslationEditor = defineAsyncComponent(() => import('./TranslationEditor.vue'));
 import { EditIcon, TrashIcon, Languages } from 'lucide-vue-next';
+import PaginatedList from '../ui/PaginatedList.vue';
 
 const catalogStore = useCatalogStore();
 const isModalOpen = ref(false);
