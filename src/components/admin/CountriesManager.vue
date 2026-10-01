@@ -15,6 +15,7 @@
             <th class="p-4">Flag</th>
             <th class="p-4">Code</th>
             <th class="p-4">Name</th>
+            <th class="p-4">Phone code</th>
             <th class="p-4">Currency</th>
             <th class="p-4">WhatsApp</th>
             <th class="p-4 text-right">Actions</th>
@@ -27,6 +28,7 @@
             </td>
             <td class="p-4 font-mono text-[#008A20] font-bold">{{ c.code }}</td>
             <td class="p-4 text-[#0A0F0D] font-bold">{{ c.name }}</td>
+            <td class="p-4 font-mono">{{ c.phoneCode || '—' }}</td>
             <td class="p-4">{{ c.currencySymbol }} ({{ c.currency }})</td>
             <td class="p-4 truncate max-w-[140px]">{{ c.whatsappNumber || '—' }}</td>
             <td class="p-4 text-right space-x-2">
@@ -49,6 +51,10 @@
           <div class="adm-field">
             <label class="adm-label">Code (e.g. NG)</label>
             <input v-model="form.code" required maxlength="10" class="adm-input uppercase" @input="syncFlagFromCode" />
+          </div>
+          <div class="adm-field">
+            <label class="adm-label">Phone country code</label>
+            <input v-model="form.phoneCode" required maxlength="16" class="adm-input" placeholder="+234" />
           </div>
           <div class="adm-field">
             <label class="adm-label">Currency code</label>
@@ -122,6 +128,7 @@ const editingId = ref(null);
 const form = ref({
   name: '',
   code: '',
+  phoneCode: '',
   currency: '',
   currencySymbol: '',
   whatsappNumber: '',
@@ -147,6 +154,7 @@ const openModal = (item = null) => {
     form.value = {
       name: item.name,
       code: item.code,
+      phoneCode: item.phoneCode || '',
       currency: item.currency,
       currencySymbol: item.currencySymbol,
       whatsappNumber: item.whatsappNumber || '',
@@ -159,6 +167,7 @@ const openModal = (item = null) => {
     form.value = {
       name: '',
       code: '',
+      phoneCode: '',
       currency: '',
       currencySymbol: '',
       whatsappNumber: '',

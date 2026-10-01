@@ -65,8 +65,22 @@
                 <input v-model="form.email" type="email" required class="nma-input-glass" :placeholder="$t('funnel.account.placeholders.email')" />
               </div>
               <div>
+                <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.country.title') }} *</label>
+                <CountrySelect v-model="selectedCountry" :countries="catalogStore.countries" @change="onCountryChange" />
+              </div>
+              <div>
                 <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.account.labels.phone') }}</label>
-                <input v-model="form.phone" type="tel" class="nma-input-glass" :placeholder="$t('funnel.account.placeholders.phone')" />
+                <div class="relative">
+                  <CountryFlag
+                    v-if="selectedCountryData"
+                    :flag-icon="selectedCountryData.flagIcon"
+                    :code="selectedCountryData.code"
+                    :name="selectedCountryData.name"
+                    size="sm"
+                    class="absolute left-3 top-1/2 -translate-y-1/2 z-10"
+                  />
+                  <input v-model="form.phone" type="tel" required class="nma-input-glass pl-12" :placeholder="$t('funnel.account.placeholders.phone')" />
+                </div>
               </div>
               <label class="flex items-start gap-3 cursor-pointer mt-4">
                 <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
@@ -74,7 +88,7 @@
               </label>
               <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50">
                 <UiButton variant="ghost" @click="prevStep">{{ $t('funnel.account.buttons.back') }}</UiButton>
-                <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">{{ $t('funnel.account.buttons.continue') }}</UiButton>
+                <UiButton variant="primary" :disabled="submitting || !form.consent || !selectedCountry || !hasPhoneNumber" :loading="submitting" type="submit">{{ $t('funnel.account.buttons.continue') }}</UiButton>
               </div>
             </form>
           </div>
@@ -83,13 +97,11 @@
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
               {{ $t('funnel.country.title') }}
             </h2>
-            <p class="text-sm text-zinc-500">{{ $t('funnel.country.description') }}</p>
-            <div class="space-y-4">
-              <CountrySelect v-model="selectedCountry" :countries="officeCountries" office-only other-option other-label="Other" />
-            </div>
+            <p v-if="isCompanySelectedCountry()" class="text-sm text-zinc-500">{{ $t('funnel.country.description') }}</p>
+            <p v-else class="text-sm text-zinc-600">{{ $t('funnel.country.notInOffice', 'We do not currently have an office in your country. Continue to our WhatsApp group for assistance.') }}</p>
             <div class="flex justify-between pt-4 border-t border-zinc-200/50">
                 <UiButton variant="ghost" @click="prevStep">{{ $t('funnel.account.buttons.back') }}</UiButton>
-                <UiButton variant="primary" @click="saveCountryAndRedirect">{{ $t('funnel.country.access') }}</UiButton>
+              <UiButton variant="primary" :disabled="!selectedCountry" @click="saveCountryAndRedirect">{{ isCompanySelectedCountry() ? $t('funnel.country.access') : $t('funnel.country.joinGroup', 'Continue to WhatsApp →') }}</UiButton>
             </div>
           </div>
         </div>
@@ -196,12 +208,22 @@
                       <input v-model="form.email" type="email" required class="nma-input-glass" :placeholder="$t('funnel.account.placeholders.email')" />
                     </div>
                     <div>
-                      <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.account.labels.phone') }}</label>
-                      <input v-model="form.phone" type="tel" required class="nma-input-glass" :placeholder="$t('funnel.account.placeholders.phone')" />
+                      <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.country.title') }}</label>
+                      <CountrySelect v-model="selectedCountry" :countries="catalogStore.countries" @change="onCountryChange" />
                     </div>
                     <div>
-                      <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.country.title') }}</label>
-                      <CountrySelect v-model="selectedCountry" :countries="officeCountries" office-only other-option other-label="Other" />
+                      <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.account.labels.phone') }}</label>
+                      <div class="relative">
+                        <CountryFlag
+                          v-if="selectedCountryData"
+                          :flag-icon="selectedCountryData.flagIcon"
+                          :code="selectedCountryData.code"
+                          :name="selectedCountryData.name"
+                          size="sm"
+                          class="absolute left-3 top-1/2 -translate-y-1/2 z-10"
+                        />
+                        <input v-model="form.phone" type="tel" required class="nma-input-glass pl-12" :placeholder="$t('funnel.account.placeholders.phone')" />
+                      </div>
                     </div>
                     <label class="flex items-start gap-3 cursor-pointer mt-4">
                       <input v-model="form.consent" type="checkbox" required class="mt-1 rounded border-zinc-300 text-accent focus:ring-accent" />
@@ -209,7 +231,7 @@
                     </label>
                     <div class="flex justify-between items-center pt-4 border-t border-zinc-200/50">
                       <UiButton variant="ghost" @click="prevStep">{{ $t('funnel.account.buttons.back') }}</UiButton>
-                      <UiButton variant="primary" :disabled="submitting || !form.consent" :loading="submitting" type="submit">{{ $t('funnel.coach.joinWhatsapp') }}</UiButton>
+                      <UiButton variant="primary" :disabled="submitting || !form.consent || !selectedCountry" :loading="submitting" type="submit">{{ $t('funnel.coach.joinWhatsapp') }}</UiButton>
                     </div>
                   </form>
                 </div>
@@ -233,6 +255,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { Play } from 'lucide-vue-next';
 import AppLogo from '../components/ui/AppLogo.vue';
 import UiButton from '../components/ui/UiButton.vue';
+import CountryFlag from '../components/ui/CountryFlag.vue';
 import { useCatalogStore } from '../stores/catalog';
 import { useLeadsStore } from '../stores/leads';
 import { useChatStore } from '../stores/chat';
@@ -289,12 +312,15 @@ const funnelId = computed(() => route.params.funnelId);
 
 const currentStepIndex = ref(1);
 const submitting = ref(false);
-const selectedCountry = ref('other');
+const selectedCountry = ref('');
+let currentPhoneCode = '';
 
-// Countries where the company operates (has an office), shown to the client.
-// Any other selection falls back to "other" and is routed straight to the
-// WhatsApp group instead of the presentation.
-const officeCountries = computed(() => (catalogStore.countries || []).filter((c) => c && c.hasOffice !== false));
+const selectedCountryData = computed(() => catalogStore.countryByCode(selectedCountry.value));
+const hasPhoneNumber = computed(() => {
+  const enteredDigits = String(form.value.phone || '').replace(/\D/g, '');
+  const phoneCodeDigits = String(selectedCountryData.value?.phoneCode || '').replace(/\D/g, '');
+  return enteredDigits.length > phoneCodeDigits.length;
+});
 
 // A user belongs to the company only if they picked one of the listed office
 // countries. Everyone else (including "other") is treated as company = "other"
@@ -306,6 +332,23 @@ const isCompanySelectedCountry = () => {
   return !!(countryData && countryData.hasOffice);
 };
 
+const onCountryChange = (code) => {
+  const nextPhoneCode = catalogStore.countryByCode(code)?.phoneCode || '';
+  const currentPhone = form.value.phone.trim();
+  const nationalNumber = currentPhoneCode && currentPhone.startsWith(currentPhoneCode)
+    ? currentPhone.slice(currentPhoneCode.length).trim()
+    : currentPhone;
+  form.value.phone = nextPhoneCode
+    ? `${nextPhoneCode}${nationalNumber ? ` ${nationalNumber}` : ''}`
+    : nationalNumber;
+  currentPhoneCode = nextPhoneCode;
+};
+
+const normalizePhone = (phone) => {
+  const digits = String(phone || '').replace(/\D/g, '');
+  return digits ? `+${digits}` : '';
+};
+
 const form = ref({
   fullName: '',
   email: '',
@@ -315,14 +358,6 @@ const form = ref({
 
 onMounted(async () => {
   await catalogStore.fetchCountries();
-  const saved = localStorage.getItem('selected_country');
-  if (saved === 'other') {
-    selectedCountry.value = 'other';
-  } else if (saved && catalogStore.countryByCode(saved)?.hasOffice) {
-    selectedCountry.value = saved;
-  } else {
-    selectedCountry.value = 'other';
-  }
   await settingsStore.fetchSettings();
   await ownerStore.fetchProfile();
   // Debug: log funnel info for inspection
@@ -416,6 +451,7 @@ const prevStep = () => {
 
 // Submitting Leads
 const submitLeadAndContinue = async () => {
+  if (!selectedCountry.value || !hasPhoneNumber.value) return;
   submitting.value = true;
   try {
     const segmentLabel = getSegmentLabel(funnelId.value);
@@ -425,7 +461,7 @@ const submitLeadAndContinue = async () => {
       await leadsStore.submitLead({
         fullName: form.value.fullName,
         email: form.value.email,
-        phone: form.value.phone,
+        phone: normalizePhone(form.value.phone),
         country: selectedCountry.value,
         profileType: segmentLabel,
         challenges: challenges,
@@ -439,10 +475,10 @@ const submitLeadAndContinue = async () => {
     chatStore.markLeadRegistered();
     localStorage.setItem('chat_visitor_name', form.value.fullName);
     localStorage.setItem('chat_visitor_email', form.value.email);
-    localStorage.setItem('chat_visitor_phone', form.value.phone || '');
+    localStorage.setItem('chat_visitor_phone', normalizePhone(form.value.phone));
     
     try {
-      await chatStore.initGuestSession(form.value.fullName, form.value.email, form.value.phone);
+      await chatStore.initGuestSession(form.value.fullName, form.value.email, normalizePhone(form.value.phone));
     } catch (_e) { /* session init failure is non-fatal */ }
     
     nextStep();
@@ -452,6 +488,7 @@ const submitLeadAndContinue = async () => {
 };
 
 const saveCountryAndRedirect = () => {
+  if (!selectedCountry.value) return;
   catalogStore.selectCountry(selectedCountry.value);
   const segmentLabel = getSegmentLabel(funnelId.value);
   const journey = memberStore.registerFromLead({
@@ -472,6 +509,7 @@ const saveCountryAndRedirect = () => {
 };
 
 const submitLeadAndCompleteFlow = async () => {
+  if (!selectedCountry.value || !hasPhoneNumber.value) return;
   submitting.value = true;
   try {
     const segmentLabel = getSegmentLabel(funnelId.value);
@@ -481,7 +519,7 @@ const submitLeadAndCompleteFlow = async () => {
       await leadsStore.submitLead({
         fullName: form.value.fullName,
         email: form.value.email,
-        phone: form.value.phone,
+        phone: normalizePhone(form.value.phone),
         country: selectedCountry.value,
         profileType: segmentLabel,
         challenges: challenges,
@@ -495,10 +533,10 @@ const submitLeadAndCompleteFlow = async () => {
     chatStore.markLeadRegistered();
     localStorage.setItem('chat_visitor_name', form.value.fullName);
     localStorage.setItem('chat_visitor_email', form.value.email);
-    localStorage.setItem('chat_visitor_phone', form.value.phone || '');
+    localStorage.setItem('chat_visitor_phone', normalizePhone(form.value.phone));
     
     try {
-      await chatStore.initGuestSession(form.value.fullName, form.value.email, form.value.phone);
+      await chatStore.initGuestSession(form.value.fullName, form.value.email, normalizePhone(form.value.phone));
     } catch (_e) { /* session init failure is non-fatal */ }
     
     catalogStore.selectCountry(selectedCountry.value);
