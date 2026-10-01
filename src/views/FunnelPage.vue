@@ -65,21 +65,10 @@
                 <input v-model="form.email" type="email" required class="nma-input-glass" :placeholder="$t('funnel.account.placeholders.email')" />
               </div>
               <div>
-                <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.country.title') }} *</label>
-                <CountrySelect v-model="selectedCountry" :countries="catalogStore.countries" @change="onCountryChange" />
-              </div>
-              <div>
                 <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.account.labels.phone') }}</label>
-                <div class="relative">
-                  <CountryFlag
-                    v-if="selectedCountryData"
-                    :flag-icon="selectedCountryData.flagIcon"
-                    :code="selectedCountryData.code"
-                    :name="selectedCountryData.name"
-                    size="sm"
-                    class="absolute left-3 top-1/2 -translate-y-1/2 z-10"
-                  />
-                  <input v-model="form.phone" type="tel" required class="nma-input-glass pl-12" :placeholder="$t('funnel.account.placeholders.phone')" />
+                <div class="flex items-stretch gap-2">
+                  <CountrySelect v-model="selectedCountry" :countries="catalogStore.countries" compact :full-width="false" @change="onCountryChange" />
+                  <input v-model="form.phone" type="tel" required class="nma-input-glass min-w-0 flex-1" :placeholder="$t('funnel.account.placeholders.phone')" />
                 </div>
               </div>
               <label class="flex items-start gap-3 cursor-pointer mt-4">
@@ -208,21 +197,10 @@
                       <input v-model="form.email" type="email" required class="nma-input-glass" :placeholder="$t('funnel.account.placeholders.email')" />
                     </div>
                     <div>
-                      <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.country.title') }}</label>
-                      <CountrySelect v-model="selectedCountry" :countries="catalogStore.countries" @change="onCountryChange" />
-                    </div>
-                    <div>
                       <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.account.labels.phone') }}</label>
-                      <div class="relative">
-                        <CountryFlag
-                          v-if="selectedCountryData"
-                          :flag-icon="selectedCountryData.flagIcon"
-                          :code="selectedCountryData.code"
-                          :name="selectedCountryData.name"
-                          size="sm"
-                          class="absolute left-3 top-1/2 -translate-y-1/2 z-10"
-                        />
-                        <input v-model="form.phone" type="tel" required class="nma-input-glass pl-12" :placeholder="$t('funnel.account.placeholders.phone')" />
+                      <div class="flex items-stretch gap-2">
+                        <CountrySelect v-model="selectedCountry" :countries="catalogStore.countries" compact :full-width="false" @change="onCountryChange" />
+                        <input v-model="form.phone" type="tel" required class="nma-input-glass min-w-0 flex-1" :placeholder="$t('funnel.account.placeholders.phone')" />
                       </div>
                     </div>
                     <label class="flex items-start gap-3 cursor-pointer mt-4">
@@ -255,7 +233,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { Play } from 'lucide-vue-next';
 import AppLogo from '../components/ui/AppLogo.vue';
 import UiButton from '../components/ui/UiButton.vue';
-import CountryFlag from '../components/ui/CountryFlag.vue';
 import { useCatalogStore } from '../stores/catalog';
 import { useLeadsStore } from '../stores/leads';
 import { useChatStore } from '../stores/chat';
