@@ -66,9 +66,9 @@
               </div>
               <div>
                 <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.account.labels.phone') }}</label>
-                <div class="flex items-stretch gap-2">
-                  <CountrySelect v-model="selectedCountry" :countries="catalogStore.countries" compact :full-width="false" @change="onCountryChange" />
-                  <input v-model="form.phone" type="tel" required class="nma-input-glass min-w-0 flex-1" :placeholder="$t('funnel.account.placeholders.phone')" />
+                <div class="flex w-full items-stretch rounded-xl border border-zinc-300 bg-white transition focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/20">
+                  <CountrySelect v-model="selectedCountry" :countries="catalogStore.countries" compact embedded :full-width="false" @change="onCountryChange" />
+                  <input v-model="form.phone" type="tel" required class="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none" :placeholder="$t('funnel.account.placeholders.phone')" />
                 </div>
               </div>
               <label class="flex items-start gap-3 cursor-pointer mt-4">
@@ -82,15 +82,14 @@
             </form>
           </div>
 
-          <div v-else-if="currentStepIndex === 3" class="space-y-6">
+          <div v-else-if="currentStepIndex === 3 && !isCompanySelectedCountry()" class="space-y-6">
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-zinc-900">
-              {{ $t('funnel.country.title') }}
+              {{ $t('funnel.country.noOfficeTitle', 'There is no office in your country') }}
             </h2>
-            <p v-if="isCompanySelectedCountry()" class="text-sm text-zinc-500">{{ $t('funnel.country.description') }}</p>
-            <p v-else class="text-sm text-zinc-600">{{ $t('funnel.country.notInOffice', 'We do not currently have an office in your country. Continue to our WhatsApp group for assistance.') }}</p>
+            <p class="text-sm text-zinc-600">{{ $t('funnel.country.notInOffice', 'We do not currently have an office in your country. Continue to our WhatsApp group for assistance.') }}</p>
             <div class="flex justify-between pt-4 border-t border-zinc-200/50">
                 <UiButton variant="ghost" @click="prevStep">{{ $t('funnel.account.buttons.back') }}</UiButton>
-              <UiButton variant="primary" :disabled="!selectedCountry" @click="saveCountryAndRedirect">{{ isCompanySelectedCountry() ? $t('funnel.country.access') : $t('funnel.country.joinGroup', 'Continue to WhatsApp →') }}</UiButton>
+              <UiButton variant="primary" :disabled="!selectedCountry" @click="saveCountryAndRedirect">{{ $t('funnel.country.joinGroup', 'Continue to WhatsApp →') }}</UiButton>
             </div>
           </div>
         </div>
@@ -198,9 +197,9 @@
                     </div>
                     <div>
                       <label class="block text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-1">{{ $t('funnel.account.labels.phone') }}</label>
-                      <div class="flex items-stretch gap-2">
-                        <CountrySelect v-model="selectedCountry" :countries="catalogStore.countries" compact :full-width="false" @change="onCountryChange" />
-                        <input v-model="form.phone" type="tel" required class="nma-input-glass min-w-0 flex-1" :placeholder="$t('funnel.account.placeholders.phone')" />
+                      <div class="flex w-full items-stretch rounded-xl border border-zinc-300 bg-white transition focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/20">
+                        <CountrySelect v-model="selectedCountry" :countries="catalogStore.countries" compact embedded :full-width="false" @change="onCountryChange" />
+                        <input v-model="form.phone" type="tel" required class="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none" :placeholder="$t('funnel.account.placeholders.phone')" />
                       </div>
                     </div>
                     <label class="flex items-start gap-3 cursor-pointer mt-4">
@@ -458,7 +457,8 @@ const submitLeadAndContinue = async () => {
       await chatStore.initGuestSession(form.value.fullName, form.value.email, normalizePhone(form.value.phone));
     } catch (_e) { /* session init failure is non-fatal */ }
     
-    nextStep();
+    if (isCompanySelectedCountry()) saveCountryAndRedirect();
+    else nextStep();
   } finally {
     submitting.value = false;
   }

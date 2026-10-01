@@ -2,10 +2,13 @@
   <div ref="root" class="relative" :class="fullWidth ? 'w-full' : ''">
     <button
       type="button"
-      class="flex items-center gap-2 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 rounded-xl transition-colors hover:border-zinc-300 dark:hover:border-zinc-600 focus:outline-none focus:ring-2 focus:ring-accent/40"
+      class="flex items-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-accent/40"
       :class="[
+        embedded
+          ? 'h-full shrink-0 rounded-l-xl border-r border-zinc-200 bg-transparent px-3 py-3 text-xs font-semibold'
+          : 'border border-zinc-200 bg-white rounded-xl hover:border-zinc-300',
         fullWidth ? 'w-full justify-between' : '',
-        compact ? 'px-3 py-1.5 text-xs font-semibold' : 'px-4 py-3 text-sm',
+        !embedded && (compact ? 'px-3 py-1.5 text-xs font-semibold' : 'px-4 py-3 text-sm'),
       ]"
       :aria-expanded="open"
       aria-haspopup="listbox"
@@ -19,21 +22,21 @@
           :name="selected.name"
           size="sm"
         />
-        <span class="truncate text-zinc-800 dark:text-zinc-100">{{ triggerLabel }}</span>
+        <span class="truncate text-zinc-800">{{ triggerLabel }}</span>
       </span>
       <ChevronDown :size="14" class="text-zinc-400 shrink-0 transition-transform" :class="{ 'rotate-180': open }" />
     </button>
 
     <div
       v-if="open"
-      class="absolute z-[60] left-0 mt-1 w-full min-w-[220px] max-w-[min(22rem,calc(100vw-2rem))] max-h-60 overflow-y-auto nma-scrollbar rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-lg py-1"
+      class="absolute z-[60] left-0 mt-1 w-full min-w-[220px] max-w-[min(22rem,calc(100vw-2rem))] max-h-60 overflow-y-auto nma-scrollbar rounded-xl border border-zinc-200 bg-white shadow-lg py-1"
       role="listbox"
     >
       <button
         v-if="showAllOption"
         type="button"
-        class="w-full flex items-center gap-2 px-3 py-2.5 text-left text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
-        :class="modelValue === '' ? 'bg-accent/10 text-accent-dark dark:text-accent-light' : 'text-zinc-700 dark:text-zinc-300'"
+        class="w-full flex items-center gap-2 px-3 py-2.5 text-left text-sm text-zinc-700 hover:bg-zinc-50 transition-colors"
+        :class="modelValue === '' ? 'bg-accent/10 text-accent-dark' : ''"
         role="option"
         :aria-selected="modelValue === ''"
         @click="pick('')"
@@ -45,8 +48,8 @@
         v-for="c in countryList"
         :key="c.code"
         type="button"
-        class="w-full flex items-center gap-2 px-3 py-2.5 text-left text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
-        :class="modelValue === c.code ? 'bg-accent/10 text-accent-dark dark:text-accent-light' : 'text-zinc-700 dark:text-zinc-300'"
+        class="w-full flex items-center gap-2 px-3 py-2.5 text-left text-sm text-zinc-700 hover:bg-zinc-50 transition-colors"
+        :class="modelValue === c.code ? 'bg-accent/10 text-accent-dark' : ''"
         role="option"
         :aria-selected="modelValue === c.code"
         @click="pick(c.code)"
@@ -57,8 +60,8 @@
       <button
         v-if="otherOption"
         type="button"
-        class="w-full flex items-center gap-2 px-3 py-2.5 text-left text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors border-t border-zinc-100 dark:border-zinc-800"
-        :class="modelValue === OTHER_VALUE ? 'bg-accent/10 text-accent-dark dark:text-accent-light' : 'text-zinc-700 dark:text-zinc-300'"
+        class="w-full flex items-center gap-2 px-3 py-2.5 text-left text-sm text-zinc-700 hover:bg-zinc-50 transition-colors border-t border-zinc-100"
+        :class="modelValue === OTHER_VALUE ? 'bg-accent/10 text-accent-dark' : ''"
         role="option"
         :aria-selected="modelValue === OTHER_VALUE"
         @click="pick(OTHER_VALUE)"
@@ -82,6 +85,7 @@ const props = defineProps({
   modelValue: { type: String, default: '' },
   countries: { type: Array, default: null },
   compact: { type: Boolean, default: false },
+  embedded: { type: Boolean, default: false },
   fullWidth: { type: Boolean, default: true },
   showCurrency: { type: Boolean, default: false },
   showAllOption: { type: Boolean, default: false },

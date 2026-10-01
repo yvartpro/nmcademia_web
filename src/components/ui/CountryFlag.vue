@@ -1,6 +1,6 @@
 <template>
   <span
-    class="inline-block shrink-0 rounded-sm overflow-hidden bg-zinc-100 dark:bg-zinc-800"
+    class="inline-block shrink-0 rounded-sm overflow-hidden bg-zinc-100"
     :class="[shapeClass, sizeClass]"
     :title="title || undefined"
     role="img"
