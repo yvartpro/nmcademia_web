@@ -179,6 +179,7 @@
       <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
         <p>{{ $t('landing.footer.copyright') }}</p>
         <p>{{ $t('landing.footer.partner') }}</p>
+        <p>Powered by <a class="text-blue-500 text-bold" href="https://giraso.bi">Giraso</a></p>
       </div>
     </footer>
 
